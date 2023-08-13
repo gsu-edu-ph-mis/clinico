@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{{app.description}}">
+    <title>{{title}}</title>
+
+    <!-- Bootstrap -->
+    <link rel="shortcut icon" href="{{app.url}}/favicon.png" />
+    <link rel="stylesheet" href="{{app.url}}/css/bootstrap.min.css" />
+    {% block styles %}{% endblock %}
+    <link rel="stylesheet" href="{{app.url}}/css/style.css?v=20230208" />
+</head>
+
+{% if user %}
+<body data-route="{{bodyClass}}" class="{% if hideNav == 'true' %}hide-menu{% endif %}">
+{% include 'parts/sidebar.html' %}
+{% else %}
+<body class="hide-menu">
+{% endif %}
+<main role="main" class="main privacy-on">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 bg-light pt-2 pb-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    {% if user %}
+                        <div class="">
+                            <button class="toggler mr-3">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    <div class="d-flex flex-grow-1 justify-content-between align-items-center">
+                        {# <div class="px-3">
+                            <a href="#"><svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="currentColor" d="M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21" /></svg></a>
+                        </div> #}
+                        <div>
+                            {# <h1 class="h6 mb-0 text-center text-md-left">Employee Account</h1> #}
+                        </div>
+                        {% if user %}
+                            <div class="pl-3">
+                                {% set accountUrl = '/account' %}
+                                {% if user.roles.includes('employee') == true %}
+                                    {% set accountUrl = '/e-profile/account/password' %}
+                                {% endif %}
+                                Hi, <a class="privy-name" href="{{accountUrl}}">{{user.username}}</a> | <a onclick="return confirm('Are you sure you want to logout?')" title="Logout" href="/logout">
+                                    <img width="18px" src="/images/logout.png" alt="Logout">
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="pl-3"><a href="/logout">Login</a></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row min-height-500">
+            {% block body %}{% endblock %}
+        </div>
+        <div class="row">
+            <div class="col-12 text-center pt-5" style="font-size: 10px">
+                <hr>
+                <p>Developed by Guimaras State University</p>
+            </div>
+        </div>
+    </div>
+</main>
+{% block scripts %}
+<script src="{{app.url}}/js/jquery.slim.min.js"></script>
+<script src="{{app.url}}/js/popper.min.js"></script>
+<script src="{{app.url}}/js/bootstrap.min.js"></script>
+<script src="{{app.url}}/js/lodash.min.js"></script>
+<script src="{{app.url}}/js/moment.min.js"></script>
+<script src="{{app.url}}/js/moment-timezone-with-data-10-year-range.min.js"></script>
+<script src="{{app.url}}/js/vue.js"></script>
+<!--<script src="{{app.url}}/js/zxcvbn.js"></script>-->
+<script src="{{app.url}}/js/script-cookies.js"></script>
+<script src="{{app.url}}/js/script.js"></script>
+{% if ENV === 'dev' %}
+<script>
+    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +
+    ':35729/livereload.js?snipver=1"></' + 'script>')
+  </script>
+{% endif %}
+{% endblock %}
+</html>

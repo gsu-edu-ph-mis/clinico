@@ -1,0 +1,41 @@
+{
+  "name": "clinico",
+  "version": "1.0.0",
+  "description": "ClinicO - Clinic Online - An online information system for the university medical record",
+  "main": "index.js",
+  "scripts": {
+    "dev": "set NODE_ENV=dev&& nodemon --ignore data/view/ --ignore data/public/ --ignore data/log/ --ignore data/upload/ index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gsu-edu-ph-mis/clinico.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gsu-edu-ph-mis/clinico/issues"
+  },
+  "homepage": "https://github.com/gsu-edu-ph-mis/clinico#readme",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.383.0",
+    "acrb": "^0.1.0",
+    "body-parser": "^1.20.2",
+    "connect-mongodb-session": "^3.1.1",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "express-session": "^1.17.3",
+    "form-data": "^4.0.0",
+    "guess-file-type": "^1.0.1",
+    "kisapmata": "^1.2.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "mongoose": "^7.4.2",
+    "nunjucks": "^3.2.4",
+    "nunjucks-filters": "github:kosinix/nunjucks-filters",
+    "pigura": "^1.0.1",
+    "sharp": "^0.32.4"
+  }
+}
