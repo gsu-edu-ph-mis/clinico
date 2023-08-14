@@ -24,6 +24,7 @@ module.exports = {
             
             main.User = main.model('User', require('./models/user'));
             main.UserVerification = main.model('UserVerification', require('./models/user-verification'));
+            main.MedicalRecord = main.model('MedicalRecord', require('./models/medical-record'));
             main.PasswordReset = main.model('PasswordReset', require('./models/password-reset'));
 
 

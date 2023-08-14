@@ -13,61 +13,62 @@
     <link rel="stylesheet" href="{{app.url}}/css/style.css?v=20230208" />
 </head>
 
-{% if user %}
-<body data-route="{{bodyClass}}" class="{% if hideNav == 'true' %}hide-menu{% endif %}">
-{% include 'parts/sidebar.html' %}
-{% else %}
+
 <body class="hide-menu">
-{% endif %}
-<main role="main" class="main privacy-on">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 bg-light pt-2 pb-2">
-                <div class="d-flex justify-content-between align-items-center">
-                    {% if user %}
-                        <div class="">
-                            <button class="toggler mr-3">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </button>
-                        </div>
-                    {% endif %}
-                    <div class="d-flex flex-grow-1 justify-content-between align-items-center">
-                        {# <div class="px-3">
-                            <a href="#"><svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="currentColor" d="M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21" /></svg></a>
-                        </div> #}
-                        <div>
-                            {# <h1 class="h6 mb-0 text-center text-md-left">Employee Account</h1> #}
-                        </div>
-                        {% if user %}
-                            <div class="pl-3">
-                                {% set accountUrl = '/account' %}
-                                {% if user.roles.includes('employee') == true %}
-                                    {% set accountUrl = '/e-profile/account/password' %}
-                                {% endif %}
-                                Hi, <a class="privy-name" href="{{accountUrl}}">{{user.username}}</a> | <a onclick="return confirm('Are you sure you want to logout?')" title="Logout" href="/logout">
-                                    <img width="18px" src="/images/logout.png" alt="Logout">
-                                </a>
-                            </div>
-                        {% else %}
-                            <div class="pl-3"><a href="/logout">Login</a></div>
-                        {% endif %}
-                    </div>
+    <!-- <nav class="navbar fixed-top navbar-light">
+        <div class="container container-app">
+            <div class="row">
+                <div class="col-6 d-flex align-items-center">
+                    <a class="navbar-brand" href="#">
+                        <img src="/images/clinico-sm-g.png" alt="">
+                    </a>
+                </div>
+                <div class="col-6 justify-content-end d-flex align-items-center">
+                    <a href="#" class="menu-toggle">
+                        <svg width="26px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Menu</title><path fill="#666" d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="row min-height-500">
-            {% block body %}{% endblock %}
+    </nav> -->
+    <div class="container container-app">
+        <div class="menu">
+            <ul>
+                <li>
+                    <a href="#" class="close-menu d-flex align-items-center justify-content-end">
+                        <svg width="26px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Close</title><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/student/med-card" class="d-flex align-items-center">
+                        <svg class="mr-1" width="26px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>chevron-right</title><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
+                        <span>Medical Record Card</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/student/account" class="d-flex align-items-center">
+                        <svg class="mr-1" width="26px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>chevron-right</title><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
+                        <span>Account</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/data-privacy" class="d-flex align-items-center">
+                        <svg class="mr-1" width="26px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>chevron-right</title><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
+                        <span>Data Privacy</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/logout" onclick="return confirm('Are you sure you want to logout?')" class="d-flex align-items-center">
+                        <svg class="mr-1" width="26px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Logout</title><path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" /></svg>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <div class="row">
-            <div class="col-12 text-center pt-5" style="font-size: 10px">
-                <hr>
-                <p>Developed by Guimaras State University</p>
-            </div>
-        </div>
+        {% block body %}
+        {% endblock %}
+        <p class="text-center pt-3" style="color: #111; font-size: 10px; opacity: 0.7;">&copy; 2023 - Clinic Online by Guimaras State University</p>
     </div>
-</main>
 {% block scripts %}
 <script src="{{app.url}}/js/jquery.slim.min.js"></script>
 <script src="{{app.url}}/js/popper.min.js"></script>
@@ -86,4 +87,5 @@
   </script>
 {% endif %}
 {% endblock %}
+</body>
 </html>

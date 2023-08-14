@@ -57,7 +57,8 @@ router.post('/register', async (req, res, next) => {
         let lastName = lodash.trim(lodash.get(payload, 'lastName', ''))
         let suffix = lodash.trim(lodash.get(payload, 'suffix', ''))
         let email = lodash.trim(lodash.get(payload, 'email', ''))
-        // let password = lodash.trim(lodash.get(payload, 'password', ''))
+        let acceptedDataPrivacy = lodash.trim(lodash.get(payload, 'acceptedDataPrivacy'))
+
         if(!firstName){
             throw new Error('First Name is required.')
         }
@@ -85,9 +86,9 @@ router.post('/register', async (req, res, next) => {
                 }
             }
         }
-        // if(!password){
-        //     throw new Error('Password is required.')
-        // }
+        if(!acceptedDataPrivacy){
+            throw new Error('Password is required.')
+        }
 
         // Check email availability
         let existingEmail = await req.app.locals.db.main.User.findOne({
@@ -129,6 +130,7 @@ router.post('/register', async (req, res, next) => {
             lastName: lastName,
             suffix: suffix,
             email: email,
+            acceptedDataPrivacy: acceptedDataPrivacy,
         }
         let hash = passwordMan.hashSha256(JSON.stringify(verificationPayload))
 

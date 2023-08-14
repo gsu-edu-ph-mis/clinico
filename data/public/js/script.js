@@ -2,7 +2,6 @@ jQuery(document).ready(function ($) {
     var $body = $('body');
 
     $('.toggler').on('click', function () {
-        console.log($body)
         $body.toggleClass('hide-menu');
         if ($body.hasClass("hide-menu")) {
             setCookie('hideNav', 'true');
@@ -10,6 +9,29 @@ jQuery(document).ready(function ($) {
             setCookie('hideNav', 'false');
         }
     })
+
+    $('.menu-toggle').on('click', function (e) {
+        $body.toggleClass('hide-menu');
+        if ($body.hasClass("hide-menu")) {
+            setCookie('hideNav', 'true');
+        } else {
+            setCookie('hideNav', 'false');
+        }
+        e.preventDefault()
+        e.stopPropagation()
+    })
+
+    $('.close-menu').on('click', function (e) {
+        $body.toggleClass('hide-menu');
+        if ($body.hasClass("hide-menu")) {
+            setCookie('hideNav', 'true');
+        } else {
+            setCookie('hideNav', 'false');
+        }
+        e.preventDefault()
+        e.stopPropagation()
+    })
+
     
     $('#sidebar').on('click', '.nav-expander', function (e) {
         e.preventDefault()

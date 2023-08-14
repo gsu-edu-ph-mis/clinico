@@ -75,6 +75,15 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group row" :data-error="errors.acceptedDataPrivacy" @click="errors.acceptedDataPrivacy=false">
+                        <div class="col-5 col-form-label"></div>
+                        <div class="col-7 d-flex align-items-center">
+                            <div class="custom-control custom-checkbox mb-0">
+                                <input v-model="acceptedDataPrivacy" name="acceptedDataPrivacy" type="checkbox" class="custom-control-input" id="acceptedDataPrivacy">
+                                <label class="custom-control-label" for="acceptedDataPrivacy">I have read and accept the <a target="_blank" href="/data-privacy">Data Privacy and Consent Form</a></label>
+                            </div>
+                        </div>
+                    </div>
                     <!-- <div class="form-group row" :data-error="errors.password" @click="errors.password=false">
                         <label for="password" class="col-5 col-form-label text-right">Password <span class="text-danger">*</span></label>
                         <div class="col-7">
@@ -126,8 +135,7 @@
             lastName: '',
             suffix: '',
             email: '',
-            password: '',
-            passwordType: 'password',
+            acceptedDataPrivacy: '',
             recaptchaToken: '',
             errors: {
                 firstName: false,
@@ -135,13 +143,11 @@
                 lastName: false,
                 suffix: false,
                 email: false,
-                password: false,
+                acceptedDataPrivacy: false,
             }
         },
         computed: {
-            disabled: function(){
-                return (!this.email || !this.password || this.pending);
-            },
+            
             loginText: function(){
                 return this.pending ? 'Logging in...' : 'Login';
             },
@@ -154,7 +160,7 @@
                     lastName: me.lastName,
                     suffix: me.suffix,
                     email: me.email,
-                    password: me.password,
+                    acceptedDataPrivacy: me.acceptedDataPrivacy,
                 })
             }
         },
@@ -167,7 +173,6 @@
             me.email = 'nico.amarilla@gsc.edu.ph'
             me.page = 2
 
-            me.password = me.generatePassword(10)
 
         },
         methods: {
@@ -245,10 +250,10 @@
                                 }
                             }
                         }
-                        // if(!me.password){
-                        //     me.errors.password = true
-                        //     throw new Error('Password is required.')
-                        // }
+                        if(!me.acceptedDataPrivacy){
+                            me.errors.acceptedDataPrivacy = true
+                            throw new Error('You must have read and accepted the Data Privacy and Consent Form is required.')
+                        }
                         me.pending = true;
                         me.$nextTick(function() {
                             me.$refs.frmReg.submit();

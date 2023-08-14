@@ -13,8 +13,8 @@
                 <div class="text-center">
                     <img class="mb-4" style="width:200px; height:auto;" src="/images/sent.png" width="400" height="400" alt="Logo">
                     <h1 class="h6 mb-3">We generated a password for you: </h1>
-                    <h2 class="h4 mb-3 text-dark">{{password}}</h2>
-                    <p class="text-danger h6 mb-5"><em>Please copy and save it.</em></p>
+                    <h2 class="h4 mb-3 text-center text-mono"><input id="code" type="text" class="text-center form-control" value="{{password}}" readonly></h2>
+                    <p class="text-danger h6 mb-5"><em>Please save it <br>as you will see this only once.</em></p>
                 </div>
             </div>
         </div>
@@ -23,4 +23,8 @@
 {% endblock %}
 {% block scripts %}
 {{ super() }}
+<script>
+    document.getElementById('code').focus()
+    document.getElementById('code').select()
+</script>
 {% endblock %}

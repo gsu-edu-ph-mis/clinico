@@ -46,6 +46,10 @@ let schema = mongoose.Schema({
         $type: Boolean,
         default: false
     },
+    acceptedDataPrivacy: {
+        $type: Boolean,
+        default: false
+    },
     createdBy: {
         $type: mongoose.Schema.Types.ObjectId, // assoc. admin user account 
     },

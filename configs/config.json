@@ -64,6 +64,19 @@
             "prefix": "files-dev"
         }
     },
-    "suffixes": ["Jr.", "II", "III", "IV", "V", "Sr."],
+    "suffixes": [
+        "Jr.",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "Sr."
+    ],
+    "civilStatuses": [
+        "Single",
+        "Married",
+        "Separated",
+        "Widowed"
+    ],
     "loginDelay": 0
 }
