@@ -18,6 +18,11 @@ let schema = mongoose.Schema({
         $type: String,
         trim: true,
     },
+    suffix: {
+        $type: String,
+        trim: true,
+        default: '',
+    },
     email: {
         $type: String,
         trim: true,

@@ -41,10 +41,6 @@ const schema = new Schema({
         $type: String,
         trim: true,
     },
-    email: {
-        $type: String,
-        trim: true,
-    },
     mobileNumber: {
         $type: String,
         trim: true,
@@ -112,10 +108,6 @@ const schema = new Schema({
     group: {
         $type: String,
         trim: true,
-    },
-    acceptedDataPrivacy: {
-        $type: Boolean,
-        default: false
     },
     createdBy: {
         $type: mongoose.Schema.Types.ObjectId, // assoc. admin user account 
