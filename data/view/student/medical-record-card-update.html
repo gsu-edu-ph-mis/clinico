@@ -22,7 +22,7 @@
 <div class="row">
     <div class="col-12 min-height-500 p-3 pb-3">
         <div id="vApp" v-cloak :data-pending="pending" class="jumbotron p-3">
-            <form ref="frmMedCard" v-on:submit.prevent="onSubmit($event)" action="/student/med-card" method="post">
+            <form ref="frmMedCard" v-on:submit.prevent="onSubmit($event)" action="/student/update-medical-record" method="post">
                 <template v-if="page==1">
                     <p class="lead text-center">Personal Details</p>
                     <hr>
@@ -85,15 +85,15 @@
                         <label for="fb">Facebook/Messenger Name</label>
                         <input v-model="fb" name="fb" id="fb" type="text" class="form-control">
                     </div>
-                    <div class="form-group" :data-error="errors.phoneNumber" @click="errors.phoneNumber=false">
-                        <label for="phoneNumber">Phone Number</label>
-                        <input v-model="phoneNumber" name="phoneNumber" id="phoneNumber" type="text" class="form-control">
+                    <div class="form-group" :data-error="errors.mobileNumber" @click="errors.mobileNumber=false">
+                        <label for="mobileNumber">Phone Number</label>
+                        <input v-model="mobileNumber" name="mobileNumber" id="mobileNumber" type="text" class="form-control">
                     </div>
                     <div class="form-row">
                         <div class="col-7">
-                            <div class="form-group" :data-error="errors.parent" @click="errors.parent=false">
-                                <label for="parent">Parent/Guardian Name</label>
-                                <input v-model="parent" name="parent" id="parent" type="text" class="form-control">
+                            <div class="form-group" :data-error="errors.parentName" @click="errors.parentName=false">
+                                <label for="parentName">Parent/Guardian Name</label>
+                                <input v-model="parentName" name="parentName" id="parentName" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="col-5">
@@ -135,7 +135,7 @@
                         <label for="handedness">Handedness</label>
                         <select v-model="handedness" id="handedness" class="form-control">
                             <option value="R">Right-Handed</option>
-                            <option value="F">Left-Handed</option>
+                            <option value="L">Left-Handed</option>
                         </select>
                     </div>
                     <div class="form-group" :data-error="errors.allergy" @click="errors.allergy=false">
@@ -183,133 +183,7 @@
                         <button id="btnSubmit" class="btn btn-success d-block w-100 mr-1">Submit</button>
                     </div>
                 </template>
-                
-                
             </form>
-        </div>
-        <h1 class="h5 text-center">Clinical Record</h1>
-        <div class="table-responsive">
-            <table class="table table-sm table-striped table-bordered">
-                <tr>
-                    <th>Date</th>
-                    <th>Complaints</th>
-                    <th>Treatment/ Care Given</th>
-                    <th>Diagnosis/ Remark</th>
-                </tr>
-                <tr>
-                    <td>2022/11/01</td>
-                    <td>Toothache</td>
-                    <td>Ibuprofen</td>
-                    <td>Looks good</td>
-                </tr>
-                <tr>
-                    <td>2022/11/01</td>
-                    <td>Toothache</td>
-                    <td>Ibuprofen</td>
-                    <td>Looks good</td>
-                </tr>
-                <tr>
-                    <td>2022/11/01</td>
-                    <td>Toothache</td>
-                    <td>Ibuprofen</td>
-                    <td>Looks good</td>
-                </tr>
-                <tr>
-                    <td>2022/11/01</td>
-                    <td>Toothache</td>
-                    <td>Ibuprofen</td>
-                    <td>Looks good</td>
-                </tr>
-            </table>
-            <!--  -->
-            <div class="jumbotron p-3">
-                <p class="lead text-center">Add Clinical Record</p>
-                <hr>
-                <form action="">
-                    <div class="form-row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Gender</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Civil Status</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="form-row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Birthdate</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Religion</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="">Citizenship</label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Course</label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="form-group text-center">
-                        <button class="btn btn-success">Next</button>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="">Allergy</label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Handedness</label>
-                        <input type="text" class="form-control">
-                    </div>
-                    <div class="form-row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Parent or Guardian</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Contact No.</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Emergency Person</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Contact No.</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="p-3">
-                <button class="btn btn-success">Add</button>
-            </div>
         </div>
     </div>
 </div>
@@ -328,23 +202,23 @@
             // middleName: '',
             // lastName: '',
             // suffix: '',
-            gender: '',
-            civilStatus: 'Single',
-            birthDate: '',
-            citizenship: 'Filipino',
-            religion: '',
-            course: '',
-            address: '',
+            gender: `{{medicalRecord.gender}}`,
+            civilStatus: `{{medicalRecord.civilStatus|default('Single', true)}}`,
+            birthDate: `{{medicalRecord.birthDate|format_date('YYYY-MM-DD')}}`,
+            citizenship: `{{medicalRecord.citizenship|default('Filipino', true)}}`,
+            religion: `{{medicalRecord.religion}}`,
+            course: `{{medicalRecord.course}}`,
+            address: `{{medicalRecord.address}}`,
 
-            fb: '',
-            phoneNumber: '',
-            parent: '',
-            parentPhoneNumber: '',
-            emergencyPerson: '',
-            emergencyPersonPhoneNumber: '',
+            fb: `{{medicalRecord.fb}}`,
+            mobileNumber: `{{medicalRecord.mobileNumber}}`,
+            parentName: `{{medicalRecord.parentName}}`,
+            parentPhoneNumber: `{{medicalRecord.parentPhoneNumber}}`,
+            emergencyPerson: `{{medicalRecord.emergencyPerson}}`,
+            emergencyPersonPhoneNumber: `{{medicalRecord.emergencyPersonPhoneNumber}}`,
 
-            allergy: '',
-            allergies: [],
+            allergy: ``,
+            allergies: {{medicalRecord.allergies|default([], true)|stringify|safe}},
             allergyList: [
                 {
                     name: 'Food',
@@ -359,12 +233,8 @@
                     value: 'others',
                 }
             ],
-            allergyDetails: {
-                'Food': '',
-                'Medicine': '',
-                'Others': '',
-            },
-            handedness: 'R',
+            allergyDetails: {{medicalRecord.allergyDetails|default({}, true)|stringify|safe}},
+            handedness: `{{medicalRecord.handedness|default('R', true)}}`,
 
             errors: {
                 gender: false,
@@ -376,8 +246,8 @@
                 address: false,
 
                 fb: false,
-                phoneNumber: false,
-                parent: false,
+                mobileNumber: false,
+                parentName: false,
                 parentPhoneNumber: false,
                 emergencyPerson: false,
                 emergencyPersonPhoneNumber: false,
@@ -405,36 +275,37 @@
                     address: me.address,
 
                     fb: me.fb,
-                    phoneNumber: me.phoneNumber,
-                    parent: me.parent,
+                    mobileNumber: me.mobileNumber,
+                    parentName: me.parentName,
                     parentPhoneNumber: me.parentPhoneNumber,
                     emergencyPerson: me.emergencyPerson,
                     emergencyPersonPhoneNumber: me.emergencyPersonPhoneNumber,
 
                     handedness: me.handedness,
                     allergies: me.allergies,
+                    allergyDetails: me.allergyDetails,
                 })
             }
         },
         mounted: function(){
             const me = this 
 
-            me.gender = 'M'
-            me.civilStatus = 'Single'
-            me.birthDate = '1986-09-15'
-            me.citizenship = 'Filipino'
-            me.religion = 'Roman Catholic'
-            me.course = 'BSIT'
-            me.address = 'Mclain, Buenavista, Guimaras'
+            // me.gender = 'M'
+            // me.civilStatus = 'Single'
+            // me.birthDate = '1986-09-15'
+            // me.citizenship = 'Filipino'
+            // me.religion = 'Roman Catholic'
+            // me.course = 'BSIT'
+            // me.address = 'Mclain, Buenavista, Guimaras'
 
-            me.fb = 'Nico Amarilla'
-            me.phoneNumber = '09106189160'
-            me.parent = 'Virgie'
-            me.parentPhoneNumber = '09106189160'
-            me.emergencyPerson = 'Juan Cruz'
-            me.emergencyPersonPhoneNumber = '09106189160'
+            // me.fb = 'Nico Amarilla'
+            // me.mobileNumber = '09106189160'
+            // me.parentName = 'Virgie'
+            // me.parentPhoneNumber = '09106189160'
+            // me.emergencyPerson = 'Juan Cruz'
+            // me.emergencyPersonPhoneNumber = '09106189160'
 
-            me.page = 3
+            // me.page = 3
 
 
         },
@@ -491,12 +362,12 @@
                             me.errors.fb = true
                             throw new Error('Facebook/Messenger Name is required.')
                         }
-                        if(!me.phoneNumber){
-                            me.errors.phoneNumber = true
+                        if(!me.mobileNumber){
+                            me.errors.mobileNumber = true
                             throw new Error('Phone Number is required.')
                         }
-                        if(!me.parent){
-                            me.errors.parent = true
+                        if(!me.parentName){
+                            me.errors.parentName = true
                             throw new Error('Parent/Guardian Name is required.')
                         }
                         if(!me.parentPhoneNumber){
@@ -553,6 +424,7 @@
                     console.log(e?.submitter?.id)
                     
                 } catch (err) {
+                    console.error(err)
                     alert(err.message)
                 }
             }

@@ -57,57 +57,50 @@ const schema = new Schema({
         $type: String,
         trim: true,
     },
-    addresses: [
-        {
-            unit: { // house, block, lot, or unit no.
-                $type: String,
-                trim: true,
-            },
-            street: {
-                $type: String,
-                trim: true,
-            },
-            village: { // or subdivision
-                $type: String,
-                trim: true,
-            },
-            brgy: {
-                $type: String,
-                trim: true,
-            },
-            cityMun: {
-                $type: String,
-                trim: true,
-            },
-            province: {
-                $type: String,
-                trim: true,
-            },
-            psgc: {
-                $type: String,
-                trim: true,
-            },
-            full: {
-                $type: String,
-                trim: true,
-            },
-            zipCode: {
-                $type: Number,
-            },
-            dateStarted: {
-                $type: Date,
-            },
-            status: {
-                $type: Number,
-            }
-        }
-    ],
-    userId: {
-        $type: mongoose.Schema.Types.ObjectId, // assoc. user account 
-    },
-    group: {
+    citizenship: {
         $type: String,
         trim: true,
+    },
+    religion: {
+        $type: String,
+        trim: true,
+    },
+    course: {
+        $type: String,
+        trim: true,
+    },
+    fb: {
+        $type: String,
+        trim: true,
+    },
+    mobileNumber: {
+        $type: String,
+        trim: true,
+    },
+    parentName: {
+        $type: String,
+        trim: true,
+    },
+    parentPhoneNumber: {
+        $type: String,
+        trim: true,
+    },
+    emergencyPerson: {
+        $type: String,
+        trim: true,
+    },
+    emergencyPersonPhoneNumber: {
+        $type: String,
+        trim: true,
+    },
+    handedness: {
+        $type: String,
+        trim: true,
+    },
+    allergies: [],
+    allergyDetails: {},
+    userId: {
+        $type: mongoose.Schema.Types.ObjectId, // assoc. user account 
     },
     createdBy: {
         $type: mongoose.Schema.Types.ObjectId, // assoc. admin user account 

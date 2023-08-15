@@ -31,17 +31,44 @@ router.get('/student/home', async (req, res, next) => {
     }
 });
 
-router.get('/student/med-card', async (req, res, next) => {
+router.get('/student/medical-record-card', async (req, res, next) => {
     try {
+        let user = res.user
+        let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
+            userId: user._id
+        }).lean()
+
         let data = {
-            civilStatuses: CONFIG.civilStatuses
+            flash: flash.get(req, 'student'),
+            civilStatuses: CONFIG.civilStatuses,
+            medicalRecord: medicalRecord
         }
-        res.render('student/med-card.html', data);
+        res.render('student/medical-record-card.html', data);
     } catch (err) {
         next(err);
     }
 });
-router.post('/student/med-card', async (req, res, next) => {
+router.get('/student/update-medical-record', async (req, res, next) => {
+    try {
+        let user = res.user
+        let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
+            userId: user._id
+        }).lean()
+        if(!medicalRecord){
+            throw new Error('Not found.')
+        }
+        let data = {
+            civilStatuses: CONFIG.civilStatuses,
+            medicalRecord: medicalRecord,
+        }
+        res.render('student/medical-record-card-update.html', data);
+    } catch (err) {
+        flash.error(req, 'student', err.message)
+        res.redirect('/student/medical-record-card')
+        // next(err);
+    }
+});
+router.post('/student/update-medical-record', async (req, res, next) => {
     try {
         let user = res.user
         let payload = lodash.get(req, 'body.payload')
@@ -50,12 +77,25 @@ router.post('/student/med-card', async (req, res, next) => {
         }
         payload = JSON.parse(payload)
 
+        if(payload.allergies.includes('None')){
+            payload.allergies = ['None']
+            payload.allergyDetails = {
+                'Food': '',
+                'Medicine': '',
+                'Others': '',
+            }
+        }
+        // console.log(payload)
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
             userId: user._id
-        })
+        }).lean()
         if(!medicalRecord){
             medicalRecord = new req.app.locals.db.main.MedicalRecord({
                 userId: user._id,
+                firstName: user.firstName,
+                middleName: user.middleName,
+                lastName: user.lastName,
+                suffix: user.suffix,
                 ...payload
             })
             await medicalRecord.save()
@@ -65,9 +105,8 @@ router.post('/student/med-card', async (req, res, next) => {
                 ...payload
             })
         }
-
-
-        res.send(user);
+        flash.ok(req, 'student', 'Medical Record Card updated.')
+        res.redirect('/student/medical-record-card')
     } catch (err) {
         next(err);
     }
