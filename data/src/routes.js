@@ -9,6 +9,7 @@ const express = require('express');
 let router = express.Router();
 router.use(require('./routes/public'));
 router.use(require('./routes/student'));
+router.use(require('./routes/admin'));
 
 
 // 404 Page

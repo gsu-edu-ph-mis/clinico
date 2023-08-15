@@ -17,6 +17,7 @@ const passwordMan = require('../password-man')
 let router = express.Router()
 
 router.use('/admin', middlewares.requireAuthUser)
+
 router.use('/admin', async (req, res, next) => {
     res.locals.title = "Admin Portal"
     next()

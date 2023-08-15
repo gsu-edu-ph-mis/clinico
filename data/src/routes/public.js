@@ -300,7 +300,10 @@ router.post('/login', async (req, res, next) => {
         if (user.roles.includes('student')) {
             return res.redirect('/student/home')
         }
-        if (user.roles.includes('clinical')) {
+        if (user.roles.includes('admin')) {
+            return res.redirect('/admin/home')
+        }
+        if (user.roles.includes('clinic')) {
             return res.redirect('/admin/home')
         }
        

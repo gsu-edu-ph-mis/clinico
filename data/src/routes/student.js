@@ -17,7 +17,7 @@ const passwordMan = require('../password-man')
 let router = express.Router()
 
 router.use('/student', middlewares.requireAuthUser)
-router.use('/student', async (req, res, next) => {
+router.use('/student', middlewares.guardRoute(['use_student_account']), middlewares.requireAssocStudent, async (req, res, next) => {
     res.locals.title = "Student Portal"
     next()
 })
