@@ -1,0 +1,143 @@
+{% extends "document-print.html" %}
+
+{% block body %}
+<div class="a4">
+    <div class="d-flex text-center align-items-center letter-head mb-4">
+        <div style="width: 20%;">
+            <img src="/images/logo.png" width="90" alt="GSU">
+        </div>
+        <div style="width: 40%;">
+            <div>Republic of the Philippines</div>
+            <div class="s1 text-uppercase">Guimaras State University</div>
+            <div>Mc Lain, Buenavista, Guimaras</div>
+        </div>
+        <div style="width: 20%;">
+            <img src="/images/pab.jpg" width="100" alt="PAB">
+        </div>
+        <div style="width: 20%;">
+            <table class="table-doc-code mb-1" width="90%">
+                <tr>
+                    <th>Document Code No.</th>
+                </tr>
+                <tr>
+                    <td class="s1">FM-DPM-GSU-DHS-05</td>
+                </tr>
+            </table>
+
+            <table class="table-doc-code" width="90%">
+                <tr>
+                    <th>Rev. No.</th>
+                    <th>Effective Date</th>
+                    <th>Page No.</th>
+                </tr>
+                <tr>
+                    <td>04</td>
+                    <td>09 JAN 2023</td>
+                    <td>1 of 1</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="text-center">
+        <h1 class="h1 mb-0">University Clinic</h1>
+        <h2 class="h2">(Medical Record Card)</h2>
+    </div>
+    <div class="d-flex mb-5">
+        <div style="width: 67%;"></div>
+        <div>MRC No.:</div>
+        <div class="underline" style="width: 13%;"></div>
+    </div>
+    <div class="d-flex">
+        <div style="width: 7%;">Name</div>
+        <div class="underline d-flex text-center" style="width: 71%;">
+            <div style="width: 33%;">{{medicalRecord.lastName}}</div>
+            <div style="width: 33%;">{{medicalRecord.firstName}}</div>
+            <div style="width: 33%;">{{medicalRecord.middleName}}</div>
+        </div>
+        <div style="width: 4%;">Age</div>
+        <div class="underline text-center" style="width: 18%;">{{medicalRecord.birthDate|age}}</div>
+    </div>
+    <div class="d-flex mb-3">
+        <div style="width: 7%;"></div>
+        <div class="d-flex text-center smol" style="width: 71%;">
+            <div style="width: 33%;">(Surname)</div>
+            <div style="width: 33%;">(Given Name)</div>
+            <div style="width: 33%;">(Middle Name)</div>
+        </div>
+        <div style="width: 4%;"></div>
+        <div style="width: 18%;"></div>
+    </div>
+    
+    <div class="d-flex mb-3">
+        <div style="width: 22%;">Course Taken/Position</div>
+        <div class="underline text-center" style="width: 31%;" contenteditable="true">{{medicalRecord.course}}</div>
+        <div style="width: 8%;">Address</div>
+        <div class="underline text-center" style="width: 39%;" contenteditable="true">{{medicalRecord.address}}</div>
+    </div>
+    <div class="d-flex mb-3">
+        <div style="width: 7%;">Gender</div>
+        <div class="underline text-center" style="width: 23%;" contenteditable="true">{{medicalRecord.gender}}</div>
+        <div style="width: 12%;">Civil Status</div>
+        <div class="underline text-center" style="width: 19%;" contenteditable="true">{{medicalRecord.civilStatus}}</div>
+        <div style="width: 13%;">Date of Birth</div>
+        <div class="underline text-center" style="width: 26%;" contenteditable="true">{{medicalRecord.birthDate|format_date('MMM DD, YYYY')}}</div>
+    </div>
+
+    <div class="d-flex mb-3">
+        <div style="width: 12%;">Citizenship</div>
+        <div class="underline text-center" style="width: 34%;" contenteditable="true">{{medicalRecord.citizenship}}</div>
+        <div style="width: 9%;">Religion</div>
+        <div class="underline text-center" style="width: 45%;" contenteditable="true">{{medicalRecord.religion}}</div>
+    </div>
+    <div class="d-flex mb-3 align-items-start">
+        <div style="width: 27%;">Allergy to Medicines/Food</div>
+        <div class="underline text-center" style="width: 29%;" contenteditable="true">{{medicalRecord.allergiesFormatted}}</div>
+        <div style="width: 19%;">Handedness: Right</div>
+        <div class="underline text-center" style="width: 9%;" contenteditable="true">{% if medicalRecord.handedness == 'R' %}✓{% endif %}</div>
+        <div style="width: 4%;">Left</div>
+        <div class="underline text-center" style="width: 12%;" contenteditable="true">{% if medicalRecord.handedness == 'L' %}✓{% endif %}</div>
+    </div>
+    <div class="d-flex mb-3 align-items-start">
+        <div style="width: 19%;">Parent or Guardian</div>
+        <div class="underline text-center" style="width: 42%;" contenteditable="true">{{medicalRecord.parentName}}</div>
+        <div style="width: 17%;">Contact Number</div>
+        <div class="underline text-center" style="width: 23%;" contenteditable="true">{{medicalRecord.parentPhoneNumber}}</div>
+    </div>
+    <div class="d-flex mb-5 align-items-start">
+        <div style="width: 36%;">In Case of Emergency, please notify</div>
+        <div class="underline text-center" style="width: 25%;" contenteditable="true">{{medicalRecord.parentName}}</div>
+        <div style="width: 17%;">Contact Number</div>
+        <div class="underline text-center" style="width: 22%;" contenteditable="true">{{medicalRecord.parentPhoneNumber}}</div>
+    </div>
+    <div class="cooper text-uppercase text-center">Clinical Record</div>
+    <table class="table-records mb-4">
+        <tr>
+            <th width="width: 17%">Date</th>
+            <th width="width: 23%">Complaints</th>
+            <th width="width: 36%">Treatment/Care Given</th>
+            <th>Diagnosis/ Remark</th>
+        </tr>
+        {% for record in [1,2,3,4,5,6,7,8,9,10,11,12,13] %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        {% endfor %}
+
+    </table>
+    <div class="cooper text-uppercase text-center">Relevance Data About Health History</div>
+    <div class="underline w-100">&nbsp;</div>
+    <div class="underline w-100">&nbsp;</div>
+    <div class="underline w-100">&nbsp;</div>
+    <div class="underline w-100">&nbsp;</div>
+
+</div>
+{% endblock %}
+{% block scripts %}
+{{super}}
+<script>
+    window.print()
+</script>
+{% endblock %}

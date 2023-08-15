@@ -1,0 +1,89 @@
+/* See https://stackoverflow.com/questions/49785039/printing-bootstrap-4-html-page-in-chrome-cuts-off-chrome-header-footers */
+@page {
+    size: A4;
+}
+@media print {
+    html, body {
+        width: 210mm;
+        height: 297mm;
+    }
+}
+
+body {
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+}
+.cooper {
+    font-family: 'Cooper Std', serif;
+    font-size: 18px;
+}
+.h1 {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.h2 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.underline {
+    border-bottom: 1px solid black;
+    opacity: 0.9;
+}
+.tunderline {
+    text-decoration: underline;
+}
+.smol {
+    font-size: 14px;
+}
+/* 793.7px by 1122.52 */
+.a4 {
+    /* border: 1px dashed #ccc; */
+    padding: 64px;
+}
+
+.table-records {
+    width: 100%;
+}
+.table-records th {
+    text-transform: uppercase;
+    font-weight: normal;
+    padding: 0px 3px;
+    text-align: center;
+}
+.table-records th,
+.table-records td {
+    border: 1px solid black;
+}
+.table-records td {
+    height: 22px;
+}
+.letter-head {
+    font-size: 14px;
+    font-family: sans-serif;
+}
+.letter-head .s1 {
+    font-weight: bold;
+    font-size: 14px;
+
+}
+
+.table-doc-code {
+    font-family: 'Times New Roman', serif;
+    font-size: 10px;
+}
+.table-doc-code th {
+    background: #001968;
+    color: #fff;
+}
+.table-doc-code th,
+.table-doc-code td {
+    border: 1px solid black
+}
+
+.table-doc-code .s1 {
+    font-weight: bold;
+    font-size: 14px;
+
+}

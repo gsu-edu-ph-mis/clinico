@@ -94,9 +94,13 @@ const extended = (env)=>{
      * Format date using moment format.
      */
     env.addFilter('format_date', function (value, format, timeZone = '+0800') {
-        let formatted = moment(value).utcOffset(timeZone).format(format);
+        let mDate = moment(value, format, true)
+        if(!mDate.isValid()){
+            return ''
+        }
+        let formatted = mDate.utcOffset(timeZone).format(format);
         if (formatted === "Invalid date") {
-            return null;
+            return '';
         }
         return formatted;
     });

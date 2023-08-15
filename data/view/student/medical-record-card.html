@@ -21,78 +21,83 @@
 <div class="row">
     <div class="col-12 min-height-500 p-3 pb-3">
         {% include 'parts/flash.html' %}
-        <div class="jumbotron pt-4 p-3">
-            <p class="lead mb-0">{{medicalRecord.firstName}} {{medicalRecord.middleName|first}}. {{medicalRecord.lastName}} {{medicalRecord.suffix}}</p>
-            <div class="mb-4 pl-1"><em>{{medicalRecord.address}}</em></div>
+        {% if not medicalRecord %}
+            <div class="alert alert-danger">Not filled-up yet. <a href="/student/update-medical-record">Add</a></div>
+        {% else %}
+            <div class="jumbotron pt-4 p-3">
+                <p class="lead mb-0">{{medicalRecord.firstName}} {{medicalRecord.middleName|first}}. {{medicalRecord.lastName}} {{medicalRecord.suffix}}</p>
+                <div class="mb-4 pl-1"><em>{{medicalRecord.address}}</em></div>
+                
+                <table class="table table-sm">
+                    <tr>
+                        <td class="text-right">Age</td>
+                        <td>{{medicalRecord.birthDate|age}} yrs <em>({{medicalRecord.birthDate|format_date('MMM DD, YYYY')}})</em></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Gender</td>
+                        <td>{{medicalRecord.gender}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Civil Status</td>
+                        <td>{{medicalRecord.civilStatus}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Citizenship</td>
+                        <td>{{medicalRecord.citizenship}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Religion</td>
+                        <td>{{medicalRecord.religion}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Course</td>
+                        <td>{{medicalRecord.course}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">FB/Messenger</td>
+                        <td>{{medicalRecord.fb}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Phone</td>
+                        <td>{{medicalRecord.mobileNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Parent/Guardian</td>
+                        <td>{{medicalRecord.parentName}} -  {{medicalRecord.parentPhoneNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Emergency Person</td>
+                        <td>{{medicalRecord.emergencyPerson}} -  {{medicalRecord.emergencyPersonPhoneNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Handedness</td>
+                        <td>{{medicalRecord.handedness|replace('R', 'Right-handed')|replace('L', 'Left-handed')}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Allergies</td>
+                        <td>
+                            {% if medicalRecord.allergies.includes('None') %}
+                            None <br>
+                            {% endif %}
+                            {% if medicalRecord.allergies.includes('Food') %}
+                                Food - {{medicalRecord.allergyDetails.Food}} <br>
+                            {% endif %}
+                            {% if medicalRecord.allergies.includes('Medicine') %}
+                                Medicine - {{medicalRecord.allergyDetails.Medicine}} <br>
+                            {% endif %}
+                            {% if medicalRecord.allergies.includes('Others') %}
+                                Others - {{medicalRecord.allergyDetails.Others}} <br>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
             
-            <table class="table table-sm">
-                <tr>
-                    <td class="text-right">Age</td>
-                    <td>{{medicalRecord.birthDate|age}} yrs <em>({{medicalRecord.birthDate|format_date('MMM DD, YYYY')}})</em></td>
-                </tr>
-                <tr>
-                    <td class="text-right">Gender</td>
-                    <td>{{medicalRecord.gender}}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Civil Status</td>
-                    <td>{{medicalRecord.civilStatus}}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Citizenship</td>
-                    <td>{{medicalRecord.citizenship}}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Religion</td>
-                    <td>{{medicalRecord.religion}}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Course</td>
-                    <td>{{medicalRecord.course}}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">FB/Messenger</td>
-                    <td>{{medicalRecord.fb}}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Phone</td>
-                    <td>{{medicalRecord.mobileNumber}}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Parent/Guardian</td>
-                    <td>{{medicalRecord.parentName}} -  {{medicalRecord.parentPhoneNumber}}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Emergency Person</td>
-                    <td>{{medicalRecord.emergencyPerson}} -  {{medicalRecord.emergencyPersonPhoneNumber}}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Handedness</td>
-                    <td>{{medicalRecord.handedness|replace('R', 'Right-handed')|replace('L', 'Left-handed')}}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Allergies</td>
-                    <td>
-                        {% if medicalRecord.allergies.includes('None') %}
-                        None <br>
-                        {% endif %}
-                        {% if medicalRecord.allergies.includes('Food') %}
-                            Food - {{medicalRecord.allergyDetails.Food}} <br>
-                        {% endif %}
-                        {% if medicalRecord.allergies.includes('Medicine') %}
-                            Medicine - {{medicalRecord.allergyDetails.Medicine}} <br>
-                        {% endif %}
-                        {% if medicalRecord.allergies.includes('Others') %}
-                            Others - {{medicalRecord.allergyDetails.Others}} <br>
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
-           
-            <div class="text-center">
-                <a class="btn btn-success" href="/student/update-medical-record" role="button">Edit</a>
+                <div class="text-center">
+                    <a class="btn btn-success" href="/student/update-medical-record" role="button">Edit</a>
+                </div>
             </div>
-        </div>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}

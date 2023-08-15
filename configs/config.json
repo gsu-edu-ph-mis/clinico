@@ -1,6 +1,6 @@
 {
     "app": {
-        "title": "ClinicO",
+        "title": "Clinic Online",
         "description": "Guimaras State University - Clinic Online",
         "port": "9098",
         "url": "http://localhost:9098",
@@ -29,7 +29,7 @@
         }
     },
     "session": {
-        "name": "gsc_hr_is_app_sid",
+        "name": "gsu_clinico_app_sid",
         "store": {
             "db": "sessions.db",
             "dir": "${APP_DIR}/data"

@@ -22,21 +22,28 @@
         <div class="jumbotron mb-3">
             <p class="lead">Welcome {{user.firstName}},</p>
             <hr class="my-4">
+            <div class="text-center mb-3">
+              <img src="/images/personal.png" class="w-50 h-auto m-auto" alt="">
+            </div>
             <p>Please keep your Medical Record Card updated.</p>
             <a class="btn btn-success" href="/student/update-medical-record" role="button">Update Record</a>
         </div>
         <!--  -->
         <div class="form-row">
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="card mb-3">
                 <div class="card-body">
                   <h5 class="card-title">Vaccination Info</h5>
-                  <p class="card-text">Update your vaccination information from 1st dose to booster shots.</p>
-                  <a href="#" class="btn btn-sm btn-success">Update</a>
+                  <div class="text-center mb-3">
+                    <img src="/images/vax.png" class="w-50 h-auto m-auto" alt="vax">
+                  </div>
+                  <p class="card-text">Update your vaccination information from your 1st dose up to the booster shots.</p>
+                  <!-- <a href="#" class="btn btn-sm btn-success">Update</a> -->
+                  <button class="btn btn-sm btn-success" disabled>Update</button>
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="card mb-3">
                 <div class="card-body">
                   <h5 class="card-title">Contact Info</h5>
@@ -44,7 +51,7 @@
                   <a href="#" class="btn btn-sm btn-success">Update</a>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
       
     </div>

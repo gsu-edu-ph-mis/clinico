@@ -3,7 +3,7 @@
 //// External modules
 const lodash = require('lodash');
 const nunjucks = require('nunjucks');
-const nunjucksFilters = require('nunjucks-filters');
+const nunjucksFilters = require('./nunjucks-filters');
 const moment = require('moment');
 
 //// Modules

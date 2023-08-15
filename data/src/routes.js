@@ -18,7 +18,7 @@ router.use((req, res) => {
     if (req.xhr || /^\/api\//.test(req.originalUrl)) {
         return res.send("Page not found.")
     }
-    res.render('error.html', { error: "Page not found." });
+    res.render('error-404.html', { error: "Page not found." });
 });
 
 

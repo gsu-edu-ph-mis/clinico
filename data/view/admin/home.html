@@ -1,0 +1,21 @@
+{% extends "document-admin.html" %}
+
+{% block body %}
+<div id="vApp" v-cloak v-bind:data-pending="pending" class="bg-white col-md-12">
+    {% include 'parts/flash.html' %}
+    <h1 class="h4">asasas</h1>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    var vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [],
+        data: {
+            pending: false
+        }
+    })
+</script>
+{% endblock %}

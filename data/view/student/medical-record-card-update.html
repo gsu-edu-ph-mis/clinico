@@ -21,11 +21,53 @@
 </div>
 <div class="row">
     <div class="col-12 min-height-500 p-3 pb-3">
+        {% include 'parts/flash.html' %}
         <div id="vApp" v-cloak :data-pending="pending" class="jumbotron p-3">
             <form ref="frmMedCard" v-on:submit.prevent="onSubmit($event)" action="/student/update-medical-record" method="post">
                 <template v-if="page==1">
                     <p class="lead text-center">Personal Details</p>
+                    <div class="text-center mb-3">
+                        <img v-if="gender==='M'" src="/images/mrc.png" class="w-50 h-auto m-auto" width="300" height="300" alt="personal">
+                        <img v-else src="/images/personal.png" class="w-50 h-auto m-auto" width="300" height="300" alt="personal">
+                    </div>
                     <hr>
+                    <div class="form-row">
+                        <div class="col-6">
+                            <div class="form-group" :data-error="errors.firstName" @click="errors.firstName=false">
+                                <label for="firstName">First Name</label>
+                                <input v-model="firstName" name="firstName" id="firstName" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group" :data-error="errors.middleName" @click="errors.middleName=false">
+                                <label for="middleName">Middle Name</label>
+                                <input v-model="middleName" name="middleName" id="middleName" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-6">
+                            <div class="form-group" :data-error="errors.lastName" @click="errors.lastName=false">
+                                <label for="lastName">Last Name</label>
+                                <input v-model="lastName" name="lastName" id="lastName" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group" :data-error="errors.suffix" @click="errors.suffix=false">
+                                <label for="suffix">Suffix</label>
+                                <select v-model="suffix" name="suffix" id="suffix" class="form-control">
+                                    <option value=""></option>
+                                    <option>Jr.</option>
+                                    <option>Sr.</option>
+                                    <option>II</option>
+                                    <option>III</option>
+                                    <option>IV</option>
+                                    <option>V</option>
+                                    <option>VI</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-row">
                         <div class="col-6">
                             <div class="form-group" :data-error="errors.gender" @click="errors.gender=false">
@@ -80,6 +122,9 @@
                 </template>
                 <template v-if="page==2">
                     <p class="lead text-center">Contact Details</p>
+                    <div class="text-center mb-3">
+                        <img src="/images/contact.png" class="w-50 h-auto m-auto" width="300" height="300" alt="contact">
+                    </div>
                     <hr>
                     <div class="form-group" :data-error="errors.fb" @click="errors.fb=false">
                         <label for="fb">Facebook/Messenger Name</label>
@@ -130,6 +175,9 @@
                 </template>
                 <template v-if="page==3">
                     <p class="lead text-center">Health Information</p>
+                    <div class="text-center mb-3">
+                        <img src="/images/health.png" class="w-50 h-auto m-auto" width="300" height="300" alt="health">
+                    </div>
                     <hr>
                     <div class="form-group" :data-error="errors.handedness" @click="errors.handedness=false">
                         <label for="handedness">Handedness</label>
@@ -157,24 +205,6 @@
                         </div>
                     </div>
                     
-                    <!-- <div class="form-group">
-                        <div v-if="allergies.length <= 0">
-                            
-                            <p class="h6">No allergy listed. <button type="button">Add</button></p>
-                        </div>
-                        <div v-else class="table-responsive">
-                            <table class="table table-sm table-striped table-bordered">
-                                <tr>
-                                    <th>Allergies</th>
-                                    <th></th>
-                                </tr>
-                                <tr v-for="a in allergies">
-                                    <td>${a}</td>
-                                    <td>${allergyDetails[a]}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div> -->
                     <div class="text-center d-flex">
                         <input :value="payload" type="hidden" name="payload" />
                         <button id="btnBack" type="button" @click="page=2" class="btn btn-sm btn-light mr-1">
@@ -198,10 +228,10 @@
         data: {
             pending: false,
             page: 1,
-            // firstName: '',
-            // middleName: '',
-            // lastName: '',
-            // suffix: '',
+            firstName: `{{medicalRecord.firstName}}`,
+            middleName: `{{medicalRecord.middleName}}`,
+            lastName: `{{medicalRecord.lastName}}`,
+            suffix: `{{medicalRecord.suffix}}`,
             gender: `{{medicalRecord.gender}}`,
             civilStatus: `{{medicalRecord.civilStatus|default('Single', true)}}`,
             birthDate: `{{medicalRecord.birthDate|format_date('YYYY-MM-DD')}}`,
@@ -237,6 +267,11 @@
             handedness: `{{medicalRecord.handedness|default('R', true)}}`,
 
             errors: {
+                firstName: false,
+                middleName: false,
+                lastName: false,
+                suffix: false,
+
                 gender: false,
                 civilStatus: false,
                 birthDate: false,
@@ -266,6 +301,11 @@
                 const me = this 
 
                 return JSON.stringify({
+                    firstName: me.firstName,
+                    middleName: me.middleName,
+                    lastName: me.lastName,
+                    suffix: me.suffix,
+
                     gender: me.gender,
                     civilStatus: me.civilStatus,
                     birthDate: me.birthDate,
@@ -326,6 +366,24 @@
                     const me = this 
 
                     if(e?.submitter?.id === 'btnNext1'){
+                        if(!me.firstName){
+                            me.errors.firstName = true
+                            throw new Error('First Name is required.')
+                        }
+                        if(!me.middleName){
+                            me.errors.middleName = true
+                            throw new Error('Middle Name is required.')
+                        } else {
+                            me.middleName = me.middleName.trim()
+                            if(me.middleName.at(-1) == '.' || me.middleName.length <= 1){
+                                me.errors.middleName = true
+                                throw new Error('Please write your Middle Name in full.')
+                            } 
+                        }
+                        if(!me.lastName){
+                            me.errors.lastName = true
+                            throw new Error('Last Name is required.')
+                        }
                         if(!me.gender){
                             me.errors.gender = true
                             throw new Error('Gender is required.')

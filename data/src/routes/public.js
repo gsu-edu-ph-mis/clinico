@@ -25,7 +25,7 @@ router.get('/', middlewares.requireAuthUser, async (req, res, next) => {
                 return res.redirect('/student/home')
             }
             if (user.roles.includes('admin')) {
-                return res.redirect('/admin/home')
+                return res.redirect('/admin/student/all')
             }
 
         }
@@ -300,12 +300,7 @@ router.post('/login', async (req, res, next) => {
         if (user.roles.includes('student')) {
             return res.redirect('/student/home')
         }
-        if (user.roles.includes('admin')) {
-            return res.redirect('/admin/home')
-        }
-        if (user.roles.includes('clinic')) {
-            return res.redirect('/admin/home')
-        }
+        
        
         return res.redirect('/');
     } catch (err) {
@@ -370,7 +365,7 @@ router.post('/forgot', async (req, res, next) => {
         // Find admin
         let user = await req.app.locals.db.main.User.findOne({ email: email });
         if (!user) {
-            throw new Error('Email not found. Please use the email that you registered with HRIS.')
+            throw new Error('Email not found. Please use the email that you use to register.')
         }
 
         if (!user.active) {

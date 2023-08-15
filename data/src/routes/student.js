@@ -55,9 +55,12 @@ router.get('/student/update-medical-record', async (req, res, next) => {
             userId: user._id
         }).lean()
         if(!medicalRecord){
-            throw new Error('Not found.')
+            medicalRecord = new req.app.locals.db.main.MedicalRecord({
+                ...user.toObject()
+            })
         }
         let data = {
+            flash: flash.get(req, 'student'),
             civilStatuses: CONFIG.civilStatuses,
             medicalRecord: medicalRecord,
         }
@@ -76,6 +79,21 @@ router.post('/student/update-medical-record', async (req, res, next) => {
             throw new Error('Payload not found.')
         }
         payload = JSON.parse(payload)
+
+        if(!payload.firstName){
+            throw new Error('First Name is required.')
+        }
+        if(!payload.middleName){
+            throw new Error('Middle Name is required.')
+        } else {
+            payload.middleName = payload.middleName.trim()
+            if(payload.middleName.at(-1) == '.' || payload.middleName.length <= 1){
+                throw new Error('Please write your Middle Name in full.')
+            } 
+        }
+        if(!payload.lastName){
+            throw new Error('Last Name is required.')
+        }
 
         if(payload.allergies.includes('None')){
             payload.allergies = ['None']
@@ -108,7 +126,9 @@ router.post('/student/update-medical-record', async (req, res, next) => {
         flash.ok(req, 'student', 'Medical Record Card updated.')
         res.redirect('/student/medical-record-card')
     } catch (err) {
-        next(err);
+        flash.error(req, 'student', err.message)
+        res.redirect('/student/update-medical-record')
+        // next(err);
     }
 });
 

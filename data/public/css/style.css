@@ -89,6 +89,9 @@ a {
     color: #025aa5;
 }
 body {
+    background: #fefefe;
+}
+body.student {
     background: hsla(95, 47%, 71%, 1);
     background: linear-gradient(135deg, hsla(95, 47%, 71%, 1) 0%, hsla(168, 41%, 50%, 1) 28%, hsla(184, 62%, 39%, 1) 44%, rgb(37, 117, 182) 54%, hsla(211, 80%, 33%, 1) 100%) fixed;
 }
@@ -162,6 +165,9 @@ div[data-pending="true"]:after {
 }
 .min-height-500 {
     min-height: 500px;
+}
+.min-height-1000 {
+    min-height: 1000px;
 }
 
 /*
@@ -1678,6 +1684,10 @@ button.btn-eye[data-state="text"] svg:nth-child(2) {
     transform: translate(-50%, -50%); 
 }
 
+.text-underline {
+    text-decoration: underline;
+}
+
 /* Scanner Calendar */
 .scanner-calendar {
     text-align: center;
@@ -1763,48 +1773,13 @@ button.btn-eye[data-state="text"] svg:nth-child(2) {
     100% { transform: translate(100%, -1000px); opacity: 0; }
 }
 
-.table-scanner-logs {
-    font-size: 30px;
+.table-sm {
+    font-size: 14px;
 }
-.table-scanner-logs th {
-    color: gray;
+.table-sm tr td{
+    font-family: 'Poppins';
+    font-weight: normal;
 }
-.table-scanner-logs td {
-    color: gray;
-}
-.table-scanner-logs th.current {
-    color: #001968;
-}
-.table-scanner-logs .current {
-    color: #001968;
-}
-.scanner-kiosk .profile {
-    overflow: hidden;
-    border-radius: 100%;
-    max-width: 200px;
-    max-height: 200px;
-    margin: 0px auto 15px;
-    border: 8px solid #f8f9fa;
-    box-shadow: 2px 5px 15px #495057;
-}
-
-.scanner-kiosk .employee-name {
-    font-size: 22px;
-    color: #000;
-}
-
-/* .table-scanner-logs {
-    border-left: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-}
-.table-scanner-logs th {
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-}
-.table-scanner-logs td {
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-} */
 
 /* Breakpoints */
 /* ≥1200px Extra large */
