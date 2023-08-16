@@ -45,7 +45,7 @@
     <div class="d-flex mb-5">
         <div style="width: 67%;"></div>
         <div>MRC No.:</div>
-        <div class="underline" style="width: 13%;"></div>
+        <div class="underline" contenteditable="true" style="width: 13%;"></div>
     </div>
     <div class="d-flex">
         <div style="width: 7%;">Name</div>
@@ -117,15 +117,14 @@
             <th width="width: 36%">Treatment/Care Given</th>
             <th>Diagnosis/ Remark</th>
         </tr>
-        {% for record in [1,2,3,4,5,6,7,8,9,10,11,12,13] %}
+        {% for record in clinicalRecords %}
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{record.date|format_date('MMM. DD, YYYY')}}</td>
+                <td>{{record.complaints}}</td>
+                <td>{{record.treatment}}</td>
+                <td>{{record.diagnosis}}</td>
             </tr>
         {% endfor %}
-
     </table>
     <div class="cooper text-uppercase text-center">Relevance Data About Health History</div>
     <div class="underline w-100">&nbsp;</div>

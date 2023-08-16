@@ -1,0 +1,376 @@
+{% extends "document-admin.html" %}
+
+{% block body %}
+<div class="col-12 min-height-500 p-3 pb-3">
+    {% include 'parts/flash.html' %}
+    {% if not medicalRecord %}
+        <div class="alert alert-danger">Not filled-up yet. <a href="/student/update-medical-record">Add</a></div>
+    {% else %}
+        <div class="jumbotron pt-4 p-3">
+            <p class="lead mb-0">{{medicalRecord.firstName}} {{medicalRecord.middleName|first}}. {{medicalRecord.lastName}} {{medicalRecord.suffix}}</p>
+            <div class="mb-4 pl-1"><em>{{medicalRecord.address}}</em></div>
+            <table class="table table-sm">
+                <tr>
+                    <th class="text-right" width="15%">Age</th>
+                    <td>{{medicalRecord.birthDate|age}} yrs <em>({{medicalRecord.birthDate|format_date('MMM DD, YYYY')}})</em></td>
+                </tr>
+                <tr>
+                    <th class="text-right">Gender</th>
+                    <td>{{medicalRecord.gender}}</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Civil Status</th>
+                    <td>{{medicalRecord.civilStatus}}</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Citizenship</th>
+                    <td>{{medicalRecord.citizenship}}</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Religion</th>
+                    <td>{{medicalRecord.religion}}</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Course</th>
+                    <td>{{medicalRecord.course}}</td>
+                </tr>
+                <tr>
+                    <th class="text-right">FB/Messenger</th>
+                    <td>{{medicalRecord.fb}}</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Phone</th>
+                    <td>{{medicalRecord.mobileNumber}}</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Parent/Guardian</th>
+                    <td>{{medicalRecord.parentName}} -  {{medicalRecord.parentPhoneNumber}}</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Emergency Person</th>
+                    <td>{{medicalRecord.emergencyPerson}} -  {{medicalRecord.emergencyPersonPhoneNumber}}</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Handedness</th>
+                    <td>{{medicalRecord.handedness|replace('R', 'Right-handed')|replace('L', 'Left-handed')}}</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Allergies</th>
+                    <td>
+                        {% if medicalRecord.allergies.includes('None') %}
+                        None <br>
+                        {% endif %}
+                        {% if medicalRecord.allergies.includes('Food') %}
+                            Food - {{medicalRecord.allergyDetails.Food}} <br>
+                        {% endif %}
+                        {% if medicalRecord.allergies.includes('Medicine') %}
+                            Medicine - {{medicalRecord.allergyDetails.Medicine}} <br>
+                        {% endif %}
+                        {% if medicalRecord.allergies.includes('Others') %}
+                            Others - {{medicalRecord.allergyDetails.Others}} <br>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+            <div class="text-center">
+                <a class="btn btn-success" href="/admin/student/{{medicalRecord._id}}/update" role="button">Edit</a>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div id="vApp" v-cloak :data-pending="pending" class="jumbotron pt-4 p-3">
+            <form v-on:submit.prevent="onSubmit($event)" action="" method="post">
+                <table class="table table-bordered table-striped table-records mb-4">
+                    <tr>
+                        <th width="width: 17%">Date</th>
+                        <th width="width: 23%">Complaints</th>
+                        <th width="width: 36%">Treatment/Care Given</th>
+                        <th>Diagnosis/ Remark</th>
+                        <th></th>
+                    </tr>
+                    <tr v-for="(clinicalRecord, index) in clinicalRecords">
+                        <td>${clinicalRecord.date|format_date('MMM. DD, YYYY')}</td>
+                        <td>${clinicalRecord.complaints}</td>
+                        <td>${clinicalRecord.treatment}</td>
+                        <td>${clinicalRecord.diagnosis}</td>
+                        <td><button @click="deleteRecord(index)" class="btn btn-sm p-1 btn-danger" type="button">X</button></td>
+                    </tr>
+                    <template v-if="page===2">
+                        <tr>
+                            <td>
+                                <div class="form-group" :data-error="errors.clinicalRecordDate" @click="errors.clinicalRecordDate=false">
+                                    <input v-model="clinicalRecordDate" type="date" class="form-control">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group" :data-error="errors.clinicalRecordComplaints" @click="errors.clinicalRecordComplaints=false">
+                                    <textarea v-model="clinicalRecordComplaints" name="complaints" id="complaints" rows="3" class="form-control"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group" :data-error="errors.clinicalRecordTreatment" @click="errors.clinicalRecordTreatment=false">
+                                    <textarea v-model="clinicalRecordTreatment" name="complaints" id="complaints" rows="3" class="form-control"></textarea>
+                                </div>
+                            </td>
+                            <td colspan="2">
+                                <div class="form-group" :data-error="errors.clinicalRecordDiagnosis" @click="errors.clinicalRecordDiagnosis=false">
+                                    <textarea v-model="clinicalRecordDiagnosis" name="complaints" id="complaints" rows="3" class="form-control"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                <button @click.prevent="page=1" id="btnCancel" class="btn btn-light" type="button">Cancel</button>
+                                <button id="btnSubmit" class="btn btn-success">Save</button>
+                            </td>
+                        </tr>
+                    </template>
+                </table>
+                <div class="text-center">
+                    <button v-if="page==1" @click.prevent="page=2" class="btn btn-success" type="button">Add</button>
+                </div>
+            </form>
+        </div>
+        <hr class="my-4">
+        <div id="vApp2" v-cloak :data-pending="pending" class="jumbotron pt-4 p-3">
+            <form v-on:submit.prevent="onSubmit($event)" action="" method="post">
+                <template v-if="page==2">
+                    <div class="form-group" :data-error="errors.relevanceData" @click="errors.relevanceData=false">
+                        <label for="relevanceData">Relevance Data About Health History</label>
+                        <textarea v-model="relevanceData" name="relevanceData" id="relevanceData" rows="3" class="form-control"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button @click.prevent="page=1" id="btnCancel" class="btn btn-light" type="button">Cancel</button>
+                        <button id="btnSubmit" class="btn btn-success">Save</button>
+                    </div>
+                </template>
+                <template v-else>
+                    <p>Relevance Data About Health History:</p>
+                    <div>
+                        ${relevanceData}
+                    </div>
+                </template>
+                <div class="text-center">
+                    <button v-if="page==1" @click.prevent="page=2" class="btn btn-success" type="button">Edit</button>
+                </div>
+            </form>
+        </div>
+        <div class="text-center">
+            <a class="btn btn-light" href="/admin/student/{{medicalRecord._id}}/print" role="button">Print</a>
+            <a class="btn btn-danger" href="/admin/student/{{medicalRecord._id}}/delete" role="button">Delete</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    let vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [],
+        filters: {
+            format_date: function (value, format, timeZone = '+0800') {
+                let formatted = moment(value).utcOffset(timeZone).format(format);
+                if (formatted === "Invalid date") {
+                    return '';
+                }
+                return formatted;
+            }
+        },
+        data: {
+            pending: false,
+            page: 1,
+            clinicalRecordDate: ``,
+            clinicalRecordComplaints: ``,
+            clinicalRecordTreatment: ``,
+            clinicalRecordDiagnosis: ``,
+            
+            clinicalRecords: {{medicalRecord.clinicalRecords|default([], true)|stringify|safe}},
+
+            errors: {
+                clinicalRecordDate: false,
+                clinicalRecordComplaints: false,
+                clinicalRecordTreatment: false,
+                clinicalRecordDiagnosis: false,
+            },
+        },
+        mounted: function(){
+            const me = this 
+
+            // me.clinicalRecordDate = '1986-09-15'
+            // me.clinicalRecordComplaints = 'Lorem'
+            // me.clinicalRecordTreatment = 'Ipsum'
+            // me.clinicalRecordDiagnosis = 'asas'
+            // me.page =2
+           
+        },
+        methods: {
+            deleteRecord:  function(i){
+                const me = this;
+                me.pending = true;
+                me.$nextTick(function() {
+                    fetch(`/admin/student/{{medicalRecord._id}}/clinical-record/delete`, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            _id: me.clinicalRecords[i]._id,
+                            acsrf: '{{acsrf}}',
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    }).then(async function(response){
+                        if (response.ok) {
+                            me.$delete(me.clinicalRecords, i)
+                            alert('Deleted.')
+                        } else {
+                            throw new Error(await response.text())
+                        }
+                    }).catch(async function(error){
+                        console.error(error)
+                        alert(error);
+                    }).then(function(){
+                        me.pending = false
+                    });
+                });
+            },
+            onSubmit: function(e){
+                try {
+                    const me = this 
+                    if(e?.submitter?.id === 'btnSubmit'){
+                        if(!me.clinicalRecordDate){
+                            me.errors.clinicalRecordDate = true
+                            throw new Error(`Date is required.`)
+                        }
+                        if(!me.clinicalRecordComplaints){
+                            me.errors.clinicalRecordComplaints = true
+                            throw new Error(`Complaints field is required.`)
+                        }
+                        if(!me.clinicalRecordTreatment) {
+                            me.errors.clinicalRecordTreatment = true
+                            throw new Error(`Treatment/Care Given field is required.`)
+                        }
+                        if(!me.clinicalRecordDiagnosis) {
+                            me.errors.clinicalRecordDiagnosis = true
+                            throw new Error(`Diagnosis/Remark field is required.`)
+                        }
+                        
+                        me.pending = true;
+                        me.$nextTick(function() {
+                            // me.$refs.frmClinicalRecord.submit();
+                            fetch(`/admin/student/{{medicalRecord._id}}/clinical-record/create`, {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    date: me.clinicalRecordDate,
+                                    complaints: me.clinicalRecordComplaints,
+                                    treatment: me.clinicalRecordTreatment,
+                                    diagnosis: me.clinicalRecordDiagnosis,
+                                }),
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            }).then(async function(response){
+                                if (response.ok) {
+                                    return response.json();
+                                }
+                                throw new Error(await response.text())
+                                
+                            }).then(function(responseJson){
+                                alert('Added.')
+                                me.clinicalRecords.push(responseJson)
+
+                                me.clinicalRecordDate = ''
+                                me.clinicalRecordComplaints = ''
+                                me.clinicalRecordTreatment = ''
+                                me.clinicalRecordDiagnosis = ''
+                                me.page = 1
+
+                            }).catch(async function(error){
+                                console.error(error)
+                                alert(error);
+                            }).then(function(){
+                                me.pending = false
+                                // window.location.reload(false); //refresh//
+                            });
+                        });
+                    }
+                } catch (err) {
+                    // console.error(err)
+                    alert(err.message)
+                }
+            }
+        }
+    });
+
+    let vApp2 = new Vue({
+        el: '#vApp2',
+        delimiters: ["${", "}"],
+        mixins: [],
+        filters: {
+            format_date: function (value, format, timeZone = '+0800') {
+                let formatted = moment(value).utcOffset(timeZone).format(format);
+                if (formatted === "Invalid date") {
+                    return '';
+                }
+                return formatted;
+            }
+        },
+        data: {
+            pending: false,
+            page: 1,
+            relevanceData: `{{medicalRecord.relevanceData}}`,
+            errors: {
+                relevanceData: false,
+            },
+        },
+        mounted: function(){
+            const me = this 
+            // me.relevanceData = 'Lorem'
+            // me.page =2
+        },
+        methods: {
+            
+            onSubmit: function(e){
+                try {
+                    const me = this 
+                    if(e?.submitter?.id === 'btnSubmit'){
+                        me.pending = true;
+                        me.$nextTick(function() {
+                            fetch(`/admin/student/{{medicalRecord._id}}/relevance-data/create`, {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    relevanceData: me.relevanceData,
+                                }),
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            }).then(async function(response){
+                                if (response.ok) {
+                                    return response.json();
+                                }
+                                throw new Error(await response.text())
+                                
+                            }).then(function(responseJson){
+                                alert('Saved.')
+                                me.page = 1
+
+                            }).catch(async function(error){
+                                console.error(error)
+                                alert(error);
+                            }).then(function(){
+                                me.pending = false
+                                // window.location.reload(false); //refresh//
+                            });
+                        });
+                    }
+                } catch (err) {
+                    // console.error(err)
+                    alert(err.message)
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

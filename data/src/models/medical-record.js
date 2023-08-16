@@ -99,6 +99,18 @@ const schema = new Schema({
     },
     allergies: [],
     allergyDetails: {},
+    clinicalRecords: [{
+        _id: mongoose.Schema.Types.ObjectId,
+        date: Date,
+        complaints: String,
+        treatment: String,
+        diagnosis: String,
+    }],
+    relevanceData: {
+        $type: String,
+        trim: true,
+        default: ''
+    },
     userId: {
         $type: mongoose.Schema.Types.ObjectId, // assoc. user account 
     },

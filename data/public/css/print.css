@@ -38,10 +38,10 @@ body {
     font-size: 14px;
 }
 /* 793.7px by 1122.52 */
-.a4 {
+/* .a4 { */
     /* border: 1px dashed #ccc; */
-    padding: 64px;
-}
+    /* padding: 64px; */
+/* } */
 
 .table-records {
     width: 100%;
@@ -55,6 +55,8 @@ body {
 .table-records th,
 .table-records td {
     border: 1px solid black;
+    padding: 3px 4px;
+    line-height: 1.1;
 }
 .table-records td {
     height: 22px;

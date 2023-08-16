@@ -22,9 +22,9 @@
                     </template>
                 </td>
                 <td>
-                    <a class="text-underline" :href="`/admin/student/${student._id}/update`">${student.lastName}</a>, 
-                    <a class="text-underline" :href="`/admin/student/${student._id}/update`">${student.firstName}</a> 
-                    <a class="text-underline" :href="`/admin/student/${student._id}/update`">${student.middleName}</a>
+                    <a class="text-underline" :href="`/admin/student/${student._id}/view`">${student.lastName}</a>, 
+                    <a class="text-underline" :href="`/admin/student/${student._id}/view`">${student.firstName}</a> 
+                    <a class="text-underline" :href="`/admin/student/${student._id}/view`">${student.middleName}</a>
                 </td>
                 <td>${student.course}</td>
                 <td>
@@ -33,7 +33,7 @@
                           ...
                         </button>
                         <div class="dropdown-menu">
-                          <a class="dropdown-item" :href="`/admin/student/${student._id}/update`">Edit</a>
+                          <a class="dropdown-item" :href="`/admin/student/${student._id}/view`">View</a>
                           <a class="dropdown-item" :href="`/admin/student/${student._id}/print`">Print</a>
                           <div class="dropdown-divider"></div>
                           <a class="dropdown-item text-danger" :href="`/admin/student/${student._id}/delete`">Delete</a>
@@ -42,7 +42,7 @@
                 </td>
             </tr>
         </table>
-    </div>
+    </div> 
 </div>
 {% endblock %}
 {% block scripts %}

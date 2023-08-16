@@ -1,0 +1,463 @@
+{% extends "document-admin.html" %}
+
+{% block body %}
+<div class="col-12 min-height-500 p-3 pb-3">
+    {% include 'parts/flash.html' %}
+    <div id="vApp" v-cloak :data-pending="pending" class="jumbotron p-3">
+        <form ref="frmMedCard" v-on:submit.prevent="onSubmit($event)" action="/admin/student/{{medicalRecord._id}}/update" method="post">
+            <template v-if="page==1">
+                <p class="lead text-center">Personal Details</p>
+                <hr>
+                <div class="form-row">
+                    <div class="col-6">
+                        <div class="form-group" :data-error="errors.firstName" @click="errors.firstName=false">
+                            <label for="firstName">First Name</label>
+                            <input v-model="firstName" name="firstName" id="firstName" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group" :data-error="errors.middleName" @click="errors.middleName=false">
+                            <label for="middleName">Middle Name</label>
+                            <input v-model="middleName" name="middleName" id="middleName" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6">
+                        <div class="form-group" :data-error="errors.lastName" @click="errors.lastName=false">
+                            <label for="lastName">Last Name</label>
+                            <input v-model="lastName" name="lastName" id="lastName" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group" :data-error="errors.suffix" @click="errors.suffix=false">
+                            <label for="suffix">Suffix</label>
+                            <select v-model="suffix" name="suffix" id="suffix" class="form-control">
+                                <option value=""></option>
+                                <option>Jr.</option>
+                                <option>Sr.</option>
+                                <option>II</option>
+                                <option>III</option>
+                                <option>IV</option>
+                                <option>V</option>
+                                <option>VI</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6">
+                        <div class="form-group" :data-error="errors.gender" @click="errors.gender=false">
+                            <label for="gender">Gender</label>
+                            <select v-model="gender" name="gender" id="gender" class="form-control">
+                                <option value=""></option>
+                                <option value="F">Female</option>
+                                <option value="M">Male</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group" :data-error="errors.civilStatus" @click="errors.civilStatus=false">
+                            <label for="civilStatus">Civil Status</label>
+                            <select v-model="civilStatus" name="civilStatus" id="civilStatus" class="form-control">
+                                <option v-for="civilStatus in civilStatuses">${civilStatus}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6">
+                        <div class="form-group" :data-error="errors.birthDate" @click="errors.birthDate=false">
+                            <label for="birthDate">Birthdate</label>
+                            <input v-model="birthDate" name="birthDate" id="birthDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group" :data-error="errors.citizenship" @click="errors.citizenship=false">
+                            <label for="citizenship">Citizenship</label>
+                            <input v-model="citizenship" name="citizenship" id="citizenship" type="text" class="form-control">
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="form-group" :data-error="errors.religion" @click="errors.religion=false">
+                    <label for="religion">Religion</label>
+                    <input v-model="religion" name="religion" id="religion" type="text" class="form-control">
+                </div>
+                <div class="form-group" :data-error="errors.course" @click="errors.course=false">
+                    <label for="course">Course</label>
+                    <input v-model="course" name="course" id="course" type="text" class="form-control">
+                </div>
+                <div class="form-group" :data-error="errors.address" @click="errors.address=false">
+                    <label for="address">Address</label>
+                    <input v-model="address" name="address" id="address" type="text" class="form-control">
+                </div>
+                
+                <div class="text-center d-flex">
+                    <button id="btnNext1" class="btn btn-success d-block w-100 mr-1">Next</button>
+                </div>
+            </template>
+            <template v-if="page==2">
+                <p class="lead text-center">Contact Details</p>
+                <hr>
+                <div class="form-group" :data-error="errors.fb" @click="errors.fb=false">
+                    <label for="fb">Facebook/Messenger Name</label>
+                    <input v-model="fb" name="fb" id="fb" type="text" class="form-control">
+                </div>
+                <div class="form-group" :data-error="errors.mobileNumber" @click="errors.mobileNumber=false">
+                    <label for="mobileNumber">Phone Number</label>
+                    <input v-model="mobileNumber" name="mobileNumber" id="mobileNumber" type="text" class="form-control">
+                </div>
+                <div class="form-row">
+                    <div class="col-7">
+                        <div class="form-group" :data-error="errors.parentName" @click="errors.parentName=false">
+                            <label for="parentName">Parent/Guardian Name</label>
+                            <input v-model="parentName" name="parentName" id="parentName" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="form-group" :data-error="errors.parentPhoneNumber" @click="errors.parentPhoneNumber=false">
+                            <label for="parentPhoneNumber">Contact No.</label>
+                            <input v-model="parentPhoneNumber" name="parentPhoneNumber" id="parentPhoneNumber" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12">
+                        <small><em>In case of emergency, contact this person</em></small>
+                    </div>
+                    <div class="col-7">
+                        <div class="form-group" :data-error="errors.emergencyPerson" @click="errors.emergencyPerson=false">
+                            <label for="emergencyPerson">Emergency Person</label>
+                            <input v-model="emergencyPerson" name="emergencyPerson" id="emergencyPerson" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="form-group" :data-error="errors.emergencyPersonPhoneNumber" @click="errors.emergencyPersonPhoneNumber=false">
+                            <label for="emergencyPersonPhoneNumber">Contact No.</label>
+                            <input v-model="emergencyPersonPhoneNumber" name="emergencyPersonPhoneNumber" id="emergencyPersonPhoneNumber" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center d-flex">
+                    <button id="btnBack" type="button" @click="page=1" class="btn btn-sm btn-light mr-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" viewBox="0 0 24 24"><title>Back</title><path fill="#222" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>
+                    </button>
+                    <button id="btnNext2" class="btn btn-success d-block w-100 mr-1">Next</button>
+                </div>
+                
+            </template>
+            <template v-if="page==3">
+                <p class="lead text-center">Health Information</p>
+                <hr>
+                <div class="form-group" :data-error="errors.handedness" @click="errors.handedness=false">
+                    <label for="handedness">Handedness</label>
+                    <select v-model="handedness" id="handedness" class="form-control">
+                        <option value="R">Right-Handed</option>
+                        <option value="L">Left-Handed</option>
+                    </select>
+                </div>
+                <div class="form-group" :data-error="errors.allergy" @click="errors.allergy=false">
+                    <label for="allergy">Allergy</label>
+                    <div class="pl-1">
+                        <div v-for="a in allergyList" v-if="allergies.includes('None') === false">
+                            <div class="custom-control custom-checkbox">
+                                <input v-model="allergies" :value="a.name" :id="a.value" type="checkbox" class="custom-control-input">
+                                <label class="custom-control-label" :for="a.value">${a.name} </label>
+                            </div>
+                            <div class="mb-3" v-if="allergies.includes(a.name)">
+                                <input v-model="allergyDetails[a.name]" placeholder="Pls. specify..." type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input v-model="allergies" @click="onNoAllergy" value="None" id="None" type="checkbox" class="custom-control-input">
+                            <label class="custom-control-label" for="None">None</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center d-flex">
+                    <input :value="payload" type="hidden" name="payload" />
+                    <button id="btnBack" type="button" @click="page=2" class="btn btn-sm btn-light mr-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" viewBox="0 0 24 24"><title>Back</title><path fill="#222" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>
+                    </button>
+                    <button id="btnSubmit" class="btn btn-success d-block w-100 mr-1">Submit</button>
+                </div>
+            </template>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    var vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [],
+        data: {
+            pending: false,
+            page: 1,
+            firstName: `{{medicalRecord.firstName}}`,
+            middleName: `{{medicalRecord.middleName}}`,
+            lastName: `{{medicalRecord.lastName}}`,
+            suffix: `{{medicalRecord.suffix}}`,
+            gender: `{{medicalRecord.gender}}`,
+            civilStatus: `{{medicalRecord.civilStatus|default('Single', true)}}`,
+            birthDate: `{{medicalRecord.birthDate|format_date('YYYY-MM-DD')}}`,
+            citizenship: `{{medicalRecord.citizenship|default('Filipino', true)}}`,
+            religion: `{{medicalRecord.religion}}`,
+            course: `{{medicalRecord.course}}`,
+            address: `{{medicalRecord.address}}`,
+
+            fb: `{{medicalRecord.fb}}`,
+            mobileNumber: `{{medicalRecord.mobileNumber}}`,
+            parentName: `{{medicalRecord.parentName}}`,
+            parentPhoneNumber: `{{medicalRecord.parentPhoneNumber}}`,
+            emergencyPerson: `{{medicalRecord.emergencyPerson}}`,
+            emergencyPersonPhoneNumber: `{{medicalRecord.emergencyPersonPhoneNumber}}`,
+
+            allergy: ``,
+            allergies: {{medicalRecord.allergies|default([], true)|stringify|safe}},
+            allergyList: [
+                {
+                    name: 'Food',
+                    value: 'food',
+                },
+                {
+                    name: 'Medicine',
+                    value: 'drug',
+                },
+                {
+                    name: 'Others',
+                    value: 'others',
+                }
+            ],
+            allergyDetails: {{medicalRecord.allergyDetails|default({}, true)|stringify|safe}},
+            handedness: `{{medicalRecord.handedness|default('R', true)}}`,
+
+            errors: {
+                firstName: false,
+                middleName: false,
+                lastName: false,
+                suffix: false,
+
+                gender: false,
+                civilStatus: false,
+                birthDate: false,
+                citizenship: false,
+                religion: false,
+                course: false,
+                address: false,
+
+                fb: false,
+                mobileNumber: false,
+                parentName: false,
+                parentPhoneNumber: false,
+                emergencyPerson: false,
+                emergencyPersonPhoneNumber: false,
+
+                allergy: false,
+                handedness: false,
+            },
+            civilStatuses: {{civilStatuses|default([], true)|stringify|safe}}
+        },
+        computed: {
+            
+            loginText: function(){
+                return this.pending ? 'Logging in...' : 'Login';
+            },
+            payload: function(){
+                const me = this 
+
+                return JSON.stringify({
+                    firstName: me.firstName,
+                    middleName: me.middleName,
+                    lastName: me.lastName,
+                    suffix: me.suffix,
+
+                    gender: me.gender,
+                    civilStatus: me.civilStatus,
+                    birthDate: me.birthDate,
+                    citizenship: me.citizenship,
+                    religion: me.religion,
+                    course: me.course,
+                    address: me.address,
+
+                    fb: me.fb,
+                    mobileNumber: me.mobileNumber,
+                    parentName: me.parentName,
+                    parentPhoneNumber: me.parentPhoneNumber,
+                    emergencyPerson: me.emergencyPerson,
+                    emergencyPersonPhoneNumber: me.emergencyPersonPhoneNumber,
+
+                    handedness: me.handedness,
+                    allergies: me.allergies,
+                    allergyDetails: me.allergyDetails,
+                })
+            }
+        },
+        mounted: function(){
+            const me = this 
+
+            // me.gender = 'M'
+            // me.civilStatus = 'Single'
+            // me.birthDate = '1986-09-15'
+            // me.citizenship = 'Filipino'
+            // me.religion = 'Roman Catholic'
+            // me.course = 'BSIT'
+            // me.address = 'Mclain, Buenavista, Guimaras'
+
+            // me.fb = 'Nico Amarilla'
+            // me.mobileNumber = '09106189160'
+            // me.parentName = 'Virgie'
+            // me.parentPhoneNumber = '09106189160'
+            // me.emergencyPerson = 'Juan Cruz'
+            // me.emergencyPersonPhoneNumber = '09106189160'
+
+            // me.page = 3
+
+
+        },
+        methods: {
+            onNoAllergy: function(){
+                const me = this;
+                if(me.allergies.includes('None')){
+                    me.allergies = ['None']
+                    me.allergyDetails = {
+                        'Food': '',
+                        'Medicine': '',
+                        'Others': '',
+                    }
+                }
+            },
+            onSubmit: function(e){
+                try {
+                    const me = this 
+
+                    if(e?.submitter?.id === 'btnNext1'){
+                        if(!me.firstName){
+                            me.errors.firstName = true
+                            throw new Error('First Name is required.')
+                        }
+                        if(!me.middleName){
+                            me.errors.middleName = true
+                            throw new Error('Middle Name is required.')
+                        } else {
+                            me.middleName = me.middleName.trim()
+                            if(me.middleName.at(-1) == '.' || me.middleName.length <= 1){
+                                me.errors.middleName = true
+                                throw new Error('Please write your Middle Name in full.')
+                            } 
+                        }
+                        if(!me.lastName){
+                            me.errors.lastName = true
+                            throw new Error('Last Name is required.')
+                        }
+                        if(!me.gender){
+                            me.errors.gender = true
+                            throw new Error('Gender is required.')
+                        }
+                        if(!me.civilStatus){
+                            me.errors.civilStatus = true
+                            throw new Error('Civil Status is required.')
+                        }
+                        if(!me.birthDate){
+                            me.errors.birthDate = true
+                            throw new Error('Birth Date is required.')
+                        }
+                        if(!me.citizenship){
+                            me.errors.citizenship = true
+                            throw new Error('Citizenship is required.')
+                        }
+                        if(!me.religion){
+                            me.errors.religion = true
+                            throw new Error('Religion is required.')
+                        }
+                        if(!me.course){
+                            me.errors.course = true
+                            throw new Error('Course is required.')
+                        }
+                        if(!me.address){
+                            me.errors.address = true
+                            throw new Error('Address is required.')
+                        }
+                        me.page = 2
+
+                    }
+                    if(e?.submitter?.id === 'btnNext2'){
+                        if(!me.fb){
+                            me.errors.fb = true
+                            throw new Error('Facebook/Messenger Name is required.')
+                        }
+                        if(!me.mobileNumber){
+                            me.errors.mobileNumber = true
+                            throw new Error('Phone Number is required.')
+                        }
+                        if(!me.parentName){
+                            me.errors.parentName = true
+                            throw new Error('Parent/Guardian Name is required.')
+                        }
+                        if(!me.parentPhoneNumber){
+                            me.errors.parentPhoneNumber = true
+                            throw new Error('Parent/Guardian Name Contact No. is required.')
+                        }
+                        if(!me.emergencyPerson){
+                            me.errors.emergencyPerson = true
+                            throw new Error('Emergency Person is required.')
+                        }
+                        if(!me.emergencyPersonPhoneNumber){
+                            me.errors.emergencyPersonPhoneNumber = true
+                            throw new Error('Emergency Person Contact No. is required.')
+                        }
+                        
+                        me.page = 3
+
+                    }
+                    if(e?.submitter?.id === 'btnSubmit'){
+                        
+                        if(!me.handedness){
+                            me.errors.handedness = true
+                            throw new Error('handedness is required.')
+                        }
+                       
+                        if(me.allergies.length <= 0){
+                            me.errors.allergy = true
+                            throw new Error('Please specify your Allergy.')
+                        } else {
+                            if(me.allergies.includes('Food') && !me.allergyDetails.Food){
+                                me.errors.allergy = true
+                                throw new Error('Please specify your Food Allergy.')
+                            }
+                            if(me.allergies.includes('Medicine') && !me.allergyDetails.Medicine){
+                                me.errors.allergy = true
+                                throw new Error('Please specify your Medicine Allergy.')
+                            }
+                            if(me.allergies.includes('Others') && !me.allergyDetails.Others){
+                                me.errors.allergy = true
+                                throw new Error('Please specify your what is Others.')
+                            }
+                        }
+                        // me.page = 3
+
+                    }
+
+                    if(e?.submitter?.id === 'btnSubmit'){
+                        
+                        me.pending = true;
+                        me.$nextTick(function() {
+                            me.$refs.frmMedCard.submit();
+                        });
+                    }
+                    console.log(e?.submitter?.id)
+                    
+                } catch (err) {
+                    console.error(err)
+                    alert(err.message)
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+

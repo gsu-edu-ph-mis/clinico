@@ -204,14 +204,23 @@ div[data-pending="true"]:after {
 }
 .container-nav {
     max-width: 414px;
-    background: #fff;
-    background: #fff;
-    box-shadow: 0 0 1px #9E9E9E;
+    background: #e9ecef;
+    box-shadow: 0 0 1px #B8B9B9;
 }
 .container-nav .row {
     height: 60px;
 }
 
+.nav-main-top {
+    background-image: linear-gradient(269deg,#2799a3,transparent);
+    background-color: #4caf50;
+    color: whitesmoke;
+}
+.nav-main-top a,
+.nav-main-top svg {
+    color: white;
+    fill: white;
+}
 .menu {
     position: absolute;
     left: 0;
@@ -947,9 +956,8 @@ div.focusable:focus-within  {
 /*
  * Sidebar
  */
-.sidebar {
-    background-image: linear-gradient(180deg,#2799a3,transparent);
-    background-color: #2573b5;
+.sidebar {background-image: linear-gradient(180deg,#009688,transparent);
+    background-color: #009688;
     height: 100%;
     position: fixed;
     left: 0;
