@@ -4,45 +4,55 @@
 <div id="vApp" v-cloak v-bind:data-pending="pending" class="col-md-12 py-3">
     {% include 'parts/flash.html' %}
     <h1 class="h6">Medical Records</h1>
-    <div class="table-responsive pb-5">
-        <table class="table table-sm table-striped mb-5">
-            <tr>
-                <th width="5%"></th>
-                <th width="25%">Name</th>
-                <th>Course</th>
-                <th></th>
-            </tr>
-            <tr v-for="student in students">
-                <td>
-                    <template v-if="student.gender=='F'">
-                        <svg width="18px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Female</title><path fill="pink" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,22V16H7.5L10.09,8.41C10.34,7.59 11.1,7 12,7C12.9,7 13.66,7.59 13.91,8.41L16.5,16H13.5V22H10.5Z" /></svg>
-                    </template>
-                    <template v-if="student.gender=='M'">
-                        <svg width="18px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Male</title><path fill="#0b51af" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,7H13.5A2,2 0 0,1 15.5,9V14.5H14V22H10V14.5H8.5V9A2,2 0 0,1 10.5,7Z" /></svg>
-                    </template>
-                </td>
-                <td>
-                    <a class="text-underline" :href="`/admin/student/${student._id}/view`">${student.lastName}</a>, 
-                    <a class="text-underline" :href="`/admin/student/${student._id}/view`">${student.firstName}</a> 
-                    <a class="text-underline" :href="`/admin/student/${student._id}/view`">${student.middleName}</a>
-                </td>
-                <td>${student.course}</td>
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-sm" type="button" data-toggle="dropdown" aria-expanded="false">
-                          ...
-                        </button>
-                        <div class="dropdown-menu">
-                          <a class="dropdown-item" :href="`/admin/student/${student._id}/view`">View</a>
-                          <a class="dropdown-item" :href="`/admin/student/${student._id}/print`">Print</a>
-                          <div class="dropdown-divider"></div>
-                          <a class="dropdown-item text-danger" :href="`/admin/student/${student._id}/delete`">Delete</a>
+    <form action="">
+        <div class="form-group">
+            <input v-model="s" name="s" type="search" class="form-control" placeholder="Search by last name...">
+        </div>
+    </form>
+    <div v-if="students.length > 0">
+        <div class="table-responsive pb-5">
+            <table class="table table-sm table-striped mb-5">
+                <tr>
+                    <th width="5%"></th>
+                    <th width="25%">Name</th>
+                    <th>Course</th>
+                    <th></th>
+                </tr>
+                <tr v-for="student in students">
+                    <td>
+                        <template v-if="student.gender=='F'">
+                            <svg width="18px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Female</title><path fill="hotpink" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,22V16H7.5L10.09,8.41C10.34,7.59 11.1,7 12,7C12.9,7 13.66,7.59 13.91,8.41L16.5,16H13.5V22H10.5Z" /></svg>
+                        </template>
+                        <template v-if="student.gender=='M'">
+                            <svg width="18px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Male</title><path fill="#0b51af" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,7H13.5A2,2 0 0,1 15.5,9V14.5H14V22H10V14.5H8.5V9A2,2 0 0,1 10.5,7Z" /></svg>
+                        </template>
+                    </td>
+                    <td>
+                        <a class="text-underline" :href="`/admin/student/${student._id}/view`">${student.lastName}</a>, 
+                        <a class="text-underline" :href="`/admin/student/${student._id}/view`">${student.firstName}</a> 
+                        <a class="text-underline" :href="`/admin/student/${student._id}/view`">${student.middleName}</a>
+                    </td>
+                    <td>${student.course}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-sm" type="button" data-toggle="dropdown" aria-expanded="false">
+                            ...
+                            </button>
+                            <div class="dropdown-menu">
+                            <a class="dropdown-item" :href="`/admin/student/${student._id}/view`">View</a>
+                            <a class="dropdown-item" :href="`/admin/student/${student._id}/print`">Print</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" :href="`/admin/student/${student._id}/delete`">Delete</a>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div> 
+                    </td>
+                </tr>
+            </table>
+        </div> 
+    </div>
+    <div v-else>
+        <p>None record found.</p>
+    </div>
 </div>
 {% endblock %}
 {% block scripts %}
@@ -54,6 +64,7 @@
         mixins: [],
         data: {
             pending: false,
+            s: '{{s}}',
             students: {{students|default([], true)|stringify|safe}}
         }
     })

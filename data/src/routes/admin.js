@@ -33,10 +33,17 @@ router.get('/admin/home', middlewares.guardRoute(['read_all_student', 'read_stud
 
 router.get('/admin/student/all', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
-        let students = await req.app.locals.db.main.MedicalRecord.find({
+        let s = req?.query?.s || ''
+        let searchQuery = {}
 
-        })
+        if(s){
+            searchQuery = {
+                lastName: new RegExp(s, "i")
+            }
+        }
+        let students = await req.app.locals.db.main.MedicalRecord.find(searchQuery)
         let data = {
+            s: s,
             students: students
         }
         res.render('admin/student/all.html', data);
@@ -191,6 +198,59 @@ router.post('/admin/student/:medicalRecordId/update', middlewares.guardRoute(['r
         })
         flash.ok(req, 'students', 'Medical Record Card updated.')
         res.redirect(`/admin/student/${medicalRecord._id}/view`)
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/admin/student/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+    try {
+        
+        
+        let data = {
+            flash: flash.get(req, 'students'),
+            civilStatuses: CONFIG.civilStatuses,
+            medicalRecord: new req.app.locals.db.main.MedicalRecord({})
+        }
+        res.render('admin/student/create.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
+router.post('/admin/student/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+    try {
+
+        let payload = JSON.parse(req?.body?.payload)
+
+
+        if (!payload.firstName) {
+            throw new Error('First Name is required.')
+        }
+        if (!payload.middleName) {
+            throw new Error('Middle Name is required.')
+        } else {
+            payload.middleName = payload.middleName.trim()
+            if (payload.middleName.at(-1) == '.' || payload.middleName.length <= 1) {
+                throw new Error('Please write your Middle Name in full.')
+            }
+        }
+        if (!payload.lastName) {
+            throw new Error('Last Name is required.')
+        }
+
+        if (payload.allergies.includes('None')) {
+            payload.allergies = ['None']
+            payload.allergyDetails = {
+                'Food': '',
+                'Medicine': '',
+                'Others': '',
+            }
+        }
+        await req.app.locals.db.main.MedicalRecord.create({
+            ...payload
+        })
+        flash.ok(req, 'students', 'Medical Record Card added.')
+        res.redirect(`/admin/student/all`)
     } catch (err) {
         next(err);
     }
