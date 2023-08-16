@@ -30,3 +30,20 @@ Create user:
 		    ]
 		}
 	)
+
+
+## Install
+
+	git clone https://github.com/gsu-edu-ph-mis/clinico.git
+	cd clinico
+	npm install
+
+	cd credentials
+	sudo nano credentials.live.json
+	cd ..
+
+
+
+	sudo nano /etc/nginx/sites-available/clinic.gsu.edu.ph
+
+	sudo ln -s /etc/nginx/sites-available/clinic.gsu.edu.ph /etc/nginx/sites-enabled/

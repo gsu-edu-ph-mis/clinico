@@ -1,0 +1,11 @@
+Greetings!
+
+A Photo/Video Documentation request was received.
+Event: {{event}}
+Format: {{format|join(', ')}}
+Event Start: {{dateStart|format_date('MMM DD, YYYY hh:mmA')}}
+Event End: {{dateEnd|format_date('MMM DD, YYYY hh:mmA')}}
+Requestor: {{requestor}}
+Department: {{department}}
+Email: {{email}}
+Facebook: {{fb}}

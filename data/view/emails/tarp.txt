@@ -1,0 +1,13 @@
+
+Greetings!
+A request was received.
+Purpose: {{purpose}}
+Date Needed: {{dateStart|format_date('MMM DD, YYYY')}}
+Content: {{content}}
+Instructions: {{instructions}}
+Dimensions: {{width}}{{widthUnit}} x {{height}}{{heightUnit}}
+Quantity: {{quantity}} pcs
+Requestor: {{requestor}}
+Department: {{department}}
+Email: {{email}}
+Facebook: {{fb}}

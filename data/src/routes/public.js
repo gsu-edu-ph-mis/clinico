@@ -9,7 +9,7 @@ const lodash = require('lodash')
 const moment = require('moment')
 
 //// Modules
-// const mailer = require('../mailer')
+const mailer = require('../mailer')
 const middlewares = require('../middlewares')
 const passwordMan = require('../password-man')
 
@@ -148,14 +148,13 @@ router.post('/register', async (req, res, next) => {
         })
 
         let data = {
-            to: email,
+            email: email,
             firstName: firstName,
             verificationLink: `${verificationLink}`,
             password: `${password}`
         }
-        console.log(data)
-        // await mailer.send('reset.html', data)
-
+        // console.log(data)
+        await mailer.sendRegister(data)
 
         res.redirect(`/register-pending?email=${email}&ref=${secureKey}`)
     } catch (err) {

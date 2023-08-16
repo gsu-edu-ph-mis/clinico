@@ -1,0 +1,27 @@
+# create: sudo nano /etc/systemd/system/clinico.service
+# update systemd: sudo systemctl daemon-reload
+# restart: sudo systemctl restart clinico
+# status: sudo systemctl status clinico
+# start-on-boot: sudo systemctl enable clinico
+
+[Unit]
+Description=clinico
+
+# Requires this service to run first
+Requires=After=mongod.service       
+
+[Service]
+ExecStart=/usr/bin/node /home/ubuntu/clinico/index.js
+
+# Restart service after 10 seconds if node service crashes
+Restart=always
+RestartSec=10
+
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=clinico
+Environment=NODE_ENV=live PORT=9098
+
+[Install]
+WantedBy=multi-user.target

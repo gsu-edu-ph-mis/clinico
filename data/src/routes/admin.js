@@ -354,4 +354,20 @@ router.post('/admin/student/:medicalRecordId/relevance-data/create', middlewares
         next(err);
     }
 });
+
+router.get('/admin/mail', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+    try {
+        let verificationLink = `${CONFIG.app.url}`
+        let password = passwordMan.generatePasswordWeb()
+        let data = {
+            email: `recipient@gsu.edu.ph`,
+            firstName: 'Nico',
+            verificationLink: `${verificationLink}`,
+            password: `${password}`
+        }
+        res.render('emails/register.html', data)
+    } catch (err) {
+        next(err);
+    }
+});
 module.exports = router;
