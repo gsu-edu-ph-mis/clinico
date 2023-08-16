@@ -72,9 +72,19 @@ router.get('/admin/student/:medicalRecordId/print', middlewares.guardRoute(['rea
                 diagnosis: '',
             })
         }
+        let relevanceDatas = medicalRecord.relevanceData.split(' ')
+        relevanceDatas = lodash.chunk(relevanceDatas, 15)
+        relevanceDatas = relevanceDatas.map(o => {
+            return o.join(' ')
+        })
+        let toPad2 = 4 - relevanceDatas.length
+        for (let x = (4 - toPad2); x < 4; x++) {
+            relevanceDatas.push('')
+        }
         let data = {
             medicalRecord: medicalRecord,
-            clinicalRecords: clinicalRecords
+            clinicalRecords: clinicalRecords,
+            relevanceDatas: relevanceDatas,
         }
         res.render('admin/student/print.html', data);
     } catch (err) {

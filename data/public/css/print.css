@@ -11,19 +11,24 @@
 
 body {
     font-family: 'Times New Roman', serif;
-    font-size: 16px;
+    /* font-size: 16px; */
+    font-size: 22px;
 }
-.cooper {
+.cooper,
+.cooper2 {
     font-family: 'Cooper Std', serif;
-    font-size: 18px;
+    font-size: 25px;
+}
+.cooper2 {
+    font-size: 20px;
 }
 .h1 {
-    font-size: 18px;
+    font-size: 26px;
     font-weight: bold;
     text-transform: uppercase;
 }
 .h2 {
-    font-size: 20px;
+    font-size: 30px;
     font-weight: bold;
 }
 
@@ -35,7 +40,7 @@ body {
     text-decoration: underline;
 }
 .smol {
-    font-size: 14px;
+    font-size: 21px;
 }
 /* 793.7px by 1122.52 */
 /* .a4 { */
@@ -62,12 +67,12 @@ body {
     height: 22px;
 }
 .letter-head {
-    font-size: 14px;
+    font-size: 18px;
     font-family: sans-serif;
 }
 .letter-head .s1 {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 20px;
 
 }
 
