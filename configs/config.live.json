@@ -1,0 +1,24 @@
+{
+    "app": {
+        "url": "https://clinic.gsu.edu.ph"
+    },
+    "nunjucks": {
+        "loader": {
+            "watch": false,
+            "noCache": false
+        }
+    },
+    "mongodb": {
+        "dir": {
+            "bin": "/usr/bin"
+        }
+    },
+    "aws": {
+        "region": "ap-southeast-1",
+        "bucket1": {
+            "url": "https://hris-gsu-ph.s3-ap-southeast-1.amazonaws.com/files-live/",
+            "prefix": "files-live"
+        }
+    },
+    "loginDelay": 5000
+}
