@@ -130,6 +130,7 @@ router.get('/admin/student/:medicalRecordId/update', middlewares.guardRoute(['re
         }
         let data = {
             flash: flash.get(req, 'students'),
+            civilStatuses: CONFIG.civilStatuses,
             medicalRecord: medicalRecord
         }
         res.render('admin/student/update.html', data);
