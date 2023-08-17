@@ -25,30 +25,28 @@ const transport2 = nodemailer.createTransport({
 
 module.exports = {
     sendRegister: async (templateVars) => {
-        
         templateVars['baseUrl'] = `${CONFIG.app.url}`
         templateVars['previewText'] = `To complete your registration...`
         let mailOptions = {
-            from: `Clinic <clinic-noreply@gsu.edu.ph>`,
+            from: `Clinic Online <clinic-noreply@gsu.edu.ph>`,
             to: templateVars['email'],
             subject: `Clinic Online Registration - ${templateVars['previewText']}`,
-            // text: nunjucksEnv.render('emails/register.txt', templateVars),
+            text: nunjucksEnv.render('emails/register.txt', templateVars),
             html: nunjucksEnv.render('emails/register.html', templateVars),
         }
         let info = await transport2.sendMail(mailOptions)
         // console.log(info.response)
         return info
     },
-    sendTarpEmail: async (templateVars) => {
-        
+    sendForgot: async (templateVars) => {
         templateVars['baseUrl'] = `${CONFIG.app.url}`
-        templateVars['previewText'] = `${templateVars['purpose']}...`
+        templateVars['previewText'] = `Forgot password...`
         let mailOptions = {
-            from: `MIS Robot <misbot-noreply@gsu.edu.ph>`,
-            to: 'mis@gsc.edu.ph',
-            subject: `Tarpaulin Design Request - ${templateVars['purpose']}`,
-            text: nunjucksEnv.render('emails/tarp.txt', templateVars),
-            html: nunjucksEnv.render('emails/tarp.html', templateVars),
+            from: `Clinic Online <clinic-noreply@gsu.edu.ph>`,
+            to: templateVars['email'],
+            subject: `Clinic Online - ${templateVars['previewText']}`,
+            // text: nunjucksEnv.render('emails/forgot.txt', templateVars),
+            html: nunjucksEnv.render('emails/forgot.html', templateVars),
         }
         let info = await transport2.sendMail(mailOptions)
         // console.log(info.response)

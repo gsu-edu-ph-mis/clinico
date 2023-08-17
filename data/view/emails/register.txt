@@ -1,11 +1,14 @@
-Greetings!
+Hello {{firstName}},
 
-A Photo/Video Documentation request was received.
-Event: {{event}}
-Format: {{format|join(', ')}}
-Event Start: {{dateStart|format_date('MMM DD, YYYY hh:mmA')}}
-Event End: {{dateEnd|format_date('MMM DD, YYYY hh:mmA')}}
-Requestor: {{requestor}}
-Department: {{department}}
+Thank you for signing up! To complete your registration, go to the link below:
+
+Verify Registration: {{verificationLink}}
+Your login are as follows:
 Email: {{email}}
-Facebook: {{fb}}
+Password: {{password}}
+
+Please note that this link is valid for the next 24 hours. After that, you may need to register again.
+If you did not sign up, or if you received this email in error, please disregard it.
+
+Best regards,
+The GSU Clinic

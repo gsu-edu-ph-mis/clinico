@@ -89,6 +89,7 @@ router.get('/admin/student/:medicalRecordId/print', middlewares.guardRoute(['rea
             relevanceDatas.push('')
         }
         let data = {
+            title: `${medicalRecord.lastName}-${medicalRecord.firstName}-${medicalRecord.uid}-mrc`,
             medicalRecord: medicalRecord,
             clinicalRecords: clinicalRecords,
             relevanceDatas: relevanceDatas,
@@ -104,11 +105,15 @@ router.get('/admin/student/:medicalRecordId/view', middlewares.guardRoute(['read
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
             _id: medicalRecordId
-        })
+        }).lean()
         if (!medicalRecord) {
             throw new Error('Record not found.')
         }
 
+        medicalRecord.user = await req.app.locals.db.main.User.findOne({
+            _id: medicalRecord.userId
+        })
+        
         if (medicalRecord.allergies.includes('None')) {
             medicalRecord.allergiesFormatted = 'None'
         } else {

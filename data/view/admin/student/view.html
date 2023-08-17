@@ -8,7 +8,10 @@
     {% else %}
         <div class="jumbotron pt-4 p-3">
             <p class="lead mb-0">{{medicalRecord.firstName}} {{medicalRecord.middleName|first}}. {{medicalRecord.lastName}} {{medicalRecord.suffix}}</p>
-            <div class="mb-4 pl-1"><em>{{medicalRecord.address}}</em></div>
+            <div class="d-flex justify-content-between">
+                <div class="mb-4 pl-1"><em>{{medicalRecord.address}}</em></div>
+                <div class="mb-4 pl-1"><em>{{medicalRecord.user.email}}</em></div>
+            </div>
             <table class="table table-sm">
                 <tr>
                     <th class="text-right" width="15%">Age</th>

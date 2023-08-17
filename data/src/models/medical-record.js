@@ -4,10 +4,14 @@
 const mongoose = require('mongoose');
 
 //// Modules
+const uid = require('../uid');
 
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
+    uid: {
+        $type: String, // Short readable UID
+    },
     firstName: {
         $type: String,
         trim: true,
@@ -126,6 +130,11 @@ const schema = new Schema({
 
 
 //// Middlewares
-
+schema.pre('save', function (next) {
+    if (!this.uid) {
+        this.uid = uid.gen()
+    }
+    next();
+});
 
 module.exports = schema

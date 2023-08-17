@@ -158,6 +158,7 @@ router.post('/register', async (req, res, next) => {
 
         res.redirect(`/register-pending?email=${email}&ref=${secureKey}`)
     } catch (err) {
+        console.error(err)
         flash.error(req, 'register', err.message)
         res.redirect(`/register`)
         // next(err);
@@ -226,6 +227,7 @@ router.get('/verify/:secureKey', async (req, res, next) => {
         flash.ok(req, 'login', `Please enter your email and password.`),
         res.redirect(`/login?email=${user.email}`);
     } catch (err) {
+        console.error(err)
         flash.error(req, 'register', err.message)
         res.redirect(`/register`)
         // next(err);
@@ -303,6 +305,7 @@ router.post('/login', async (req, res, next) => {
        
         return res.redirect('/');
     } catch (err) {
+        console.error(err)
         flash.error(req, 'login', err.message);
         return res.redirect('/login');
     }
@@ -358,7 +361,7 @@ router.post('/forgot', async (req, res, next) => {
         if (!validateEmail(email)) {
             throw new Error('Invalid email.')
         }
-        let recaptchaToken = lodash.trim(lodash.get(post, 'recaptchaToken', ''))
+        // let recaptchaToken = lodash.trim(lodash.get(post, 'recaptchaToken', ''))
 
 
         // Find admin
@@ -386,7 +389,7 @@ router.post('/forgot', async (req, res, next) => {
             createdBy: email,
         })
         if (passwordReset) {
-            let diff = moment(passwordReset.expiredAt).diff(moment(), 'minutes')
+            // let diff = moment(passwordReset.expiredAt).diff(moment(), 'minutes')
             throw new Error(`You already sent a request for a password reset. Please check your email.`)
         }
 
@@ -409,14 +412,13 @@ router.post('/forgot', async (req, res, next) => {
         })
 
         let data = {
-            to: user.email,
+            email: user.email,
             firstName: user.firstName,
             resetLink: `${resetLink}`
         }
-        // await mailer.send('reset.html', data)
-
+        await mailer.sendForgot(data)
         // console.log(passwordReset)
-        console.log(data)
+        // console.log(data)
 
         res.redirect(`/sent?email=${user.email}`);
     } catch (err) {
