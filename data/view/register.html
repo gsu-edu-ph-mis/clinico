@@ -1,118 +1,120 @@
 {% extends "document-public.html" %}
 
 {% block body %}
-<div id="vApp" v-cloak v-bind:data-pending="pending" class="col-md-9 ml-auto mr-auto mt-md-5 mb-md-5" style="box-shadow: 0 0 5px #333; border-radius: 10px; overflow: hidden; ">
-    <div class="row" style="background: #fff;">
-        <div class="col-xl-6 p-0 order-md-2 order-2">
-            <form ref="frmReg" v-on:submit.prevent="onSubmit($event)" action="/register" method="post" class="p-4 min-height-500">
-                <h1 class="h5 text-center mb-4">
-                    <span>Create Account</span>
-                </h1>
-                {% include 'parts/flash.html' %}
-                <template v-if="page==1">
-                    <div class="form-group row" :data-error="errors.firstName" @click="errors.firstName=false">
-                        <label for="firstName" class="col-5 col-form-label text-right">First Name <span class="text-danger">*</span></label>
-                        <div class="col-7">
-                            <input v-model="firstName" name="firstName" type="text" class="form-control" id="firstName">
-                        </div>
-                    </div>
-                    <div class="form-group row" :data-error="errors.middleName" @click="errors.middleName=false">
-                        <label for="middleName" class="col-5 col-form-label text-right">Middle Name <span class="text-danger">*</span></label>
-                        <div class="col-7">
-                            <input v-model="middleName" name="middleName" type="text" class="form-control" id="middleName">
-                        </div>
-                    </div>
-                    <div class="form-group row" :data-error="errors.lastName" @click="errors.lastName=false">
-                        <label for="lastName" class="col-5 col-form-label text-right">Last Name <span class="text-danger">*</span></label>
-                        <div class="col-7">
-                            <input v-model="lastName" name="lastName" type="text" class="form-control" id="lastName">
-                        </div>
-                    </div>
-                    <div class="form-group row" :data-error="errors.suffix" @click="errors.suffix=false">
-                        <label for="suffix" class="col-5 col-form-label text-right">Suffix</label>
-                        <div class="col-7">
-                            <select v-model="suffix" name="suffix" id="suffix" class="form-control">
-                                <option value=""></option>
-                                <option>Jr.</option>
-                                <option>Sr.</option>
-                                <option>II</option>
-                                <option>III</option>
-                                <option>IV</option>
-                                <option>V</option>
-                                <option>VI</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-5"></div>
-                        <div class="col-7 text-center">
-                            <button id="btnNext" class="btn btn-success d-block w-100">Next</button>
-                        </div>
-                    </div>
-                    <hr>
-                    <p class="mb-0 text-center">Already have an account? <a class="text-primary" href="/login">Login here</a></p>
-                </template>
-                <template v-if="page==2">
-                    <div class="form-group row">
-                        <div class="col-5">
-                            
-                        </div>
-                        <div class="col-7">
-                        </div>
-                    </div>
-                    <div class="form-group row" :data-error="errors.email" @click="errors.email=false">
-                        <label for="email" class="col-5 col-form-label text-right">GSU Email <span class="text-danger">*</span></label>
-                        <div class="col-7">
-                            <input v-model="email" type="text" class="form-control" id="email">
-                        </div>
-                    </div>
-                    <div class="form-group row" :data-error="errors.email" @click="errors.email=false">
-                        <label for="email" class="col-5 col-form-label text-right">Account</label>
-                        <div class="col-7">
-                            <select name="" id="" class="form-control">
-                                <option>Student</option>
-                                <option>Staff</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row" :data-error="errors.acceptedDataPrivacy" @click="errors.acceptedDataPrivacy=false">
-                        <div class="col-5 col-form-label"></div>
-                        <div class="col-7 d-flex align-items-center">
-                            <div class="custom-control custom-checkbox mb-0">
-                                <input v-model="acceptedDataPrivacy" name="acceptedDataPrivacy" type="checkbox" class="custom-control-input" id="acceptedDataPrivacy">
-                                <label class="custom-control-label" for="acceptedDataPrivacy">I have read and accept the <a target="_blank" href="/data-privacy">Data Privacy and Consent Form</a></label>
+<div id="vApp" v-cloak v-bind:data-pending="pending">
+    <div class="col-md-9 ml-auto mr-auto mt-md-5 mb-md-5" style="box-shadow: 0 0 5px #333; border-radius: 10px; overflow: hidden; ">
+        <div class="row" style="background: #fff;">
+            <div class="col-xl-6 p-0 order-md-2 order-2">
+                <form ref="frmReg" v-on:submit.prevent="onSubmit($event)" action="/register" method="post" class="p-4 min-height-500">
+                    <h1 class="h5 text-center mb-4">
+                        <span>Create Account</span>
+                    </h1>
+                    {% include 'parts/flash.html' %}
+                    <template v-if="page==1">
+                        <div class="form-group row" :data-error="errors.firstName" @click="errors.firstName=false">
+                            <label for="firstName" class="col-5 col-form-label text-right">First Name <span class="text-danger">*</span></label>
+                            <div class="col-7">
+                                <input v-model="firstName" name="firstName" type="text" class="form-control" id="firstName">
                             </div>
                         </div>
-                    </div>
-                    <!-- <div class="form-group row" :data-error="errors.password" @click="errors.password=false">
-                        <label for="password" class="col-5 col-form-label text-right">Password <span class="text-danger">*</span></label>
-                        <div class="col-7">
-                            <div class="passgen-suffixed">
-                                <input v-model="password" type="text" class="form-control" id="password">
-                                <button @click="onGeneratePassword" class="btn btn-light" type="button">
-                                    <svg width="18px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Generate</title><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" /></svg>
+                        <div class="form-group row" :data-error="errors.middleName" @click="errors.middleName=false">
+                            <label for="middleName" class="col-5 col-form-label text-right">Middle Name <span class="text-danger">*</span></label>
+                            <div class="col-7">
+                                <input v-model="middleName" name="middleName" type="text" class="form-control" id="middleName">
+                            </div>
+                        </div>
+                        <div class="form-group row" :data-error="errors.lastName" @click="errors.lastName=false">
+                            <label for="lastName" class="col-5 col-form-label text-right">Last Name <span class="text-danger">*</span></label>
+                            <div class="col-7">
+                                <input v-model="lastName" name="lastName" type="text" class="form-control" id="lastName">
+                            </div>
+                        </div>
+                        <div class="form-group row" :data-error="errors.suffix" @click="errors.suffix=false">
+                            <label for="suffix" class="col-5 col-form-label text-right">Suffix</label>
+                            <div class="col-7">
+                                <select v-model="suffix" name="suffix" id="suffix" class="form-control">
+                                    <option value=""></option>
+                                    <option>Jr.</option>
+                                    <option>Sr.</option>
+                                    <option>II</option>
+                                    <option>III</option>
+                                    <option>IV</option>
+                                    <option>V</option>
+                                    <option>VI</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-5"></div>
+                            <div class="col-7 text-center">
+                                <button id="btnNext" class="btn btn-success d-block w-100">Next</button>
+                            </div>
+                        </div>
+                        <hr>
+                        <p class="mb-0 text-center">Already have an account? <a class="text-primary" href="/login">Login here</a></p>
+                    </template>
+                    <template v-if="page==2">
+                        <div class="form-group row">
+                            <div class="col-5">
+                                
+                            </div>
+                            <div class="col-7">
+                            </div>
+                        </div>
+                        <div class="form-group row" :data-error="errors.email" @click="errors.email=false">
+                            <label for="email" class="col-5 col-form-label text-right">GSU Email <span class="text-danger">*</span></label>
+                            <div class="col-7">
+                                <input v-model="email" type="text" class="form-control" id="email">
+                            </div>
+                        </div>
+                        <div class="form-group row" :data-error="errors.email" @click="errors.email=false">
+                            <label for="email" class="col-5 col-form-label text-right">Account</label>
+                            <div class="col-7">
+                                <select name="" id="" class="form-control">
+                                    <option>Student</option>
+                                    <option>Staff</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row" :data-error="errors.acceptedDataPrivacy" @click="errors.acceptedDataPrivacy=false">
+                            <div class="col-5 col-form-label"></div>
+                            <div class="col-7 d-flex align-items-center">
+                                <div class="custom-control custom-checkbox mb-0">
+                                    <input v-model="acceptedDataPrivacy" name="acceptedDataPrivacy" type="checkbox" class="custom-control-input" id="acceptedDataPrivacy">
+                                    <label class="custom-control-label" for="acceptedDataPrivacy">I have read and accept the <a target="_blank" href="/data-privacy">Data Privacy and Consent Form</a></label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="form-group row" :data-error="errors.password" @click="errors.password=false">
+                            <label for="password" class="col-5 col-form-label text-right">Password <span class="text-danger">*</span></label>
+                            <div class="col-7">
+                                <div class="passgen-suffixed">
+                                    <input v-model="password" type="text" class="form-control" id="password">
+                                    <button @click="onGeneratePassword" class="btn btn-light" type="button">
+                                        <svg width="18px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Generate</title><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" /></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="form-group row">
+                            <div class="col-5 text-right">
+                                
+                            </div>
+                            <div class="col-7 text-center d-flex">
+                                <input :value="payload" type="hidden" name="payload" />
+                                <button id="btnBack" type="button" @click="page=1" class="btn btn-sm btn-light mr-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" viewBox="0 0 24 24"><title>Back</title><path fill="#222" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>
                                 </button>
+                                <button id="btnSubmit" class="btn btn-success d-block w-100 mr-1">Register</button>
                             </div>
                         </div>
-                    </div> -->
-                    <div class="form-group row">
-                        <div class="col-5 text-right">
-                            
-                        </div>
-                        <div class="col-7 text-center d-flex">
-                            <input :value="payload" type="hidden" name="payload" />
-                            <button id="btnBack" type="button" @click="page=1" class="btn btn-sm btn-light mr-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" viewBox="0 0 24 24"><title>Back</title><path fill="#222" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>
-                            </button>
-                            <button id="btnSubmit" class="btn btn-success d-block w-100 mr-1">Register</button>
-                        </div>
-                    </div>
-                </template>
-              
-            </form>
-        </div>
-        <div class="col-xl-6 p-0 order-md-1 order-1 align-self-stretch text-center" style="background: url('/images/flat-lay-health-still-life-arrangement-with-copy-space.jpg') no-repeat top #b1cedc;background-size: cover; ">
-            <img src="/images/clinico.png" alt="Logo" class="mt-4 mb-4">
+                    </template>
+                
+                </form>
+            </div>
+            <div class="col-xl-6 p-0 order-md-1 order-1 align-self-stretch text-center" style="background: url('/images/flat-lay-health-still-life-arrangement-with-copy-space.jpg') no-repeat top #b1cedc;background-size: cover; ">
+                <img src="/images/clinico.png" alt="Logo" class="mt-4 mb-4">
+            </div>
         </div>
     </div>
 </div>
