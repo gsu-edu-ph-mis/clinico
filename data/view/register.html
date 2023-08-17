@@ -1,8 +1,8 @@
 {% extends "document-public.html" %}
 
 {% block body %}
-<div id="vApp" v-cloak v-bind:data-pending="pending">
-    <div class="col-md-9 ml-auto mr-auto mt-md-5 mb-md-5" style="box-shadow: 0 0 5px #333; border-radius: 10px; overflow: hidden; ">
+<div id="vApp" v-cloak v-bind:data-pending="pending" class="col-md-9 ml-auto mr-auto mt-md-5 mb-md-5">
+    <div style="box-shadow: 0 0 5px #333; border-radius: 10px; overflow: hidden; ">
         <div class="row" style="background: #fff;">
             <div class="col-xl-6 p-0 order-md-2 order-2">
                 <form ref="frmReg" v-on:submit.prevent="onSubmit($event)" action="/register" method="post" class="p-4 min-height-500">
