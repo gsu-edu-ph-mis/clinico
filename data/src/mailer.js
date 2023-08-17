@@ -27,7 +27,7 @@ module.exports = {
     sendRegister: async (templateVars) => {
         
         templateVars['baseUrl'] = `${CONFIG.app.url}`
-        templateVars['previewText'] = `To complete your registration, please verify...`
+        templateVars['previewText'] = `To complete your registration...`
         let mailOptions = {
             from: `Clinic <clinic-noreply@gsu.edu.ph>`,
             to: templateVars['email'],
