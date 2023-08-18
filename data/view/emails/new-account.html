@@ -1,0 +1,35 @@
+{% extends "document-email.html" %}
+
+{% block body %}
+    <div style="border-bottom: 1px solid #cccc; padding-bottom: 20px; margin-bottom: 20px;">
+        <img src="/images/clinico-sm.png" alt="GSU Clinic">
+    </div>
+
+    <p>Hello {{firstName}}!</p>
+    <p>To complete your registration, click the button below:</p>
+
+    <div style="text-align: center; padding: 10px">
+        <a href="{{verificationLink}}" style="border: 1px solid #4caf50; border-radius: 20px; background: #4caf50; color: #fefefe; text-decoration: none; padding: 5px 10px">Verify Registration</a>
+    </div>
+    <p>Your login are as follows:</p>
+    <div>
+        <strong>Email:</strong> <input type="text" style="color:#05366a; display:inline-block; font-size: 16px; border: none; background: #fefefe; padding: 2px 7px; border-radius: 3px;" readonly value="{{email}}">
+    </div>
+    <div>
+        <strong>Password:</strong> <input type="text" style="color:#05366a; display:inline-block; font-size: 16px; border: none; background: #fefefe; padding: 2px 7px; border-radius: 3px;" readonly value="{{password}}">
+    </div>
+    <p>If the button doesn't work, you can copy and paste the following URL into your browser's address bar:</p>
+
+    <div style="text-align: center;">
+        <input type="text" style="width: 50%; margin: auto; border: 1px solid #ccc; background: #fefefe; padding: 5px 7px; text-align: center; border-radius: 3px;" readonly value="{{verificationLink}}">
+    </div>
+
+    <p>Please note that this link is valid for the next 24 hours. After that, you may need to register again.</p>
+
+    <p>If you did not sign up, or if you received this email in error, please disregard it.</p>
+
+    <p style="text-align: right;">
+        Best regards,<br>
+        The GSU Clinic
+    </p>
+{% endblock %}

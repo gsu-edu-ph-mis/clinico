@@ -121,14 +121,33 @@ module.exports = {
             }
         }
     },
-    getUser: async (req, res, next) => {
+    getUserAccount: async (req, res, next) => {
         try {
-            let userId = req.params.userId || ''
+            let userId = req.params?.userId || ''
+            if(!req.app.locals.db.mongoose.Types.ObjectId.isValid(userId)){
+                throw new Error("Sorry, user not found.")
+            }
             let user = await req.app.locals.db.main.User.findById(userId);
             if (!user) {
-                return res.render('error.html', { error: "Sorry, user not found." })
+                throw new Error("Sorry, user not found.")
             }
-            res.user = user
+            res.userAccount = user
+            next();
+        } catch (err) {
+            next(err);
+        }
+    },
+    getMedicalRecord: async (req, res, next) => {
+        try {
+            let medicalRecordId = req.params?.medicalRecordId || ''
+            if(!req.app.locals.db.mongoose.Types.ObjectId.isValid(medicalRecordId)){
+                throw new Error("Sorry, medical record not found.")
+            }
+            let medicalRecord = await req.app.locals.db.main.MedicalRecord.findById(medicalRecordId);
+            if (!medicalRecord) {
+                throw new Error("Sorry, medical record not found.")
+            }
+            res.medicalRecord = medicalRecord
             next();
         } catch (err) {
             next(err);

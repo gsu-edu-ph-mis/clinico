@@ -360,9 +360,22 @@ router.post('/admin/student/:medicalRecordId/relevance-data/create', middlewares
     }
 });
 
-router.get('/admin/user/:userId/account', middlewares.getUser, async (req, res, next) => {
+router.get('/admin/medical-record/:medicalRecordId/user/create', middlewares.getMedicalRecord, async (req, res, next) => {
     try {
-        let userAccount = await req.app.locals.db.main.User.findById(req?.params?.userId)
+        let medicalRecord = res.medicalRecord
+        let data = {
+            flash: flash.get(req, 'admin'),
+            medicalRecord: medicalRecord,
+        }
+        res.render('admin/user/create.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/admin/user/:userId/account', middlewares.getUserAccount, async (req, res, next) => {
+    try {
+        let userAccount = res.userAccount
         let data = {
             flash: flash.get(req, 'student'),
             userAccount: userAccount,
@@ -417,17 +430,42 @@ router.post('/user/user/account', async (req, res, next) => {
     }
 });
 
-router.get('/admin/mail', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+
+
+router.get('/admin/mail/verify-account', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
-        let verificationLink = `${CONFIG.app.url}`
-        let password = passwordMan.generatePasswordWeb()
+        let email = req.query.email
+        let firstName = req.query.firstName
+        let verificationLink = req.query.verificationLink
+        let password = req.query.password
+
+        // let verificationLink = `${CONFIG.app.url}`
         let data = {
-            email: `recipient@gsu.edu.ph`,
-            firstName: 'Nico',
-            verificationLink: `${verificationLink}`,
-            password: `${password}`
+            email: email,
+            firstName: firstName,
+            verificationLink: verificationLink,
+            password: password,
         }
         res.render('emails/register.html', data)
+    } catch (err) {
+        next(err);
+    }
+});
+router.get('/admin/mail/create-account', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+    try {
+        let email = req.query.email
+        let firstName = req.query.firstName
+        let verificationLink = req.query.verificationLink
+        let password = req.query.password
+
+        // let verificationLink = `${CONFIG.app.url}`
+        let data = {
+            email: email,
+            firstName: firstName,
+            verificationLink: verificationLink,
+            password: password,
+        }
+        res.render('emails/new-account.html', data)
     } catch (err) {
         next(err);
     }
