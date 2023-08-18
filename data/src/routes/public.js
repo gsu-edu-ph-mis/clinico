@@ -261,7 +261,6 @@ router.post('/login', async (req, res, next) => {
 
         let email = lodash.get(post, 'email', '');
         let password = lodash.trim(lodash.get(post, 'password', ''))
-        let recaptchaToken = lodash.trim(lodash.get(post, 'recaptchaToken', ''))
 
         // Find admin
         let user = await req.app.locals.db.main.User.findOne({ 
@@ -416,9 +415,11 @@ router.post('/forgot', async (req, res, next) => {
             firstName: user.firstName,
             resetLink: `${resetLink}`
         }
-        await mailer.sendForgot(data)
-        // console.log(passwordReset)
-        // console.log(data)
+        if(ENV === 'dev' ) {
+            console.log(data)
+        } else {
+            await mailer.sendForgot(data)
+        }
 
         res.redirect(`/sent?email=${user.email}`);
     } catch (err) {

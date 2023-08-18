@@ -360,6 +360,63 @@ router.post('/admin/student/:medicalRecordId/relevance-data/create', middlewares
     }
 });
 
+router.get('/admin/user/:userId/account', middlewares.getUser, async (req, res, next) => {
+    try {
+        let userAccount = await req.app.locals.db.main.User.findById(req?.params?.userId)
+        let data = {
+            flash: flash.get(req, 'student'),
+            userAccount: userAccount,
+            civilStatuses: CONFIG.civilStatuses
+        }
+        res.render('admin/user/account.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
+router.post('/user/user/account', async (req, res, next) => {
+    try {
+        let user = res.user
+
+        let password = lodash.trim(lodash.get(req, 'body.password'))
+        let password2 = lodash.trim(lodash.get(req, 'body.password2'))
+
+        if(!password){
+            throw new Error('Current Password is required.')
+        }
+        if(!password2){
+            throw new Error('New Password is required.')
+        }
+        if(password2.length < 10){
+            throw new Error('New Password is too short. Must be at least 10 characters.')
+        }
+
+        if(password === password2){
+            throw new Error('New Password and Current Password is the same!')
+        }
+
+        // Check password
+        let passwordHash = passwordMan.hashPassword(password, user.salt);
+        if (!timingSafeEqual(Buffer.from(passwordHash, 'utf8'), Buffer.from(user.passwordHash, 'utf8'))) {
+            throw new Error('Incorrect password.');
+        }
+
+        let salt2 = passwordMan.randomString(16)
+        let passwordHash2 = passwordMan.hashPassword(password2, salt2)
+
+        user.salt = salt2
+        user.passwordHash = passwordHash2
+        await user.save()
+
+        flash.ok(req, 'student', 'Password changed.')
+        res.redirect('/student/account')
+    } catch (err) {
+        console.error(err)
+        flash.error(req, 'student', err.message)
+        res.redirect('/student/account')
+        // next(err);
+    }
+});
+
 router.get('/admin/mail', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
         let verificationLink = `${CONFIG.app.url}`
@@ -375,4 +432,6 @@ router.get('/admin/mail', middlewares.guardRoute(['read_all_student', 'read_stud
         next(err);
     }
 });
+
+
 module.exports = router;

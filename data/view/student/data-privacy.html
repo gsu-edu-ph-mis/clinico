@@ -1,0 +1,26 @@
+{% extends "document.html" %}
+
+{% block body %}
+<div class="navigation">
+    <div class="container container-nav">
+        <div class="row">
+            <div class="col-10 d-flex align-items-center">
+                <a class="mr-2 d-flex" href="/student/home">
+                    <svg width="26px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Back</title><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+                </a>
+                <h1 class="h6 mb-0">Data Privacy</h1>
+            </div>
+            <div class="col-2 justify-content-end d-flex align-items-center">
+                <a href="#" class="menu-toggle">
+                    <svg width="26px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Menu</title><path fill="#666" d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 ml-auto mr-auto pt-5 pb-5 ">
+        {% include 'data-privacy-content.html' %}
+    </div>
+</div>
+{% endblock %}
