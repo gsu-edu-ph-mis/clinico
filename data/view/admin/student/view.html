@@ -24,7 +24,10 @@
             <table class="table table-sm">
                 <tr>
                     <th class="text-right" width="15%">Age</th>
-                    <td>{{medicalRecord.birthDate|age}} yrs <em>({{medicalRecord.birthDate|format_date('MMM DD, YYYY')}})</em></td>
+                    <td>{% if medicalRecord.birthDate|age > 0 %}
+                        {{medicalRecord.birthDate|age}} yrs <em>({{medicalRecord.birthDate|format_date('MMM DD, YYYY')}})</em>
+                        {% endif %}
+                    </td>
                 </tr>
                 <tr>
                     <th class="text-right">Gender</th>

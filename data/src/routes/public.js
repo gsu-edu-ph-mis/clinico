@@ -22,10 +22,10 @@ router.get('/', middlewares.requireAuthUser, async (req, res, next) => {
             let user = res.user.toObject()
 
             if (user.roles.includes('student')) {
-                return res.redirect('/student/home')
+                return res.redirect('/medical-record/home')
             }
             if (user.roles.includes('admin')) {
-                return res.redirect('/admin/student/all')
+                return res.redirect('/admin/medical-record/all')
             }
 
         }
@@ -45,7 +45,17 @@ router.get('/register', async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-    
+
+});
+router.get('/register-pending', async (req, res, next) => {
+    try {
+        res.render('register-pending.html', {
+            email: req?.query?.email || '',
+            ref: req?.query?.ref || '',
+        });
+    } catch (err) {
+        next(err);
+    }
 });
 router.post('/register', async (req, res, next) => {
     try {
@@ -59,34 +69,34 @@ router.post('/register', async (req, res, next) => {
         let email = lodash.trim(lodash.get(payload, 'email', ''))
         let acceptedDataPrivacy = lodash.trim(lodash.get(payload, 'acceptedDataPrivacy'))
 
-        if(!firstName){
+        if (!firstName) {
             throw new Error('First Name is required.')
         }
-        if(!middleName){
+        if (!middleName) {
             throw new Error('Middle Name is required.')
         } else {
             middleName = middleName.trim()
-            if(middleName.at(-1) == '.' || middleName.length <= 1){
+            if (middleName.at(-1) == '.' || middleName.length <= 1) {
                 throw new Error('Please write your Middle Name in full.')
-            } 
+            }
         }
-        if(!lastName){
+        if (!lastName) {
             throw new Error('Last Name is required.')
         }
-        if(!email){
+        if (!email) {
             throw new Error('Email is required.')
         } else {
             email = email.trim()
-            if(/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email) === false){
+            if (/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email) === false) {
                 throw new Error('Invalid email.')
             } else {
                 let domain = email.split('@').at(-1)
-                if(['gsc.edu.ph', 'gsu.edu.ph'].includes(domain) === false){
+                if (['gsc.edu.ph', 'gsu.edu.ph'].includes(domain) === false) {
                     throw new Error('Only GSU emails are allowed.')
                 }
             }
         }
-        if(!acceptedDataPrivacy){
+        if (!acceptedDataPrivacy) {
             throw new Error('Password is required.')
         }
 
@@ -98,7 +108,7 @@ router.post('/register', async (req, res, next) => {
         if (existingEmail) {
             throw new Error(`Email "${email}" is already registered.`)
         }
-        
+
         // Delete expired
         await req.app.locals.db.main.UserVerification.deleteMany({
             expiredAt: {
@@ -153,8 +163,11 @@ router.post('/register', async (req, res, next) => {
             verificationLink: `${verificationLink}`,
             password: `${password}`
         }
-        // console.log(data)
-        await mailer.sendRegister(data)
+        if (ENV === 'dev') {
+            console.log(data)
+        } else {
+            await mailer.sendRegister(data)
+        }
 
         res.redirect(`/register-pending?email=${email}&ref=${secureKey}`)
     } catch (err) {
@@ -164,16 +177,7 @@ router.post('/register', async (req, res, next) => {
         // next(err);
     }
 });
-router.get('/register-pending', async (req, res, next) => {
-    try {
-        res.render('register-pending.html', {
-            email: req?.query?.email || '',
-            ref: req?.query?.ref || '',
-        });
-    } catch (err) {
-        next(err);
-    }
-});
+
 router.get('/verify/:secureKey', async (req, res, next) => {
     try {
         let secureKey = req.params.secureKey
@@ -199,7 +203,7 @@ router.get('/verify/:secureKey', async (req, res, next) => {
         // console.log(hash)
         // console.log(hash2)
 
-        if(hash !== hash2){
+        if (hash !== hash2) {
             throw new Error('Invalid verification. Please restart the registration process.')
         }
 
@@ -212,19 +216,31 @@ router.get('/verify/:secureKey', async (req, res, next) => {
             throw new Error(`Verification failed. Email "${verification.payload.email}" is already registered.`)
         }
 
-        let user = new req.app.locals.db.main.User(verification.payload);
-        user.emailVerified = true
-        user.active = true
-        user.roles = ["student"]
-        user.permissions = []
+        let user = new req.app.locals.db.main.User({
+            passwordHash: verification.payload.passwordHash,
+            salt: verification.payload.salt,
+            email: verification.payload.email,
+            emailVerified: true,
+            active: true,
+            roles: ["student"],
+            permissions: [],
+        });
         await user.save()
+        let medicalRecord = new req.app.locals.db.main.MedicalRecord({
+            firstName: verification.payload.firstName,
+            middleName: verification.payload.middleName,
+            lastName: verification.payload.lastName,
+            suffix: verification.payload.suffix,
+            userId: user._id
+        });
+        await medicalRecord.save()
 
         // Remove
         await req.app.locals.db.main.UserVerification.deleteMany({
             secureKey: secureKey
         })
 
-        flash.ok(req, 'login', `Please enter your email and password.`),
+        flash.ok(req, 'login', `Please enter your email and password.`)
         res.redirect(`/login?email=${user.email}`);
     } catch (err) {
         console.error(err)
@@ -263,8 +279,8 @@ router.post('/login', async (req, res, next) => {
         let password = lodash.trim(lodash.get(post, 'password', ''))
 
         // Find admin
-        let user = await req.app.locals.db.main.User.findOne({ 
-            email: email 
+        let user = await req.app.locals.db.main.User.findOne({
+            email: email
         });
         if (!user) {
             throw new Error('Incorrect Email.')
@@ -298,10 +314,10 @@ router.post('/login', async (req, res, next) => {
         lodash.set(req, 'session.acsrf', antiCsrfToken);
 
         if (user.roles.includes('student')) {
-            return res.redirect('/student/home')
+            return res.redirect('/medical-record/home')
         }
-        
-       
+
+
         return res.redirect('/');
     } catch (err) {
         console.error(err)
@@ -415,7 +431,7 @@ router.post('/forgot', async (req, res, next) => {
             firstName: user.firstName,
             resetLink: `${resetLink}`
         }
-        if(ENV === 'dev' ) {
+        if (ENV === 'dev') {
             console.log(data)
         } else {
             await mailer.sendForgot(data)
