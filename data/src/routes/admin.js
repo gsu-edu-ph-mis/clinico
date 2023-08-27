@@ -25,18 +25,18 @@ router.use('/admin', async (req, res, next) => {
 
 router.get('/admin/home', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
-        res.redirect(`/admin/student/all`)
+        res.redirect(`/admin/medical-record/all`)
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/admin/student/all', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/medical-record/all', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
         let s = req?.query?.s || ''
         let searchQuery = {}
 
-        if(s){
+        if (s) {
             searchQuery = {
                 lastName: new RegExp(s, "i")
             }
@@ -46,13 +46,13 @@ router.get('/admin/student/all', middlewares.guardRoute(['read_all_student', 're
             s: s,
             students: students
         }
-        res.render('admin/student/all.html', data);
+        res.render('admin/medical-record/all.html', data);
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/admin/student/:medicalRecordId/print', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/medical-record/:medicalRecordId/print', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -94,13 +94,13 @@ router.get('/admin/student/:medicalRecordId/print', middlewares.guardRoute(['rea
             clinicalRecords: clinicalRecords,
             relevanceDatas: relevanceDatas,
         }
-        res.render('admin/student/print.html', data);
+        res.render('admin/medical-record/print.html', data);
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/admin/student/:medicalRecordId/view', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/medical-record/:medicalRecordId/view', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -113,7 +113,7 @@ router.get('/admin/student/:medicalRecordId/view', middlewares.guardRoute(['read
         medicalRecord.user = await req.app.locals.db.main.User.findOne({
             _id: medicalRecord.userId
         })
-        
+
         if (medicalRecord.allergies.includes('None')) {
             medicalRecord.allergiesFormatted = 'None'
         } else {
@@ -126,13 +126,13 @@ router.get('/admin/student/:medicalRecordId/view', middlewares.guardRoute(['read
             flash: flash.get(req, 'students'),
             medicalRecord: medicalRecord
         }
-        res.render('admin/student/view.html', data);
+        res.render('admin/medical-record/view.html', data);
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/admin/student/:medicalRecordId/update', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/medical-record/:medicalRecordId/update', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -155,12 +155,12 @@ router.get('/admin/student/:medicalRecordId/update', middlewares.guardRoute(['re
             civilStatuses: CONFIG.civilStatuses,
             medicalRecord: medicalRecord
         }
-        res.render('admin/student/update.html', data);
+        res.render('admin/medical-record/update.html', data);
     } catch (err) {
         next(err);
     }
 });
-router.post('/admin/student/:medicalRecordId/update', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.post('/admin/medical-record/:medicalRecordId/update', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -202,27 +202,27 @@ router.post('/admin/student/:medicalRecordId/update', middlewares.guardRoute(['r
             ...payload
         })
         flash.ok(req, 'students', 'Medical Record Card updated.')
-        res.redirect(`/admin/student/${medicalRecord._id}/view`)
+        res.redirect(`/admin/medical-record/${medicalRecord._id}/view`)
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/admin/student/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/medical-record/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
-        
-        
+
+
         let data = {
             flash: flash.get(req, 'students'),
             civilStatuses: CONFIG.civilStatuses,
             medicalRecord: new req.app.locals.db.main.MedicalRecord({})
         }
-        res.render('admin/student/create.html', data);
+        res.render('admin/medical-record/create.html', data);
     } catch (err) {
         next(err);
     }
 });
-router.post('/admin/student/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.post('/admin/medical-record/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
 
         let payload = JSON.parse(req?.body?.payload)
@@ -255,13 +255,13 @@ router.post('/admin/student/create', middlewares.guardRoute(['read_all_student',
             ...payload
         })
         flash.ok(req, 'students', 'Medical Record Card added.')
-        res.redirect(`/admin/student/all`)
+        res.redirect(`/admin/medical-record/all`)
     } catch (err) {
         next(err);
     }
 });
 
-router.post('/admin/student/:medicalRecordId/clinical-record/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.post('/admin/medical-record/:medicalRecordId/clinical-record/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -305,7 +305,7 @@ router.post('/admin/student/:medicalRecordId/clinical-record/create', middleware
     }
 });
 
-router.post('/admin/student/:medicalRecordId/clinical-record/delete', middlewares.guardRoute(['read_all_student', 'read_student']), middlewares.antiCsrfCheck, async (req, res, next) => {
+router.post('/admin/medical-record/:medicalRecordId/clinical-record/delete', middlewares.guardRoute(['read_all_student', 'read_student']), middlewares.antiCsrfCheck, async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -337,7 +337,7 @@ router.post('/admin/student/:medicalRecordId/clinical-record/delete', middleware
     }
 });
 
-router.post('/admin/student/:medicalRecordId/relevance-data/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.post('/admin/medical-record/:medicalRecordId/relevance-data/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -372,7 +372,85 @@ router.get('/admin/medical-record/:medicalRecordId/user/create', middlewares.get
         next(err);
     }
 });
+router.post('/admin/medical-record/:medicalRecordId/user/create', middlewares.getMedicalRecord, async (req, res, next) => {
+    try {
+        let medicalRecord = res.medicalRecord
 
+        let payload = req?.body
+        console.log(payload)
+
+        let email = lodash.trim(lodash.get(payload, 'email', ''))
+        let password = lodash.trim(lodash.get(payload, 'password', ''))
+
+        if (!password) {
+            throw new Error('Password is required.')
+        } else {
+            if (password.length < 10) {
+                throw new Error('Password is too short. Must be at least 10 characters.')
+            }
+        }
+
+        if (!email) {
+            throw new Error('Email is required.')
+        } else {
+            email = email.trim()
+            if (/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email) === false) {
+                throw new Error('Invalid email.')
+            } else {
+                let domain = email.split('@').at(-1)
+                if (['gsc.edu.ph', 'gsu.edu.ph'].includes(domain) === false) {
+                    throw new Error('Only GSU emails are allowed.')
+                }
+            }
+        }
+
+        // Check email availability
+        let existingEmail = await req.app.locals.db.main.User.findOne({
+            email: email,
+            emailVerified: true,
+        })
+        if (existingEmail) {
+            throw new Error(`Email "${email}" is already registered.`)
+        }
+
+        let salt = passwordMan.randomString(16)
+        let passwordHash = passwordMan.hashPassword(password, salt)
+
+        let user = new req.app.locals.db.main.User({
+            email: email,
+            emailVerified: true,
+            salt: salt,
+            passwordHash: passwordHash,
+        });
+        user.active = true
+        user.roles = ["student"]
+        user.permissions = []
+        await user.save()
+
+        medicalRecord.userId = user._id 
+        await medicalRecord.save()
+      
+        let resetLink = `${CONFIG.app.url}/login`
+        let data = {
+            email: user.email,
+            firstName: medicalRecord.firstName,
+            resetLink: `${resetLink}`
+        }
+        if(ENV === 'dev' ) {
+            console.log(data)
+        } else {
+            await mailer.sendForgot(data)
+        }
+
+        flash.ok(req, 'admin', `Created`)
+        res.redirect(`/admin/medical-record/${medicalRecord._id}/view`)
+    } catch (err) {
+        console.error(err)
+        flash.error(req, 'register', err.message)
+        res.redirect(`/register`)
+        // next(err);
+    }
+});
 router.get('/admin/user/:userId/account', middlewares.getUserAccount, async (req, res, next) => {
     try {
         let userAccount = res.userAccount
@@ -393,17 +471,17 @@ router.post('/user/user/account', async (req, res, next) => {
         let password = lodash.trim(lodash.get(req, 'body.password'))
         let password2 = lodash.trim(lodash.get(req, 'body.password2'))
 
-        if(!password){
+        if (!password) {
             throw new Error('Current Password is required.')
         }
-        if(!password2){
+        if (!password2) {
             throw new Error('New Password is required.')
         }
-        if(password2.length < 10){
+        if (password2.length < 10) {
             throw new Error('New Password is too short. Must be at least 10 characters.')
         }
 
-        if(password === password2){
+        if (password === password2) {
             throw new Error('New Password and Current Password is the same!')
         }
 
@@ -421,11 +499,11 @@ router.post('/user/user/account', async (req, res, next) => {
         await user.save()
 
         flash.ok(req, 'student', 'Password changed.')
-        res.redirect('/student/account')
+        res.redirect('/medical-record/account')
     } catch (err) {
         console.error(err)
         flash.error(req, 'student', err.message)
-        res.redirect('/student/account')
+        res.redirect('/medical-record/account')
         // next(err);
     }
 });

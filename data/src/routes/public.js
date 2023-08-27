@@ -22,7 +22,7 @@ router.get('/', middlewares.requireAuthUser, async (req, res, next) => {
             let user = res.user.toObject()
 
             if (user.roles.includes('student')) {
-                return res.redirect('/medical-record/home')
+                return res.redirect('/student/home')
             }
             if (user.roles.includes('admin')) {
                 return res.redirect('/admin/medical-record/all')

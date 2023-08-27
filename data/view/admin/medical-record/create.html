@@ -4,7 +4,7 @@
 <div class="col-12 min-height-500 p-3 pb-3">
     {% include 'parts/flash.html' %}
     <div id="vApp" v-cloak :data-pending="pending" class="jumbotron p-3">
-        <form ref="frmMedCard" v-on:submit.prevent="onSubmit($event)" action="/admin/student/create" method="post">
+        <form ref="frmMedCard" v-on:submit.prevent="onSubmit($event)" action="" method="post">
             <template v-if="page==1">
                 <p class="lead text-center">Personal Details</p>
                 <hr>
@@ -300,22 +300,22 @@
         mounted: function(){
             const me = this 
 
-            // me.gender = 'M'
-            // me.civilStatus = 'Single'
-            // me.birthDate = '1986-09-15'
-            // me.citizenship = 'Filipino'
-            // me.religion = 'Roman Catholic'
-            // me.course = 'BSIT'
-            // me.address = 'Mclain, Buenavista, Guimaras'
+            me.gender = 'M'
+            me.civilStatus = 'Single'
+            me.birthDate = '1986-09-15'
+            me.citizenship = 'Filipino'
+            me.religion = 'Roman Catholic'
+            me.course = 'BSIT'
+            me.address = 'Mclain, Buenavista, Guimaras'
 
-            // me.fb = 'Nico Amarilla'
-            // me.mobileNumber = '09106189160'
-            // me.parentName = 'Virgie'
-            // me.parentPhoneNumber = '09106189160'
-            // me.emergencyPerson = 'Juan Cruz'
-            // me.emergencyPersonPhoneNumber = '09106189160'
+            me.fb = 'Nico Amarilla'
+            me.mobileNumber = '09106189160'
+            me.parentName = 'Virgie'
+            me.parentPhoneNumber = '09106189160'
+            me.emergencyPerson = 'Juan Cruz'
+            me.emergencyPersonPhoneNumber = '09106189160'
 
-            // me.page = 3
+            me.page = 3
 
 
         },

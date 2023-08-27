@@ -4,7 +4,7 @@
 <div class="col-12 min-height-500 p-3 pb-3">
     {% include 'parts/flash.html' %}
     <div id="vApp" v-cloak :data-pending="pending" class="jumbotron p-3">
-        <form ref="frmMedCard" v-on:submit.prevent="onSubmit($event)" action="/admin/student/{{medicalRecord._id}}/update" method="post">
+        <form ref="frmMedCard" v-on:submit.prevent="onSubmit($event)" action="" method="post">
             <template v-if="page==1">
                 <p class="lead text-center">Personal Details</p>
                 <hr>

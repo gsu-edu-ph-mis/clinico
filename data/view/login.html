@@ -4,10 +4,10 @@
 <div id="vApp" v-cloak class="col-md-6 ml-auto mr-auto mt-md-5 mb-md-5">
     <div style="box-shadow: 0 0 5px #333; border-radius: 10px; overflow: hidden; ">
         <div class="row" style="background: #fff;">
-            <div class="col-md-12 p-0 align-self-stretch text-center" style="background: url('/images/flat-lay-health-still-life-arrangement-with-copy-space.jpg') no-repeat top #b1cedc;background-size: cover; ">
+            <div class="col-md-12 align-self-stretch text-center" style="background: url('/images/flat-lay-health-still-life-arrangement-with-copy-space.jpg') no-repeat top #b1cedc;background-size: cover; ">
                 <img src="/images/clinico.png" width="100px%" alt="" class="mt-4 mb-4">
             </div>
-            <div class="col-md-12 p-0">
+            <div class="col-md-12">
                 <form ref="form" @submit.prevent="onSubmit($event)" action="/login" method="POST" class="p-4 min-height-400">
                     <h1 class="h5 text-center mb-4">Student Account</h1>
                     {% include 'parts/flash.html' %}

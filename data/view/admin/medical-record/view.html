@@ -4,7 +4,7 @@
 <div class="col-12 min-height-500 p-3 pb-3">
     {% include 'parts/flash.html' %}
     {% if not medicalRecord %}
-        <div class="alert alert-danger">Not filled-up yet. <a href="/student/update-medical-record">Add</a></div>
+        <div class="alert alert-danger">Not filled-up yet. <a href="/medical-record/update">Add</a></div>
     {% else %}
         <div class="jumbotron pt-4 p-3">
             <p class="lead mb-0">{{medicalRecord.firstName}} {{medicalRecord.middleName|first}}. {{medicalRecord.lastName}} {{medicalRecord.suffix}}</p>
@@ -88,7 +88,7 @@
                 </tr>
             </table>
             <div class="text-center">
-                <a class="btn btn-success" href="/admin/student/{{medicalRecord._id}}/update" role="button">Edit</a>
+                <a class="btn btn-success" href="/admin/medical-record/{{medicalRecord._id}}/update" role="button">Edit</a>
             </div>
         </div>
         <hr class="my-4">
@@ -170,8 +170,8 @@
             </form>
         </div>
         <div class="text-center">
-            <a class="btn btn-light" href="/admin/student/{{medicalRecord._id}}/print" role="button">Print</a>
-            <a class="btn btn-danger" href="/admin/student/{{medicalRecord._id}}/delete" role="button">Delete</a>
+            <a class="btn btn-light" href="/admin/medical-record/{{medicalRecord._id}}/print" role="button">Print</a>
+            <a class="btn btn-danger" href="/admin/medical-record/{{medicalRecord._id}}/delete" role="button">Delete</a>
         </div>
     {% endif %}
 </div>
@@ -224,7 +224,7 @@
                 const me = this;
                 me.pending = true;
                 me.$nextTick(function() {
-                    fetch(`/admin/student/{{medicalRecord._id}}/clinical-record/delete`, {
+                    fetch(`/admin/medical-record/{{medicalRecord._id}}/clinical-record/delete`, {
                         method: 'POST',
                         body: JSON.stringify({
                             _id: me.clinicalRecords[i]._id,
@@ -273,7 +273,7 @@
                         me.pending = true;
                         me.$nextTick(function() {
                             // me.$refs.frmClinicalRecord.submit();
-                            fetch(`/admin/student/{{medicalRecord._id}}/clinical-record/create`, {
+                            fetch(`/admin/medical-record/{{medicalRecord._id}}/clinical-record/create`, {
                                 method: 'POST',
                                 body: JSON.stringify({
                                     date: me.clinicalRecordDate,
@@ -352,7 +352,7 @@
                     if(e?.submitter?.id === 'btnSubmit'){
                         me.pending = true;
                         me.$nextTick(function() {
-                            fetch(`/admin/student/{{medicalRecord._id}}/relevance-data/create`, {
+                            fetch(`/admin/medical-record/{{medicalRecord._id}}/relevance-data/create`, {
                                 method: 'POST',
                                 body: JSON.stringify({
                                     relevanceData: me.relevanceData,
