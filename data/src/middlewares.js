@@ -228,6 +228,13 @@ module.exports = {
                     user = lodash.pickBy(user.toObject(), (_, key) => {
                         return !['createdAt', 'updatedAt', '__v', 'passwordHash', 'salt'].includes(key) // Remove these props
                     })
+                    // We need firstname for greetings
+                    let mrc = await req.app.locals.db.main.MedicalRecord.findOne({
+                        userId: user._id
+                    })
+                    if(mrc){
+                        user.firstName = mrc.firstName
+                    }
                 }
                 res.locals.user = user
             }

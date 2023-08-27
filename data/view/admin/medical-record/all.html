@@ -28,9 +28,9 @@
                         </template>
                     </td>
                     <td>
-                        <a class="text-underline" :href="`/admin/medical-record/${student._id}/view`">${student.lastName}</a>, 
-                        <a class="text-underline" :href="`/admin/medical-record/${student._id}/view`">${student.firstName}</a> 
-                        <a class="text-underline" :href="`/admin/medical-record/${student._id}/view`">${student.middleName}</a>
+                        <a class="text-underline" :href="`/admin/medical-record/view/${student._id}`">${student.lastName}</a>, 
+                        <a class="text-underline" :href="`/admin/medical-record/view/${student._id}`">${student.firstName}</a> 
+                        <a class="text-underline" :href="`/admin/medical-record/view/${student._id}`">${student.middleName}</a>
                     </td>
                     <td>${student.course}</td>
                     <td width="5%">
@@ -39,10 +39,10 @@
                             ...
                             </button>
                             <div class="dropdown-menu">
-                            <a class="dropdown-item" :href="`/admin/medical-record/${student._id}/view`">View</a>
-                            <a class="dropdown-item" :href="`/admin/medical-record/${student._id}/print`">Print</a>
+                            <a class="dropdown-item" :href="`/admin/medical-record/view/${student._id}`">View</a>
+                            <a class="dropdown-item" :href="`/admin/medical-record/print/${student._id}`">Print</a>
                             <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-danger" :href="`/admin/medical-record/${student._id}/delete`">Delete</a>
+                                <a class="dropdown-item text-danger" :href="`/admin/medical-record/delete/${student._id}`">Delete</a>
                             </div>
                         </div>
                     </td>

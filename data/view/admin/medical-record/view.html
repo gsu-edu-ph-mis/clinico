@@ -4,7 +4,7 @@
 <div class="col-12 min-height-500 p-3 pb-3">
     {% include 'parts/flash.html' %}
     {% if not medicalRecord %}
-        <div class="alert alert-danger">Not filled-up yet. <a href="/medical-record/update">Add</a></div>
+        <div class="alert alert-danger">Not filled-up yet.</div>
     {% else %}
         <div class="jumbotron pt-4 p-3">
             <p class="lead mb-0">{{medicalRecord.firstName}} {{medicalRecord.middleName|first}}. {{medicalRecord.lastName}} {{medicalRecord.suffix}}</p>
@@ -88,7 +88,7 @@
                 </tr>
             </table>
             <div class="text-center">
-                <a class="btn btn-success" href="/admin/medical-record/{{medicalRecord._id}}/update" role="button">Edit</a>
+                <a class="btn btn-success" href="/admin/medical-record/update/{{medicalRecord._id}}" role="button">Edit</a>
             </div>
         </div>
         <hr class="my-4">
@@ -170,8 +170,8 @@
             </form>
         </div>
         <div class="text-center">
-            <a class="btn btn-light" href="/admin/medical-record/{{medicalRecord._id}}/print" role="button">Print</a>
-            <a class="btn btn-danger" href="/admin/medical-record/{{medicalRecord._id}}/delete" role="button">Delete</a>
+            <a class="btn btn-light" href="/admin/medical-record/print/{{medicalRecord._id}}" role="button">Print</a>
+            <a class="btn btn-danger" href="/admin/medical-record/delete/{{medicalRecord._id}}" role="button">Delete</a>
         </div>
     {% endif %}
 </div>

@@ -4,7 +4,7 @@
 <div id="vApp" v-cloak v-bind:data-pending="pending" class="col-md-9 ml-auto mr-auto mt-md-5 mb-md-5">
     <div style="box-shadow: 0 0 5px #333; border-radius: 10px; overflow: hidden; ">
         <div class="row" style="background: #fff;">
-            <div class="col-xl-6 p-0 order-md-2 order-2">
+            <div class="col-xl-6 order-md-2 order-2">
                 <form ref="frmReg" v-on:submit.prevent="onSubmit($event)" action="/register" method="post" class="p-4 min-height-500">
                     <h1 class="h5 text-center mb-4">
                         <span>Create Account</span>
@@ -112,7 +112,7 @@
                 
                 </form>
             </div>
-            <div class="col-xl-6 p-0 order-md-1 order-1 align-self-stretch text-center" style="background: url('/images/flat-lay-health-still-life-arrangement-with-copy-space.jpg') no-repeat top #b1cedc;background-size: cover; ">
+            <div class="col-xl-6 order-md-1 order-1 align-self-stretch text-center" style="background: url('/images/flat-lay-health-still-life-arrangement-with-copy-space.jpg') no-repeat top #b1cedc;background-size: cover; ">
                 <img src="/images/clinico.png" alt="Logo" class="mt-4 mb-4">
             </div>
         </div>
@@ -169,11 +169,11 @@
         mounted: function(){
             const me = this 
 
-            // me.firstName = 'Nico'
-            // me.middleName = 'Gayapa'
-            // me.lastName = 'Amarilla'
-            // me.email = 'nico.amarilla@gsc.edu.ph'
-            // me.page = 2
+            me.firstName = 'Nico'
+            me.middleName = 'Gayapa'
+            me.lastName = 'Amarilla'
+            me.email = 'nico.amarilla@gsc.edu.ph'
+            me.page = 2
 
 
         },

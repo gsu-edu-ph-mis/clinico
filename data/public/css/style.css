@@ -186,7 +186,7 @@ div[data-pending="true"]:after {
 
 /* Mobile first */
 .container-app {
-    max-width: 414px;
+    max-width: 500px;
     background: #000;
     background: #fff;
     box-shadow: 0 0 1px #9E9E9E;
@@ -203,7 +203,7 @@ div[data-pending="true"]:after {
     z-index: 99;
 }
 .container-nav {
-    max-width: 414px;
+    max-width: 500px;
     background: #e9ecef;
     box-shadow: 0 0 1px #B8B9B9;
 }
@@ -1856,7 +1856,7 @@ button.btn-eye[data-state="text"] svg:nth-child(2) {
     
 }
 
-@media (max-width:414px){
+@media (max-width:500px){
     .container-app,
     .container-nav {
         border-radius: 0;

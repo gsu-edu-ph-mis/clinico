@@ -38,8 +38,7 @@
             </div>
             <div v-if="send" class="form-group">
                 <label for="email">Email Message Preview:</label>
-
-                <iframe style="pointer-events: none; overflow: hidden;"scrolling="no" width="100%" height="400px" v-bind:src="iframeUrl" frameborder="0"></iframe>
+                <iframe style="pointer-events: none; overflow: hidden; opacity: 0.6; border: 1px dotted gray;" scrolling="yes" width="100%" height="400px" v-bind:src="iframeUrl" frameborder="0"></iframe>
             </div>
             <div class="form-group text-center">
                 <button :disabled="disabled" class="btn btn-success">Create Online Account</button>

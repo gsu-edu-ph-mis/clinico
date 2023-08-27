@@ -18,12 +18,13 @@ module.exports = [
     'update_employee',
     'delete_employee',
 
-    // Students
-    'read_all_student',
-    'create_student',
-    'read_student',
-    'update_student',
-    'delete_student',
+    // Medical Record Card
+    'read_all_mrc',
+    'create_mrc',
+    'read_mrc',
+    'print_mrc',
+    'update_mrc',
+    'delete_mrc',
 
     // 'use_student_account', // Student account only
 

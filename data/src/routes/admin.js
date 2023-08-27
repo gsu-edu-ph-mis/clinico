@@ -23,7 +23,7 @@ router.use('/admin', async (req, res, next) => {
     next()
 })
 
-router.get('/admin/home', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/home', middlewares.guardRoute(['read_all_mrc']), async (req, res, next) => {
     try {
         res.redirect(`/admin/medical-record/all`)
     } catch (err) {
@@ -31,7 +31,7 @@ router.get('/admin/home', middlewares.guardRoute(['read_all_student', 'read_stud
     }
 });
 
-router.get('/admin/medical-record/all', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/medical-record/all', middlewares.guardRoute(['read_all_mrc']), async (req, res, next) => {
     try {
         let s = req?.query?.s || ''
         let searchQuery = {}
@@ -43,6 +43,7 @@ router.get('/admin/medical-record/all', middlewares.guardRoute(['read_all_studen
         }
         let students = await req.app.locals.db.main.MedicalRecord.find(searchQuery)
         let data = {
+            flash: flash.get(req, 'admin'),
             s: s,
             students: students
         }
@@ -52,7 +53,7 @@ router.get('/admin/medical-record/all', middlewares.guardRoute(['read_all_studen
     }
 });
 
-router.get('/admin/medical-record/:medicalRecordId/print', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/medical-record/print/:medicalRecordId', middlewares.guardRoute(['print_mrc']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -100,7 +101,7 @@ router.get('/admin/medical-record/:medicalRecordId/print', middlewares.guardRout
     }
 });
 
-router.get('/admin/medical-record/:medicalRecordId/view', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/medical-record/view/:medicalRecordId', middlewares.guardRoute(['read_mrc']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -123,7 +124,7 @@ router.get('/admin/medical-record/:medicalRecordId/view', middlewares.guardRoute
             }).join(', ')
         }
         let data = {
-            flash: flash.get(req, 'students'),
+            flash: flash.get(req, 'admin'),
             medicalRecord: medicalRecord
         }
         res.render('admin/medical-record/view.html', data);
@@ -132,7 +133,7 @@ router.get('/admin/medical-record/:medicalRecordId/view', middlewares.guardRoute
     }
 });
 
-router.get('/admin/medical-record/:medicalRecordId/update', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/medical-record/update/:medicalRecordId', middlewares.guardRoute(['update_mrc']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -151,7 +152,7 @@ router.get('/admin/medical-record/:medicalRecordId/update', middlewares.guardRou
             }).join(', ')
         }
         let data = {
-            flash: flash.get(req, 'students'),
+            flash: flash.get(req, 'admin'),
             civilStatuses: CONFIG.civilStatuses,
             medicalRecord: medicalRecord
         }
@@ -160,7 +161,7 @@ router.get('/admin/medical-record/:medicalRecordId/update', middlewares.guardRou
         next(err);
     }
 });
-router.post('/admin/medical-record/:medicalRecordId/update', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.post('/admin/medical-record/update/:medicalRecordId', middlewares.guardRoute(['update_mrc']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -201,19 +202,19 @@ router.post('/admin/medical-record/:medicalRecordId/update', middlewares.guardRo
             ...medicalRecord.toObject(),
             ...payload
         })
-        flash.ok(req, 'students', 'Medical Record Card updated.')
-        res.redirect(`/admin/medical-record/${medicalRecord._id}/view`)
+        flash.ok(req, 'admin', 'Medical Record Card updated.')
+        res.redirect(`/admin/medical-record/view/${medicalRecord._id}`)
     } catch (err) {
         next(err);
     }
 });
 
-router.get('/admin/medical-record/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/medical-record/create', middlewares.guardRoute(['create_mrc']), async (req, res, next) => {
     try {
 
 
         let data = {
-            flash: flash.get(req, 'students'),
+            flash: flash.get(req, 'admin'),
             civilStatuses: CONFIG.civilStatuses,
             medicalRecord: new req.app.locals.db.main.MedicalRecord({})
         }
@@ -222,7 +223,7 @@ router.get('/admin/medical-record/create', middlewares.guardRoute(['read_all_stu
         next(err);
     }
 });
-router.post('/admin/medical-record/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.post('/admin/medical-record/create', middlewares.guardRoute(['create_mrc']), async (req, res, next) => {
     try {
 
         let payload = JSON.parse(req?.body?.payload)
@@ -254,14 +255,14 @@ router.post('/admin/medical-record/create', middlewares.guardRoute(['read_all_st
         await req.app.locals.db.main.MedicalRecord.create({
             ...payload
         })
-        flash.ok(req, 'students', 'Medical Record Card added.')
+        flash.ok(req, 'admin', 'Medical Record Card added.')
         res.redirect(`/admin/medical-record/all`)
     } catch (err) {
         next(err);
     }
 });
 
-router.post('/admin/medical-record/:medicalRecordId/clinical-record/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.post('/admin/medical-record/:medicalRecordId/clinical-record/create', middlewares.guardRoute(['create_mrc', 'update_mrc']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -305,7 +306,7 @@ router.post('/admin/medical-record/:medicalRecordId/clinical-record/create', mid
     }
 });
 
-router.post('/admin/medical-record/:medicalRecordId/clinical-record/delete', middlewares.guardRoute(['read_all_student', 'read_student']), middlewares.antiCsrfCheck, async (req, res, next) => {
+router.post('/admin/medical-record/:medicalRecordId/clinical-record/delete', middlewares.guardRoute(['create_mrc', 'update_mrc']), middlewares.antiCsrfCheck, async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -337,7 +338,7 @@ router.post('/admin/medical-record/:medicalRecordId/clinical-record/delete', mid
     }
 });
 
-router.post('/admin/medical-record/:medicalRecordId/relevance-data/create', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.post('/admin/medical-record/:medicalRecordId/relevance-data/create', middlewares.guardRoute(['create_mrc', 'update_mrc']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -360,7 +361,7 @@ router.post('/admin/medical-record/:medicalRecordId/relevance-data/create', midd
     }
 });
 
-router.get('/admin/medical-record/:medicalRecordId/user/create', middlewares.getMedicalRecord, async (req, res, next) => {
+router.get('/admin/medical-record/:medicalRecordId/user/create', middlewares.guardRoute(['update_mrc']), middlewares.getMedicalRecord, async (req, res, next) => {
     try {
         let medicalRecord = res.medicalRecord
         let data = {
@@ -372,7 +373,7 @@ router.get('/admin/medical-record/:medicalRecordId/user/create', middlewares.get
         next(err);
     }
 });
-router.post('/admin/medical-record/:medicalRecordId/user/create', middlewares.getMedicalRecord, async (req, res, next) => {
+router.post('/admin/medical-record/:medicalRecordId/user/create', middlewares.guardRoute(['update_mrc']), middlewares.getMedicalRecord, async (req, res, next) => {
     try {
         let medicalRecord = res.medicalRecord
 
@@ -508,9 +509,51 @@ router.post('/user/user/account', async (req, res, next) => {
     }
 });
 
+router.get('/admin/medical-record/delete/:medicalRecordId', middlewares.guardRoute(['delete_mrc']), async (req, res, next) => {
+    try {
+        let medicalRecordId = req.params.medicalRecordId
+        let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
+            _id: medicalRecordId
+        }).lean()
+        if (!medicalRecord) {
+            throw new Error('Record not found.')
+        }
 
+        medicalRecord.user = await req.app.locals.db.main.User.findOne({
+            _id: medicalRecord.userId
+        })
 
-router.get('/admin/mail/verify-account', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+        let data = {
+            flash: flash.get(req, 'admin'),
+            medicalRecord: medicalRecord
+        }
+        res.render('admin/medical-record/delete.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
+router.post('/admin/medical-record/delete/:medicalRecordId', middlewares.guardRoute(['delete_mrc']), middlewares.antiCsrfCheck, async (req, res, next) => {
+    try {
+        let medicalRecordId = req.params.medicalRecordId
+        let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
+            _id: medicalRecordId
+        }).lean()
+        if (!medicalRecord) {
+            throw new Error('Record not found.')
+        }
+       
+        await req.app.locals.db.main.MedicalRecord.deleteOne({
+            _id: medicalRecord._id
+        })
+
+        flash.ok(req, 'admin', `MRC of ${medicalRecord.firstName} ${medicalRecord.lastName} deleted.`)
+        res.redirect('/admin/medical-record/all');
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/admin/mail/verify-account', middlewares.guardRoute(['read_all_mrc', 'read_mrc']), async (req, res, next) => {
     try {
         let email = req.query.email
         let firstName = req.query.firstName
@@ -529,7 +572,7 @@ router.get('/admin/mail/verify-account', middlewares.guardRoute(['read_all_stude
         next(err);
     }
 });
-router.get('/admin/mail/create-account', middlewares.guardRoute(['read_all_student', 'read_student']), async (req, res, next) => {
+router.get('/admin/mail/create-account', middlewares.guardRoute(['read_all_mrc', 'read_mrc']), async (req, res, next) => {
     try {
         let email = req.query.email
         let firstName = req.query.firstName
