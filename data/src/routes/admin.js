@@ -542,6 +542,10 @@ router.post('/admin/medical-record/delete/:medicalRecordId', middlewares.guardRo
             throw new Error('Record not found.')
         }
        
+        await req.app.locals.db.main.User.deleteOne({
+            _id: medicalRecord.userId
+        })
+
         await req.app.locals.db.main.MedicalRecord.deleteOne({
             _id: medicalRecord._id
         })
