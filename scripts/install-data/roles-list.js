@@ -23,6 +23,12 @@ const ROLES = [
         permissions: allPermissions
     },
     {
+        key: 'clinic',
+        name: 'Clinic Staff',
+        description: 'Can do mostly anything.',
+        permissions: allPermissions
+    },
+    {
         key: 'student',
         name: 'Student',
         description: 'Can access student account.',
