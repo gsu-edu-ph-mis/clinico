@@ -1,6 +1,6 @@
 
 //// Core modules
-let { timingSafeEqual } = require('crypto')
+let fs = require('fs')
 
 //// External modules
 const access = require('acrb')
@@ -124,7 +124,7 @@ module.exports = {
     getUserAccount: async (req, res, next) => {
         try {
             let userId = req.params?.userId || ''
-            if(!req.app.locals.db.mongoose.Types.ObjectId.isValid(userId)){
+            if (!req.app.locals.db.mongoose.Types.ObjectId.isValid(userId)) {
                 throw new Error("Sorry, user not found.")
             }
             let user = await req.app.locals.db.main.User.findById(userId);
@@ -140,7 +140,7 @@ module.exports = {
     getMedicalRecord: async (req, res, next) => {
         try {
             let medicalRecordId = req.params?.medicalRecordId || ''
-            if(!req.app.locals.db.mongoose.Types.ObjectId.isValid(medicalRecordId)){
+            if (!req.app.locals.db.mongoose.Types.ObjectId.isValid(medicalRecordId)) {
                 throw new Error("Sorry, medical record not found.")
             }
             let medicalRecord = await req.app.locals.db.main.MedicalRecord.findById(medicalRecordId);
@@ -203,13 +203,29 @@ module.exports = {
      * @param {*} next 
      */
     perAppViewVars: function (req, res, next) {
-        req.app.locals.app = {
-            title: CONFIG.app.title,
-            description: CONFIG.description,
+        try {
+            req.app.locals.app = {
+                title: CONFIG.app.title,
+                description: CONFIG.description,
+            }
+            req.app.locals.CONFIG = lodash.cloneDeep(CONFIG) // Config
+            req.app.locals.ENV = ENV
+
+            let courses = fs.readFileSync(`${CONFIG.app.dir}/scripts/install-data/courses.csv`, { encoding: 'utf8' })
+            courses = courses.split("\n")
+            courses = courses.map(e => {
+                e = e.split(',')
+                return {
+                    id: e.at(0),
+                    name: e.at(1)
+                }
+            })
+            req.app.locals.COURSES = courses
+
+            next()
+        } catch (error) {
+            next(error);
         }
-        req.app.locals.CONFIG = lodash.cloneDeep(CONFIG) // Config
-        req.app.locals.ENV = ENV
-        next()
     },
     /**
      * See: https://expressjs.com/en/api.html#res.locals
@@ -232,7 +248,7 @@ module.exports = {
                     let mrc = await req.app.locals.db.main.MedicalRecord.findOne({
                         userId: user._id
                     })
-                    if(mrc){
+                    if (mrc) {
                         user.firstName = mrc.firstName
                     }
                 }
@@ -280,12 +296,12 @@ module.exports = {
             let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
                 userId: res.user._id
             })
-            
+
             // Data privacy
             res.locals.acceptedDataPrivacy = lodash.get(res, 'user.acceptedDataPrivacy', false)
-            
+
             res.locals.medicalRecord = medicalRecord
-            
+
             next();
         } catch (err) {
             next(err)

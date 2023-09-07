@@ -37,6 +37,7 @@
     "nodemailer": "^6.9.4",
     "nunjucks": "^3.2.4",
     "nunjucks-filters": "github:kosinix/nunjucks-filters",
+    "ph-address": "^3.0.3",
     "pigura": "^1.0.1",
     "sharp": "^0.32.4"
   }

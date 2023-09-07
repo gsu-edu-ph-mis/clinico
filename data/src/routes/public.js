@@ -1,6 +1,5 @@
 //// Core modules
 let { timingSafeEqual } = require('crypto')
-const url = require('url');
 
 //// External modules
 const express = require('express')
@@ -10,30 +9,100 @@ const moment = require('moment')
 
 //// Modules
 const mailer = require('../mailer')
-const middlewares = require('../middlewares')
 const passwordMan = require('../password-man')
 
 // Router
 let router = express.Router()
 
-router.get('/', middlewares.requireAuthUser, async (req, res, next) => {
+// Login
+router.get('/login', async (req, res, next) => {
     try {
         if (lodash.get(req, 'session.authUserId')) {
-            let user = res.user.toObject()
-
-            if (user.roles.includes('student')) {
-                return res.redirect('/student/home')
-            }
-            if (user.roles.includes('admin')) {
-                return res.redirect('/admin/medical-record/all')
-            }
-
+            return res.redirect(`/`)
         }
-        res.render('home.html');
+        // console.log(req.session)
+        let ip = req.headers['x-real-ip'] || req.socket.remoteAddress;
+        res.render('login.html', {
+            flash: flash.get(req, 'login'),
+            ip: ip,
+            email: lodash.get(req, 'query.email', ''),
+        });
     } catch (err) {
         next(err);
     }
 });
+router.post('/login', async (req, res, next) => {
+    try {
+        if (CONFIG.loginDelay > 0) {
+            await new Promise(resolve => setTimeout(resolve, CONFIG.loginDelay)) // Rate limit 
+        }
+
+        let post = req.body;
+
+        let email = lodash.get(post, 'email', '');
+        let password = lodash.trim(lodash.get(post, 'password', ''))
+
+        // Find admin
+        let user = await req.app.locals.db.main.User.findOne({
+            email: email
+        });
+        if (!user) {
+            throw new Error('Incorrect Email.')
+        }
+
+        if (!user.emailVerified) {
+            throw new Error('Email unverified.')
+        }
+
+        if (!user.active) {
+            throw new Error('Your account is deactivated.');
+        }
+
+        // Check password
+        let passwordHash = passwordMan.hashPassword(password, user.salt);
+        if (!timingSafeEqual(Buffer.from(passwordHash, 'utf8'), Buffer.from(user.passwordHash, 'utf8'))) {
+            // throw new Error('Incorrect password.');
+            flash.error(req, 'login', 'Incorrect password.');
+            return res.redirect(`/login?email=${email}`);
+        }
+
+        if (!lodash.get(user.toObject(), 'settings.ol', true)) {
+            await new Promise(resolve => setTimeout(resolve, 30000)) // Rate limit 
+        }
+
+        // Save user id to session
+        lodash.set(req, 'session.authUserId', user._id);
+
+        // Security: Anti-CSRF token.
+        let antiCsrfToken = await passwordMan.randomStringAsync(16)
+        lodash.set(req, 'session.acsrf', antiCsrfToken);
+
+        if (user.roles.includes('student')) {
+            return res.redirect('/student/home')
+        }
+
+
+        return res.redirect('/');
+    } catch (err) {
+        console.error(err)
+        flash.error(req, 'login', err.message);
+        return res.redirect('/login');
+    }
+});
+
+router.get('/logout', async (req, res, next) => {
+    try {
+        lodash.set(req, 'session.authUserId', null);
+        lodash.set(req, 'session.acsrf', null);
+        lodash.set(req, 'session.flash', null);
+        res.clearCookie(CONFIG.session.name, CONFIG.session.cookie);
+
+        res.redirect('/login');
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/register', async (req, res, next) => {
     try {
         if (lodash.get(req, 'session.authUserId')) {
@@ -250,95 +319,6 @@ router.get('/verify/:secureKey', async (req, res, next) => {
     }
 });
 
-// Login
-router.get('/login', async (req, res, next) => {
-    try {
-        if (lodash.get(req, 'session.authUserId')) {
-            return res.redirect(`/`)
-        }
-        // console.log(req.session)
-        let ip = req.headers['x-real-ip'] || req.socket.remoteAddress;
-        res.render('login.html', {
-            flash: flash.get(req, 'login'),
-            ip: ip,
-            email: lodash.get(req, 'query.email', ''),
-        });
-    } catch (err) {
-        next(err);
-    }
-});
-router.post('/login', async (req, res, next) => {
-    try {
-        if (CONFIG.loginDelay > 0) {
-            await new Promise(resolve => setTimeout(resolve, CONFIG.loginDelay)) // Rate limit 
-        }
-
-        let post = req.body;
-
-        let email = lodash.get(post, 'email', '');
-        let password = lodash.trim(lodash.get(post, 'password', ''))
-
-        // Find admin
-        let user = await req.app.locals.db.main.User.findOne({
-            email: email
-        });
-        if (!user) {
-            throw new Error('Incorrect Email.')
-        }
-
-        if (!user.emailVerified) {
-            throw new Error('Email unverified.')
-        }
-
-        if (!user.active) {
-            throw new Error('Your account is deactivated.');
-        }
-
-        // Check password
-        let passwordHash = passwordMan.hashPassword(password, user.salt);
-        if (!timingSafeEqual(Buffer.from(passwordHash, 'utf8'), Buffer.from(user.passwordHash, 'utf8'))) {
-            // throw new Error('Incorrect password.');
-            flash.error(req, 'login', 'Incorrect password.');
-            return res.redirect(`/login?email=${email}`);
-        }
-
-        if (!lodash.get(user.toObject(), 'settings.ol', true)) {
-            await new Promise(resolve => setTimeout(resolve, 30000)) // Rate limit 
-        }
-
-        // Save user id to session
-        lodash.set(req, 'session.authUserId', user._id);
-
-        // Security: Anti-CSRF token.
-        let antiCsrfToken = await passwordMan.randomStringAsync(16)
-        lodash.set(req, 'session.acsrf', antiCsrfToken);
-
-        if (user.roles.includes('student')) {
-            return res.redirect('/medical-record/home')
-        }
-
-
-        return res.redirect('/');
-    } catch (err) {
-        console.error(err)
-        flash.error(req, 'login', err.message);
-        return res.redirect('/login');
-    }
-});
-
-router.get('/logout', async (req, res, next) => {
-    try {
-        lodash.set(req, 'session.authUserId', null);
-        lodash.set(req, 'session.acsrf', null);
-        lodash.set(req, 'session.flash', null);
-        res.clearCookie(CONFIG.session.name, CONFIG.session.cookie);
-
-        res.redirect('/login');
-    } catch (err) {
-        next(err);
-    }
-});
-
 // Forgot password
 router.get('/forgot', async (req, res, next) => {
     try {
@@ -540,4 +520,4 @@ router.get('/data-privacy', async (req, res, next) => {
 });
 
 
-module.exports = router;
+module.exports = router

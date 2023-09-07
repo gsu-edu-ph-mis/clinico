@@ -86,11 +86,33 @@
                 </div>
                 <div class="form-group" :data-error="errors.course" @click="errors.course=false">
                     <label for="course">Course</label>
-                    <input v-model="course" name="course" id="course" type="text" class="form-control">
+                    <input v-model="course" name="course" id="course" type="hidden" class="form-control">
+                    <autocomplete
+                        initial-value=""
+                        :initial-display="course"
+                        placeholder="Type your course..."
+                        :source="dataSource1"
+                        input-class="form-control"
+                        :request-headers="headers"
+                        v-on:selected="onSelect1"
+                        v-on:clear="course=''"
+                        >
+                    </autocomplete>
                 </div>
                 <div class="form-group" :data-error="errors.address" @click="errors.address=false">
                     <label for="address">Address</label>
-                    <input v-model="address" name="address" id="address" type="text" class="form-control">
+                    <input v-model="address" name="address" id="address" type="hidden" class="form-control">
+                    <autocomplete
+                        initial-value=""
+                        :initial-display="address"
+                        placeholder="Type your barangay and city/municipality..."
+                        :source="dataSource2"
+                        input-class="form-control"
+                        :request-headers="headers"
+                        v-on:selected="onSelect2"
+                        v-on:clear="address=''"
+                        >
+                    </autocomplete>
                 </div>
                 
                 <div class="text-center d-flex">
@@ -190,11 +212,18 @@
 {% endblock %}
 {% block scripts %}
 {{ super() }}
+<script src="{{app.url}}/js/vuejs-auto-complete.js"></script>
+<script src="{{app.url}}/js/vue-ph-address.js"></script>
 <script>
     var vApp = new Vue({
         el: '#vApp',
         delimiters: ["${", "}"],
-        mixins: [],
+        mixins: [
+            VuePhAddress.mixin
+        ],
+        components: {
+            'autocomplete': window["vuejs-autocomplete"]
+        },
         data: {
             pending: false,
             page: 1,
@@ -320,6 +349,18 @@
 
         },
         methods: {
+            onSelect1: function(o){
+                this.course = o.display
+            },
+            dataSource1: function(input) {
+                return '/courses?s=' + input
+            },
+            onSelect2: function(o){
+                this.address = o.display
+            },
+            dataSource2: function(input) {
+                return '/address?s=' + input
+            },
             onNoAllergy: function(){
                 const me = this;
                 if(me.allergies.includes('None')){
