@@ -10,23 +10,13 @@ BOA-ENG,Bachelor of Arts major in English
 BEED-GE,Bachelor of Elementary Education Major in General Education
 BFT,Bachelor of Food Technology
 BIT,Bachelor of Industrial Technology
-BIT-MOS,Bachelor of Industrial Technology
-BITAT,Bachelor of Industrial Technology major in Automotive Technology
-BIT-AT,MOS Bachelor of Industrial Technology Major in Automotive Technology 
 BIT-AT,Bachelor of Industrial Technology major in Automotive Technology
-BITEY,Bachelor of Industrial Technology major in Electrical Technology 
 BIT-ELT,Bachelor of Industrial Technology major in Electrical Technology
-BIT-ELT MOS,Bachelor of Industrial Technology Major in Electrical Technology 
-BIT-EXT MOS,Bachelor of Industrial Technology Major in Electronics Technology
-BIT-EXT,Bachelor of industrialTechnology major in Electronics Technology
-BITEX,Bachelor of Industrial Technology major in Electronics Technology
-BITFA,Bachelor of Industrial Technology major in Fashion and Apparel Technology
-BIT-FAT MOS,Bachelor of Industrial Technology Major in Fashion and Apparel Technology
+BIT-EXT,Bachelor of Industrial Technology Major in Electronics Technology
 BIT-FAT,Bachelor of Industrial Technology major in Fashion and Apparel Technology
 BIT-FT,Bachelor of Industrial Technology major in Food Technology
 BIT-MT MOS,Bachelor of Industrial Technology Major in Mechanical Technology
 BIT-MT,Bachelor of Industrial Technology major in Mechanical Technology
-BITMT,Bachelor of Industrial Technology major in Mechanical Technology
 BIT-PT,Bachelor of Industrial Technology Major in Packaging Technology
 BIT-EXT 1E,Bachelor of industrial technology major of electronics
 BLIS,Bachelor of Library and Information Science
@@ -83,3 +73,4 @@ BTLE,Bachelor of Technology and Livelihood Education
 BTLEHE,Bachelor of Technology and Livelihood Education major in HELE 
 BTLEIA,Bachelor of Technology and Livelihood Education major in Industrial Arts
 BOT,Bachelor of Theology
+O,Others
