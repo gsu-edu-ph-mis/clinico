@@ -11,6 +11,10 @@
     <link rel="shortcut icon" href="{{app.url}}/favicon.png" />
     <link rel="stylesheet" href="{{app.url}}/css/bootstrap.min.css" />
     <link rel="stylesheet" href="{{app.url}}/css/style.css" />
+    {% if ENV === 'dev' %}
+        <script src="{{app.url}}/js/eruda-3.0.1.js"></script>
+        <script>eruda.init();</script>
+    {% endif %}
 </head>
 <body class="body-public">
 <div class="container-fluid">
@@ -21,7 +25,12 @@
 </div>
 {% block scripts %}
 <script src="{{app.url}}/js/lodash.min.js"></script>
-<script src="{{app.url}}/js/vue.js"></script>
+{% if ENV === 'dev' %}
+    <script src="{{app.url}}/js/vue.js"></script>
+{% else %}
+    <script src="{{app.url}}/js/vue.min.js"></script>
+{% endif %}
+<script src="{{app.url}}/js/polyfills.js"></script>
 {% if ENV === 'dev' %}
 <script>
     document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +

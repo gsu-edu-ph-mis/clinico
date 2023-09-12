@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="{{app.url}}/css/bootstrap.min.css" />
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{app.url}}/css/style.css?v=20230208" />
+    {% if ENV === 'dev' %}
+        <script src="{{app.url}}/js/eruda-3.0.1.js"></script>
+        <script>eruda.init();</script>
+    {% endif %}
 </head>
 
 {% if user %}
@@ -66,7 +70,12 @@
 <script src="{{app.url}}/js/lodash.min.js"></script>
 <script src="{{app.url}}/js/moment.min.js"></script>
 <script src="{{app.url}}/js/moment-timezone-with-data-10-year-range.min.js"></script>
-<script src="{{app.url}}/js/vue.js"></script>
+{% if ENV === 'dev' %}
+    <script src="{{app.url}}/js/vue.js"></script>
+{% else %}
+    <script src="{{app.url}}/js/vue.min.js"></script>
+{% endif %}
+<script src="{{app.url}}/js/polyfills.js"></script>
 <!--<script src="{{app.url}}/js/zxcvbn.js"></script>-->
 <script src="{{app.url}}/js/script-cookies.js"></script>
 <script src="{{app.url}}/js/script.js"></script>

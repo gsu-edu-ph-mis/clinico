@@ -249,6 +249,11 @@ router.post('/register', async (req, res, next) => {
 
 router.get('/verify/:secureKey', async (req, res, next) => {
     try {
+        // Redirect if logged-in. Do not ruin verification token.
+        if (lodash.get(req, 'session.authUserId')) {
+            return res.redirect(`/`)
+        }
+
         let secureKey = req.params.secureKey
         let hash = req.query.hash
 

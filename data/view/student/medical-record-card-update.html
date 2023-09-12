@@ -406,7 +406,7 @@
                 try {
                     const me = this 
 
-                    if(e?.submitter?.id === 'btnNext1'){
+                    if(_.get(e, 'submitter.id') === 'btnNext1'){
                         if(!me.firstName){
                             me.errors.firstName = true
                             throw new Error('First Name is required.')
@@ -416,7 +416,7 @@
                             throw new Error('Middle Name is required.')
                         } else {
                             me.middleName = me.middleName.trim()
-                            if(me.middleName.at(-1) == '.' || me.middleName.length <= 1){
+                            if(me.middleName.slice(-1) == '.' || me.middleName.length <= 1){
                                 me.errors.middleName = true
                                 throw new Error('Please write your Middle Name in full.')
                             } 
@@ -456,7 +456,7 @@
                         me.page = 2
 
                     }
-                    if(e?.submitter?.id === 'btnNext2'){
+                    if(_.get(e, 'submitter.id') === 'btnNext2'){
                         if(!me.fb){
                             me.errors.fb = true
                             throw new Error('Facebook/Messenger Name is required.')
@@ -485,7 +485,7 @@
                         me.page = 3
 
                     }
-                    if(e?.submitter?.id === 'btnSubmit'){
+                    if(_.get(e, 'submitter.id') === 'btnSubmit'){
                         
                         if(!me.handedness){
                             me.errors.handedness = true
@@ -513,14 +513,13 @@
 
                     }
 
-                    if(e?.submitter?.id === 'btnSubmit'){
+                    if(_.get(e, 'submitter.id') === 'btnSubmit'){
                         
                         me.pending = true;
                         me.$nextTick(function() {
                             me.$refs.frmMedCard.submit();
                         });
                     }
-                    console.log(e?.submitter?.id)
                     
                 } catch (err) {
                     console.error(err)
