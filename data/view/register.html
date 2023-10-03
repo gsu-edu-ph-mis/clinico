@@ -12,26 +12,26 @@
                     {% include 'parts/flash.html' %}
                     <template v-if="page==1">
                         <div class="form-group row" :data-error="errors.firstName" @click="errors.firstName=false">
-                            <label for="firstName" class="col-5 col-form-label text-right">First Name <span class="text-danger">*</span></label>
-                            <div class="col-7">
+                            <label for="firstName" class="col-6 col-md-5 col-form-label text-right">First Name <span class="text-danger">*</span></label>
+                            <div class="col-6 col-md-7">
                                 <input v-model="firstName" name="firstName" type="text" class="form-control" id="firstName">
                             </div>
                         </div>
                         <div class="form-group row" :data-error="errors.middleName" @click="errors.middleName=false">
-                            <label for="middleName" class="col-5 col-form-label text-right">Middle Name <span class="text-danger">*</span></label>
-                            <div class="col-7">
+                            <label for="middleName" class="col-6 col-md-5 col-form-label text-right">Middle Name <span class="text-danger">*</span></label>
+                            <div class="col-6 col-md-7">
                                 <input v-model="middleName" name="middleName" type="text" class="form-control" id="middleName">
                             </div>
                         </div>
                         <div class="form-group row" :data-error="errors.lastName" @click="errors.lastName=false">
-                            <label for="lastName" class="col-5 col-form-label text-right">Last Name <span class="text-danger">*</span></label>
-                            <div class="col-7">
+                            <label for="lastName" class="col-6 col-md-5 col-form-label text-right">Last Name <span class="text-danger">*</span></label>
+                            <div class="col-6 col-md-7">
                                 <input v-model="lastName" name="lastName" type="text" class="form-control" id="lastName">
                             </div>
                         </div>
                         <div class="form-group row" :data-error="errors.suffix" @click="errors.suffix=false">
-                            <label for="suffix" class="col-5 col-form-label text-right">Suffix</label>
-                            <div class="col-7">
+                            <label for="suffix" class="col-6 col-md-5 col-form-label text-right">Suffix</label>
+                            <div class="col-6 col-md-7">
                                 <select v-model="suffix" name="suffix" id="suffix" class="form-control">
                                     <option value=""></option>
                                     <option>Jr.</option>
@@ -45,8 +45,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-5"></div>
-                            <div class="col-7 text-center">
+                            <div class="col-6 col-md-5"></div>
+                            <div class="col-6 col-md-7 text-center">
                                 <button id="btnNext" class="btn btn-success d-block w-100">Next</button>
                             </div>
                         </div>
@@ -55,21 +55,21 @@
                     </template>
                     <template v-if="page==2">
                         <div class="form-group row">
-                            <div class="col-5">
+                            <div class="col-6 col-md-5">
                                 
                             </div>
-                            <div class="col-7">
+                            <div class="col-6 col-md-7">
                             </div>
                         </div>
                         <div class="form-group row" :data-error="errors.email" @click="errors.email=false">
-                            <label for="email" class="col-5 col-form-label text-right">GSU Email <span class="text-danger">*</span></label>
-                            <div class="col-7">
+                            <label for="email" class="col-md-5 col-form-label text-md-right">GSU Email <span class="text-danger">*</span></label>
+                            <div class="col-md-7">
                                 <input v-model="email" type="text" class="form-control" id="email">
                             </div>
                         </div>
                         <div class="form-group row" :data-error="errors.email" @click="errors.email=false">
-                            <label for="email" class="col-5 col-form-label text-right">Account</label>
-                            <div class="col-7">
+                            <label for="email" class="col-md-5 col-form-label text-md-right">Account</label>
+                            <div class="col-md-7">
                                 <select name="" id="" class="form-control">
                                     <option>Student</option>
                                     <option>Staff</option>
@@ -77,9 +77,9 @@
                             </div>
                         </div>
                         <div class="form-group row" :data-error="errors.acceptedDataPrivacy" @click="errors.acceptedDataPrivacy=false">
-                            <div class="col-5 col-form-label"></div>
-                            <div class="col-7 d-flex align-items-center">
-                                <div class="custom-control custom-checkbox mb-0">
+                            <div class="col-md-5 col-form-label"></div>
+                            <div class="col-md-7 d-flex align-items-center">
+                                <div class="custom-control custom-checkbox mb-0 ml-1">
                                     <input v-model="acceptedDataPrivacy" name="acceptedDataPrivacy" type="checkbox" class="custom-control-input" id="acceptedDataPrivacy">
                                     <label class="custom-control-label" for="acceptedDataPrivacy">I have read and accept the <a target="_blank" href="/data-privacy">Data Privacy and Consent Form</a></label>
                                 </div>
@@ -87,10 +87,10 @@
                         </div>
                         
                         <div class="form-group row">
-                            <div class="col-5 text-right">
+                            <div class="col-6 col-md-5 text-right">
                                 
                             </div>
-                            <div class="col-7 text-center d-flex">
+                            <div class="col-6 col-md-7 text-center d-flex">
                                 <input :value="payload" type="hidden" name="payload" />
                                 <button id="btnBack" type="button" @click="page=1" class="btn btn-sm btn-light mr-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="22" viewBox="0 0 24 24"><title>Back</title><path fill="#222" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>
