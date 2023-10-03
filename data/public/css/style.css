@@ -96,9 +96,16 @@ body.student {
     background: linear-gradient(135deg, hsla(95, 47%, 71%, 1) 0%, hsla(168, 41%, 50%, 1) 28%, hsla(184, 62%, 39%, 1) 44%, rgb(37, 117, 182) 54%, hsla(211, 80%, 33%, 1) 100%) fixed;
 }
 body.body-public {
-    padding: 15px;
+    padding: 15px 0;
     background: hsla(95, 47%, 71%, 1);
     background: linear-gradient(135deg, hsla(95, 47%, 71%, 1) 0%, hsla(168, 41%, 50%, 1) 28%, hsla(184, 62%, 39%, 1) 44%, rgb(37, 117, 182) 54%, hsla(211, 80%, 33%, 1) 100%) fixed;
+}
+
+body.body-home {
+    font-family: "Poppins";
+    color: #125196;
+    background: whitesmoke;
+    background: linear-gradient(160deg, #e9eafc 0%, whitesmoke 28%) fixed;
 }
 
 body, pre {
@@ -1370,72 +1377,14 @@ button.btn-eye[data-state="text"] svg:nth-child(2) {
     /* color: purple; */
 }
 
-
-.scanner {
-    overflow:hidden; 
-    position:absolute; 
-    width: 100%; 
-    height: 100%; 
-    background: black;
+/* Video JS overrides */
+.video-js .vjs-big-play-button {
+    background-color: #FF5722;
+    border-radius: 0.9em;
 }
-.scanner-white {
-    background: #fefefe;
-}
-.scan-bar {
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 5px 0; 
-    box-shadow: 0 -1px 3px #000; 
-    position: fixed; 
-    bottom: 0; 
-    left: 0; 
-    width: 100%
-}
-.scan-bar-title {
-    background: white; 
-    z-index:1; 
-    padding: 3px 0; 
-    border-bottom: 1px solid #ccc; 
-    position: fixed; 
-    top:0; 
-    left: 0; 
-    width: 100%
-}
-.scan-text {
-    position: absolute;
-    text-align: center;
-    font-size: 28px;
-    top: 50%;
-    left: 0;
-    width: 100%;
-}
-
-.payroll-status {
-    padding: 3px 0;
-}
-.payroll-status div {
-    width: 25%;
-    height: 3px;
-    background: #fff;
-    margin-left: 5px;
-}
-.payroll-status.status-1 div:nth-child(1) {
-    background: #4bb29d;
-    margin-left: 0;
-}
-.payroll-status.status-2 div:nth-child(1),
-.payroll-status.status-2 div:nth-child(2) {
-    background: #4bb29d;
-}
-.payroll-status.status-3 div:nth-child(1),
-.payroll-status.status-3 div:nth-child(2),
-.payroll-status.status-3 div:nth-child(3) {
-    background: #4bb29d;
-}
-.payroll-status.status-4 div:nth-child(1),
-.payroll-status.status-4 div:nth-child(2),
-.payroll-status.status-4 div:nth-child(3),
-.payroll-status.status-4 div:nth-child(4) {
-    background: #4bb29d;
+.video-js:hover .vjs-big-play-button,
+.video-js .vjs-big-play-button:focus {
+  background-color: rgb(254, 82, 39, 0.4);
 }
 
 .rotate {
