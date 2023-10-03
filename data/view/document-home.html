@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{{app.description}}">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>{{app.title}}</title>
+
+    <!-- Bootstrap -->
+    <link rel="shortcut icon" href="{{app.url}}/favicon.png" />
+    <link rel="stylesheet" href="{{app.url}}/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{app.url}}/css/vjs.zencdn.net_8.5.2_video-js.css" />
+    <link rel="stylesheet" href="{{app.url}}/css/style.css" />
+    {% if ENV === 'dev' %}
+        <script src="{{app.url}}/js/eruda-3.0.1.js"></script>
+        <script>eruda.init();</script>
+    {% endif %}
+</head>
+<body class="body-home">
+<div class="container">
+    <div class="row">
+        {% block body %}{% endblock %}
+    </div>
+    <p class="text-center" style="margin:25px 0 0 0; font-size: 10px;">Developed by Guimaras State University <br>&copy; 2023</p>
+</div>
+{% block scripts %}
+    <script src="{{app.url}}/js/lodash.min.js"></script>
+    {% if ENV === 'dev' %}
+        <script src="{{app.url}}/js/vue.js"></script>
+    {% else %}
+        <script src="{{app.url}}/js/vue.min.js"></script>
+    {% endif %}
+    <script src="{{app.url}}/js/polyfills.js"></script>
+    <script src="{{app.url}}/js/vjs.zencdn.net_8.5.2_video.min.js"></script>
+    {% if ENV === 'dev' %}
+    <script>
+        document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +
+        ':35729/livereload.js?snipver=1"></' + 'script>')
+    </script>
+    {% endif %}
+{% endblock %}
+</body>
+</html>

@@ -14,11 +14,22 @@ const passwordMan = require('../password-man')
 // Router
 let router = express.Router()
 
+router.get('/', async (req, res, next) => {
+    try {
+        if (lodash.get(req, 'session.authUserId')) {
+            return res.redirect(`/auth`)
+        }
+        let data = {}
+        res.render('home.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
 // Login
 router.get('/login', async (req, res, next) => {
     try {
         if (lodash.get(req, 'session.authUserId')) {
-            return res.redirect(`/`)
+            return res.redirect(`/auth`)
         }
         // console.log(req.session)
         let ip = req.headers['x-real-ip'] || req.socket.remoteAddress;
@@ -82,7 +93,7 @@ router.post('/login', async (req, res, next) => {
         }
 
 
-        return res.redirect('/');
+        return res.redirect('/auth');
     } catch (err) {
         console.error(err)
         flash.error(req, 'login', err.message);
@@ -106,7 +117,7 @@ router.get('/logout', async (req, res, next) => {
 router.get('/register', async (req, res, next) => {
     try {
         if (lodash.get(req, 'session.authUserId')) {
-            return res.redirect(`/`)
+            return res.redirect(`/auth`)
         }
         res.render('register.html', {
             flash: flash.get(req, 'register'),
@@ -251,7 +262,7 @@ router.get('/verify/:secureKey', async (req, res, next) => {
     try {
         // Redirect if logged-in. Do not ruin verification token.
         if (lodash.get(req, 'session.authUserId')) {
-            return res.redirect(`/`)
+            return res.redirect(`/auth`)
         }
 
         let secureKey = req.params.secureKey
@@ -328,7 +339,7 @@ router.get('/verify/:secureKey', async (req, res, next) => {
 router.get('/forgot', async (req, res, next) => {
     try {
         if (lodash.get(req, 'session.authUserId')) {
-            return res.redirect(`/`)
+            return res.redirect(`/auth`)
         }
         res.render('forgot.html', {
             flash: flash.get(req, 'forgot'),
@@ -432,7 +443,7 @@ router.post('/forgot', async (req, res, next) => {
 router.get('/sent', async (req, res, next) => {
     try {
         if (lodash.get(req, 'session.authUserId')) {
-            return res.redirect(`/`)
+            return res.redirect(`/auth`)
         }
 
         res.render('sent.html', {
@@ -446,7 +457,7 @@ router.get('/sent', async (req, res, next) => {
 router.get('/sent-done', async (req, res, next) => {
     try {
         if (lodash.get(req, 'session.authUserId')) {
-            return res.redirect(`/`)
+            return res.redirect(`/auth`)
         }
         res.render('sent-done.html', {
             flash: flash.get(req, 'forgot'),

@@ -1,15 +1,39 @@
-{% extends "document-public.html" %}
+{% extends "document-home.html" %}
 
 {% block body %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12 bg-white">
-            asasas
+<div class="col-md-12">
+    <div class=" pt-3 pb-5 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <img src="/images/clinico-sm-g.png" alt="" class="mr-2"> <span>Clinic Online Portal</span>
+        </div>
+        <div class="d-flex">
+            <img src="/images/logo-sm.png" width="36px" alt="">
         </div>
     </div>
 </div>
+<div class="col-md-6 pb-5">
+
+    <h1 style="font-size: 28px;" class="mb-4">Update your <span class="text-success">Medical Record Card</span> online
+        now.</h1>
+    <div class="mb-4">
+        <p class="text-dark">The service is available to all Guimaras State University students.</p>
+    </div>
+    <a href="/register" class="btn btn-primary" style="border-radius: 3px;">Register</a>
+    <a href="/login" class="btn btn-success" style="border-radius: 3px;">Login</a>
+</div>
+<div class="col-md-6 text-center pb-5">
+    <video id="my-video" class="video-js vjs-fluid" style="box-shadow: 0 0 3px lightgray; border-radius: 3px; overflow: hidden;" controls preload="auto" width="640" height="480" poster="/media/what.jpg"
+        data-setup="{}">
+        <source src="/media/what.mp4" type="video/mp4" />
+        <!-- <source src="/media/what.webm" type="video/webm" /> -->
+        <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a
+            web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+        </p>
+    </video>
+</div>
+{% endblock %}
 {% block scripts %}
 {{ super() }}
 {% endblock %}
-{% endblock %}
-

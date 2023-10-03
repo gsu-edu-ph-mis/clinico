@@ -14,7 +14,7 @@ const middlewares = require('../middlewares')
 // Router
 let router = express.Router()
 
-router.get('/', middlewares.requireAuthUser, async (req, res, next) => {
+router.get('/auth', middlewares.requireAuthUser, async (req, res, next) => {
     try {
         if (lodash.get(req, 'session.authUserId')) {
             let user = res.user.toObject()
