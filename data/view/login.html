@@ -5,11 +5,11 @@
     <div style="box-shadow: 0 0 5px #333; border-radius: 10px; overflow: hidden; ">
         <div class="row" style="background: #fff;">
             <div class="col-md-12 align-self-stretch text-center" style="background: url('/images/flat-lay-health-still-life-arrangement-with-copy-space.jpg') no-repeat top #b1cedc;background-size: cover; ">
-                <img src="/images/clinico.png" width="100px%" alt="" class="mt-4 mb-4">
+                <a href="/"><img src="/images/clinico.png" width="155" alt="" class="mt-4 mb-4"></a>
             </div>
             <div class="col-md-12">
                 <form ref="form" @submit.prevent="onSubmit($event)" action="/login" method="POST" class="p-4 min-height-400">
-                    <h1 class="h5 text-center mb-4">Student Account</h1>
+                    <h1 class="h5 text-center mb-4">Login Page</h1>
                     {% include 'parts/flash.html' %}
                     <div class="form-group row mt-4">
                         <label for="email" class="col-4 col-form-label text-right">Email</label>
@@ -49,9 +49,6 @@
 {% endblock %}
 {% block scripts %}
 {{ super() }}
-{% if CONFIG.recaptchav3.enable %}
-    <script src="https://www.google.com/recaptcha/api.js?render=6LcB1_scAAAAABxNHSvZ1gnl5ZpTKZCoWa_JcYkV"></script>
-{% endif %}
 <script>
     var vApp = new Vue({
         el: '#vApp',
@@ -62,28 +59,27 @@
             email: '{{email}}',
             password: '',
             passwordType: 'password',
-            recaptchaToken: '',
+            recaptchaToken: ''
         },
         computed: {
-            disabled: function(){
-                return (!this.email || !this.password || this.pending);
+            disabled: function disabled() {
+                return !this.email || !this.password || this.pending;
             },
-            loginText: function(){
+            loginText: function loginText() {
                 return this.pending ? 'Logging in...' : 'Login';
             }
         },
         methods: {
-           
-            togglePassword: function () {
+            togglePassword: function togglePassword() {
                 if (this.passwordType === "password") {
                     return this.passwordType = "text";
                 }
-                this.passwordType = "password"
+                this.passwordType = "password";
             },
-            onSubmit: function(){
-                let me = this;
+            onSubmit: function onSubmit() {
+                var me = this;
                 me.pending = true;
-                me.$nextTick(function() {
+                me.$nextTick(function () {
                     me.$refs.form.submit();
                 });
             }

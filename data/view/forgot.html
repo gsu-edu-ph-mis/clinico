@@ -16,14 +16,13 @@
                 <div>
                     {% include 'parts/flash.html' %}
                     <form ref="form" v-on:submit.prevent="onSubmit" action="/forgot" method="POST" novalidate>
-                        <div class="form-group">
+                        <div class="form-group" :data-error="errors.email" @click="errors.email=false">
                             <input v-bind:readonly="pending" placeholder="Type your email..." v-model="email" type="email" name="email" class="form-control" autocomplete="off">
                         </div>
                         <input type="hidden" name="recaptchaToken" v-model="recaptchaToken">
                         <div class="form-group">
                             <button v-bind:disabled="disabled" class="btn btn-success btn-full-width">${loginText}</button>
                         </div>
-                        {# <small class="note">Logging in from IP Address: {{ip}}</small> #}
                     </form>
                 </div>
             </div>
@@ -33,52 +32,54 @@
 {% endblock %}
 {% block scripts %}
 {{ super() }}
-{% if CONFIG.recaptchav3.enable %}
-<script src="https://www.google.com/recaptcha/api.js?render=6LcB1_scAAAAABxNHSvZ1gnl5ZpTKZCoWa_JcYkV"></script>
-{% endif %}
 <script>
     var vApp = new Vue({
         el: '#vApp',
         delimiters: ["${", "}"],
-        mixins: [
-        ],
+        mixins: [],
         data: {
             pending: false,
             email: '{{email}}',
-            recaptchaEnable: {{CONFIG.recaptchav3.enable|default(false, true)}},
-            recaptchaClientKey: '{{CONFIG.recaptchav3.clientKey}}',
-            recaptchaToken: '',
+            errors: {
+                email: false
+            }
         },
-        validations: {
-            
-        },
+        validations: {},
         computed: {
-            disabled: function(){
-                return (!this.email || this.pending);
+            disabled: function disabled() {
+                return !this.email || this.pending;
             },
-            loginText: function(){
+            loginText: function loginText() {
                 return this.pending ? 'Processing...' : 'Reset Password';
             }
         },
         methods: {
-            onSubmit: function(){
-                var me = this;
-               
-                    me.pending = true;
-                    if(me.recaptchaEnable){
-                        grecaptcha.ready(function() {
-                            grecaptcha.execute(me.recaptchaClientKey, {action: 'submit'}).then(function(token) {
-                                me.recaptchaToken = token;
-                                me.$nextTick(function() {
-                                    me.$refs.form.submit();
-                                });
-                            });
-                        });
+            onSubmit: function onSubmit() {
+                try {
+                    var me = this;
+                    if (!me.email) {
+                        me.errors.email = true;
+                        throw new Error('Email is required.');
                     } else {
-                        me.$nextTick(function() {
-                            me.$refs.form.submit();
-                        });
+                        me.email = me.email.trim();
+                        if (/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/g.test(me.email) === false) {
+                            me.errors.email = true;
+                            throw new Error('Invalid email.');
+                        } else {
+                            var domain = me.email.split('@').pop();
+                            if (['gsu.edu.ph'].includes(domain) === false) {
+                                me.errors.email = true;
+                                throw new Error('Only GSU emails are allowed (email that ends in @gsu.edu.ph).');
+                            }
+                        }
                     }
+                    me.pending = true;
+                    me.$nextTick(function () {
+                        me.$refs.form.submit();
+                    });
+                } catch (err) {
+                    alert(err.message);
+                }
             }
         }
     });
