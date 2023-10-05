@@ -19,7 +19,6 @@
                         <div class="form-group" :data-error="errors.email" @click="errors.email=false">
                             <input v-bind:readonly="pending" placeholder="Type your email..." v-model="email" type="email" name="email" class="form-control" autocomplete="off">
                         </div>
-                        <input type="hidden" name="recaptchaToken" v-model="recaptchaToken">
                         <div class="form-group">
                             <button v-bind:disabled="disabled" class="btn btn-success btn-full-width">${loginText}</button>
                         </div>
