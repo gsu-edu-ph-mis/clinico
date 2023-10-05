@@ -115,6 +115,7 @@ const schema = new Schema({
         trim: true,
         default: ''
     },
+    attachments: [],
     userId: {
         $type: mongoose.Schema.Types.ObjectId, // assoc. user account 
     },

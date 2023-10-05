@@ -596,5 +596,27 @@ router.get('/admin/mail/create-account', middlewares.guardRoute(['read_all_mrc',
     }
 });
 
-
+// 
+router.post('/admin/medical-record/attach/:medicalRecordId', middlewares.guardRoute(['update_mrc']), middlewares.dataUrlToReqFiles(['attachment']), middlewares.handleUpload({ allowedMimes: ["application/pdf"] }), async (req, res, next) => {
+    try {
+        let medicalRecordId = req.params.medicalRecordId
+        let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
+            _id: medicalRecordId
+        }).lean()
+        if (!medicalRecord) {
+            throw new Error('Record not found.')
+        }
+        
+        let attachments = lodash.get(medicalRecord, 'attachments', [])
+        attachments.push(lodash.get(req, 'saveList.attachment[0]'))
+        let x = await req.app.locals.db.main.MedicalRecord.updateOne({ _id: medicalRecord._id }, {
+            $set: {
+                attachments: attachments
+            }
+        })
+        res.send(req.saveList)
+    } catch (err) {
+        next(err);
+    }
+});
 module.exports = router;
