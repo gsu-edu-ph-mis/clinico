@@ -389,6 +389,8 @@ router.post('/forgot', async (req, res, next) => {
             throw new Error('This is for student accounts only. Please contact the system admin.');
         }
 
+        let mrc = await req.app.locals.db.main.MedicalRecord.findOne({ userId: user._id });
+
         // Delete expired
         await req.app.locals.db.main.PasswordReset.deleteMany({
             expiredAt: {
@@ -424,14 +426,14 @@ router.post('/forgot', async (req, res, next) => {
 
         let data = {
             email: user.email,
-            firstName: user.firstName,
+            firstName: mrc.firstName,
             resetLink: `${resetLink}`
         }
-        if (ENV === 'dev') {
-            console.log(data)
-        } else {
+        // if (ENV === 'dev') {
+        //     console.log(data)
+        // } else {
             await mailer.sendForgot(data)
-        }
+        // }
 
         res.redirect(`/sent?email=${user.email}`);
     } catch (err) {

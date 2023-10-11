@@ -40,7 +40,7 @@ module.exports = {
     },
     sendForgot: async (templateVars) => {
         templateVars['baseUrl'] = `${CONFIG.app.url}`
-        templateVars['previewText'] = `Forgot password...`
+        templateVars['previewText'] = templateVars['previewText'] || `Forgot password...`
         let mailOptions = {
             from: `Clinic Online <clinic-noreply@gsu.edu.ph>`,
             to: templateVars['email'],

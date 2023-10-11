@@ -1,0 +1,98 @@
+{% extends "document-admin.html" %}
+
+{% block body %}
+<div class="col-12 min-height-500 p-3 pb-3 bg-light">
+    <div>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link {{urlPath|active_class([r/^\/admin\/user\/([a-f\d]{24})\/(.)+/])}}" href="/admin/user/{{userAccount._id}}/account">Account</a>
+            </li>
+        </ul>
+    </div>
+    <div id="vApp" v-cloak :data-pending="pending" class="p-3 tab-content">
+        <p class="lead text-center">Change Email</p>
+        {% include 'parts/flash.html' %}
+        <form ref="form" @submit.prevent="onSubmit($event)" action="" method="POST" class="p-4">
+            <div class="form-group" :data-error="errors.email" @click="errors.email=false">
+                <label for="email">Email</label>
+                <input name="email" v-model="email" id="email" type="email" class="form-control">
+            </div>
+          
+            <div class="form-row pt-3 pb-3">
+                <div class="col-md-6 text-md-left">
+                    <a class="btn btn-link btn-sm" href="/admin/user/{{userAccount._id}}/account">Cancel</a>
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <button :disabled="disabled" class="btn btn-sm btn-success">Change</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    var vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [],
+        data: {
+            pending: false,
+            firstName: '{{medicalRecord.firstName}}',
+            email: '{{userAccount.email}}',
+            errors: {
+                email: false,
+            }
+        },
+        computed: {
+            disabled: function(){
+                var me = this;
+                if(!me.email){
+                    return true
+                }
+
+                return false
+            }
+        },
+        mounted: function(){
+        },
+        methods: {
+            onSubmit: function(){
+                try {
+                    const me = this;
+
+                    if(!me.email){
+                        me.errors.email = true
+                        throw new Error('Email is required.')
+                    }
+                    if(!me.email){
+                        me.errors.email = true
+                        throw new Error('Email is required.')
+                    } else {
+                        me.email = me.email.trim()
+                        if(/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/g.test(me.email) === false){
+                            me.errors.email = true
+                            throw new Error('Invalid email.')
+                        } else {
+                            let domain = me.email.split('@').at(-1)
+                            if(['gsu.edu.ph'].includes(domain) === false){
+                                me.errors.email = true
+                                throw new Error('Only GSU emails are allowed.')
+                            }
+                        }
+                    }
+
+                    me.pending = true;
+                    me.$nextTick(function() {
+                        me.$refs.form.submit();
+                    });
+                } catch (err) {
+                    alert(err.message)
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+

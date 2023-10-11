@@ -9,7 +9,7 @@ const lodash = require('lodash')
 const moment = require('moment')
 
 //// Modules
-// const mailer = require('../mailer')
+const mailer = require('../mailer')
 const middlewares = require('../middlewares')
 const passwordMan = require('../password-man')
 
@@ -456,59 +456,167 @@ router.get('/admin/user/:userId/account', middlewares.getUserAccount, async (req
     try {
         let userAccount = res.userAccount
         let data = {
-            flash: flash.get(req, 'student'),
+            flash: flash.get(req, 'user'),
             userAccount: userAccount,
-            civilStatuses: CONFIG.civilStatuses
         }
         res.render('admin/user/account.html', data);
     } catch (err) {
         next(err);
     }
 });
-router.post('/user/user/account', async (req, res, next) => {
+router.get('/admin/user/:userId/password-reset', middlewares.getUserAccount, middlewares.getUserMedicalRecord, async (req, res, next) => {
     try {
-        let user = res.user
-
-        let password = lodash.trim(lodash.get(req, 'body.password'))
-        let password2 = lodash.trim(lodash.get(req, 'body.password2'))
-
-        if (!password) {
-            throw new Error('Current Password is required.')
+        let userAccount = res.userAccount
+        let medicalRecord = res.medicalRecord
+        let password = passwordMan.genPassword()
+        let data = {
+            flash: flash.get(req, 'user'),
+            userAccount: userAccount,
+            medicalRecord: medicalRecord,
+            password: password,
         }
-        if (!password2) {
-            throw new Error('New Password is required.')
-        }
-        if (password2.length < 10) {
-            throw new Error('New Password is too short. Must be at least 10 characters.')
-        }
-
-        if (password === password2) {
-            throw new Error('New Password and Current Password is the same!')
-        }
-
-        // Check password
-        let passwordHash = passwordMan.hashPassword(password, user.salt);
-        if (!timingSafeEqual(Buffer.from(passwordHash, 'utf8'), Buffer.from(user.passwordHash, 'utf8'))) {
-            throw new Error('Incorrect password.');
-        }
-
-        let salt2 = passwordMan.randomString(16)
-        let passwordHash2 = passwordMan.hashPassword(password2, salt2)
-
-        user.salt = salt2
-        user.passwordHash = passwordHash2
-        await user.save()
-
-        flash.ok(req, 'student', 'Password changed.')
-        res.redirect('/medical-record/account')
+        res.render('admin/user/password-reset.html', data);
     } catch (err) {
-        console.error(err)
-        flash.error(req, 'student', err.message)
-        res.redirect('/medical-record/account')
-        // next(err);
+        next(err);
     }
 });
+// check email look
+router.get('/admin/user/:userId/password-reset-email-preview', middlewares.getUserAccount, middlewares.getUserMedicalRecord, async (req, res, next) => {
+    try {
+        let firstName = lodash.get(req, 'query.firstName', 'Juan')
+        let email = lodash.get(req, 'query.email', 'juan@example.com')
+        let password = lodash.get(req, 'query.password', passwordMan.genPassword(10))
+        let loginUrl = lodash.get(req, 'query.loginUrl', `${CONFIG.app.url}/login`)
+        res.render('emails/forgot.html', {
+            to: email,
+            firstName: firstName,
+            password: password,
+            appUrl: `${CONFIG.app.url}`,
+            loginUrl: loginUrl,
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+router.post('/admin/user/:userId/password-reset', middlewares.getUserAccount, middlewares.getUserMedicalRecord, async (req, res, next) => {
+    try {
+        let userAccount = res.userAccount
+        let medicalRecord = res.medicalRecord
+        let email = userAccount.email
+        let user = userAccount
 
+        // Delete expired
+        await req.app.locals.db.main.PasswordReset.deleteMany({
+            expiredAt: {
+                $lte: moment().toDate()
+            }
+        })
+
+        let passwordReset = await req.app.locals.db.main.PasswordReset.findOne({
+            createdBy: email,
+        })
+        if (passwordReset) {
+            let diff = moment(passwordReset.expiredAt).diff(moment(), 'minutes')
+            throw new Error(`You already sent a request for a password reset. Please try again after ${diff} minutes.`)
+        }
+
+        let secureKey = await passwordMan.randomStringAsync(32)
+        let resetLink = `${CONFIG.app.url}/forgotten/${secureKey}`
+        let hash = passwordMan.hashSha256(resetLink)
+        resetLink += '?hash=' + hash
+
+        let momentNow = moment()
+        passwordReset = await req.app.locals.db.main.PasswordReset.create({
+            secureKey: secureKey,
+            createdBy: email,
+            payload: {
+                url: resetLink,
+                userId: user._id,
+                hash: hash
+            },
+            createdAt: momentNow.toDate(),
+            expiredAt: momentNow.clone().add(1, 'hour').toDate(),
+        })
+
+        let data = {
+            email: user.email,
+            firstName: medicalRecord.firstName,
+            resetLink: `${resetLink}`,
+            previewText: 'Password Reset'
+        }
+        // if (ENV === 'dev') {
+        //     console.log(data)
+        // } else {
+            await mailer.sendForgot(data)
+        // }
+        flash.ok(req, 'user', 'Password reset email sent.')
+        res.redirect(`/admin/user/${userAccount._id}/account`);
+    } catch (err) {
+        console.error(err)
+        next(err)
+    }
+});
+router.get('/admin/user/:userId/change-email', middlewares.getUserAccount, middlewares.getUserMedicalRecord, async (req, res, next) => {
+    try {
+        let userAccount = res.userAccount
+        let medicalRecord = res.medicalRecord
+        let password = passwordMan.genPassword()
+        let data = {
+            flash: flash.get(req, 'user'),
+            userAccount: userAccount,
+            medicalRecord: medicalRecord,
+            password: password,
+        }
+        res.render('admin/user/change-email.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
+router.post('/admin/user/:userId/change-email', middlewares.getUserAccount, middlewares.getUserMedicalRecord, async (req, res, next) => {
+    try {
+        let userAccount = res.userAccount
+        let medicalRecord = res.medicalRecord
+        let email1 = userAccount.email
+        let email2 = lodash.get(req, 'body.email')
+        let user = userAccount
+
+        if(email1 === email2){
+            throw new Error('Nothing to change.')
+        }
+
+        if (!email2) {
+            throw new Error('Email is required.')
+        } else {
+            email2 = email2.trim()
+            if (/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email2) === false) {
+                throw new Error('Invalid email.')
+            } else {
+                let domain = email2.split('@').at(-1)
+                if (['gsu.edu.ph'].includes(domain) === false) {
+                    throw new Error('Only GSU emails are allowed.')
+                }
+            }
+        }
+
+        // Check email availability
+        let existingEmail = await req.app.locals.db.main.User.findOne({
+            email: email2,
+            emailVerified: true,
+        })
+        if (existingEmail) {
+            throw new Error(`Email "${email2}" is already registered.`)
+        }
+
+        userAccount.email = req.body.email
+        await userAccount.save()
+
+        flash.ok(req, 'user', 'Email changed.')
+        res.redirect(`/admin/user/${userAccount._id}/account`);
+    } catch (err) {
+        console.error(err)
+        next(err)
+    }
+});
 router.get('/admin/medical-record/delete/:medicalRecordId', middlewares.guardRoute(['delete_mrc']), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId

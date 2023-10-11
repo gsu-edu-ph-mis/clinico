@@ -137,6 +137,25 @@ module.exports = {
             next(err);
         }
     },
+    getUserMedicalRecord: async (req, res, next) => {
+        try {
+            let userAccount = res.userAccount 
+            if(!userAccount){
+                throw new Error('Sorry, user account not found for MRC.')
+            }
+
+            let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
+                userId: userAccount._id
+            });
+            if (!medicalRecord) {
+                throw new Error("Sorry, medical record not found.")
+            }
+            res.medicalRecord = medicalRecord
+            next();
+        } catch (err) {
+            next(err);
+        }
+    },
     getMedicalRecord: async (req, res, next) => {
         try {
             let medicalRecordId = req.params?.medicalRecordId || ''
