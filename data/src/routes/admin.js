@@ -41,7 +41,29 @@ router.get('/admin/medical-record/all', middlewares.guardRoute(['read_all_mrc'])
                 lastName: new RegExp(s, "i")
             }
         }
-        let students = await req.app.locals.db.main.MedicalRecord.find(searchQuery)
+
+        const lastId = req.query?.lastId
+        if (lastId) {
+            searchQuery = {
+                _id: {
+                    $lt: new req.app.locals.db.mongoose.Types.ObjectId(lastId)
+                }
+            }
+        }
+
+        let students = await req.app.locals.db.main.MedicalRecord.aggregate([
+            {
+                $sort: {
+                    _id: -1
+                }
+            },
+            {
+                $match: searchQuery
+            },
+            {
+                $limit: 500
+            },
+        ])
         let data = {
             flash: flash.get(req, 'admin'),
             s: s,
@@ -399,7 +421,7 @@ router.post('/admin/medical-record/:medicalRecordId/user/create', middlewares.gu
                 throw new Error('Invalid email.')
             } else {
                 let domain = email.split('@').at(-1)
-                if (['gsc.edu.ph', 'gsu.edu.ph'].includes(domain) === false) {
+                if (['gsu.edu.ph'].includes(domain) === false) {
                     throw new Error('Only GSU emails are allowed.')
                 }
             }
@@ -440,16 +462,14 @@ router.post('/admin/medical-record/:medicalRecordId/user/create', middlewares.gu
         if(ENV === 'dev' ) {
             console.log(data)
         } else {
-            await mailer.sendForgot(data)
+            // await mailer.sendForgot(data)
         }
 
-        flash.ok(req, 'admin', `Created`)
-        res.redirect(`/admin/medical-record/${medicalRecord._id}/view`)
+        flash.ok(req, 'admin', `Created online account.`)
+        res.redirect(`/admin/medical-record/view/${medicalRecord._id}`)
     } catch (err) {
         console.error(err)
-        flash.error(req, 'register', err.message)
-        res.redirect(`/register`)
-        // next(err);
+        next(err);
     }
 });
 router.get('/admin/user/:userId/account', middlewares.getUserAccount, async (req, res, next) => {
@@ -460,6 +480,20 @@ router.get('/admin/user/:userId/account', middlewares.getUserAccount, async (req
             userAccount: userAccount,
         }
         res.render('admin/user/account.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
+router.get('/admin/user/:userId/delete', middlewares.getUserAccount, middlewares.getUserMedicalRecord, async (req, res, next) => {
+    try {
+        let userAccount = res.userAccount
+        let medicalRecord = res.medicalRecord
+
+        await req.app.locals.db.main.User.deleteOne({
+            _id: userAccount._id
+        });
+        flash.ok(req, 'admin', 'User account deleted.')
+        res.redirect(`/admin/medical-record/view/${medicalRecord._id}`);
     } catch (err) {
         next(err);
     }

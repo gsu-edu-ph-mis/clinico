@@ -4,16 +4,16 @@
 <div id="vApp" v-cloak v-bind:data-pending="pending" class="col-md-12 py-3">
     {% include 'parts/flash.html' %}
     <h1 class="h6">Medical Records</h1>
-    <form action="">
+    <form ref="formSearch" action="">
         <div class="form-group">
             <input v-model="s" name="s" type="search" class="form-control" placeholder="Search by last name...">
         </div>
     </form>
-    <div v-if="students.length > 0">
-        <div class="table-responsive pb-5">
-            <table class="table table-sm table-striped mb-5">
+    <div v-if="students.length > 0" class="pb-5">
+        <div class="table-responsive">
+            <table class="table table-sm table-striped table-bordered">
                 <tr>
-                    <th width="5%"></th>
+                    <th width="1%"></th>
                     <th width="25%">Name</th>
                     <th>Course</th>
                     <th></th>
@@ -49,23 +49,32 @@
                 </tr>
             </table>
         </div> 
+        <div class="text-center">
+            <a href="/admin/medical-record/all?lastId={{students.at(-1)._id}}" class="btn btn-sm btn-light">View More</a>
+        </div>
     </div>
     <div v-else>
-        <p>No record found.</p>
+        <p>No record found. <a href="/admin/medical-record/all">Go back</a>.</p>
     </div>
 </div>
 {% endblock %}
 {% block scripts %}
 {{ super() }}
 <script>
+    var s = '{{s}}';
+    var students = {{students|default([], true)|stringify|safe}};
+
     var vApp = new Vue({
         el: '#vApp',
         delimiters: ["${", "}"],
         mixins: [],
         data: {
             pending: false,
-            s: '{{s}}',
-            students: {{students|default([], true)|stringify|safe}}
+            s: s,
+            students: students
+        },
+        methods: {
+            
         }
     })
 </script>
