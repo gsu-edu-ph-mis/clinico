@@ -25,12 +25,34 @@ module.exports = [
     // clinic
     {
         "roles" : [
-            "clinic"
+            "admin"
         ],
         "firstName" : "Jean",
         "middleName" : "G",
         "lastName" : "Baterzal",
         "email" : "clinic@gsu.edu.ph",
+        "active" : true,
+        permissions: [],
+    },
+    {
+        "roles" : [
+            "admin"
+        ],
+        "firstName" : "Richelle",
+        "middleName" : "D",
+        "lastName" : "Gallo",
+        "email" : "xgallo1226@gmail.com",
+        "active" : true,
+        permissions: [],
+    },
+    {
+        "roles" : [
+            "admin"
+        ],
+        "firstName" : "Cherry Ann",
+        "middleName" : "Y",
+        "lastName" : "Salapio",
+        "email" : "xgallo1226@gmail.com",
         "active" : true,
         permissions: [],
     },

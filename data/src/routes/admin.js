@@ -12,6 +12,7 @@ const moment = require('moment')
 const mailer = require('../mailer')
 const middlewares = require('../middlewares')
 const passwordMan = require('../password-man')
+const S3_CLIENT = require('../aws-s3-client')  // V3 SDK
 
 // Router
 let router = express.Router()
@@ -450,16 +451,16 @@ router.post('/admin/medical-record/:medicalRecordId/user/create', middlewares.gu
         user.permissions = []
         await user.save()
 
-        medicalRecord.userId = user._id 
+        medicalRecord.userId = user._id
         await medicalRecord.save()
-      
+
         let resetLink = `${CONFIG.app.url}/login`
         let data = {
             email: user.email,
             firstName: medicalRecord.firstName,
             resetLink: `${resetLink}`
         }
-        if(ENV === 'dev' ) {
+        if (ENV === 'dev') {
             console.log(data)
         } else {
             // await mailer.sendForgot(data)
@@ -578,11 +579,11 @@ router.post('/admin/user/:userId/password-reset', middlewares.getUserAccount, mi
             resetLink: `${resetLink}`,
             previewText: 'Password Reset'
         }
-        // if (ENV === 'dev') {
-        //     console.log(data)
-        // } else {
+        if (ENV === 'dev') {
+            console.log(data)
+        } else {
             await mailer.sendForgot(data)
-        // }
+        }
         flash.ok(req, 'user', 'Password reset email sent.')
         res.redirect(`/admin/user/${userAccount._id}/account`);
     } catch (err) {
@@ -609,12 +610,12 @@ router.get('/admin/user/:userId/change-email', middlewares.getUserAccount, middl
 router.post('/admin/user/:userId/change-email', middlewares.getUserAccount, middlewares.getUserMedicalRecord, async (req, res, next) => {
     try {
         let userAccount = res.userAccount
-        let medicalRecord = res.medicalRecord
+        // let medicalRecord = res.medicalRecord
         let email1 = userAccount.email
         let email2 = lodash.get(req, 'body.email')
-        let user = userAccount
+        // let user = userAccount
 
-        if(email1 === email2){
+        if (email1 === email2) {
             throw new Error('Nothing to change.')
         }
 
@@ -683,7 +684,7 @@ router.post('/admin/medical-record/delete/:medicalRecordId', middlewares.guardRo
         if (!medicalRecord) {
             throw new Error('Record not found.')
         }
-       
+
         await req.app.locals.db.main.User.deleteOne({
             _id: medicalRecord.userId
         })
@@ -739,7 +740,7 @@ router.get('/admin/mail/create-account', middlewares.guardRoute(['read_all_mrc',
 });
 
 // 
-router.post('/admin/medical-record/attach/:medicalRecordId', middlewares.guardRoute(['update_mrc']), middlewares.dataUrlToReqFiles(['attachment']), middlewares.handleUpload({ allowedMimes: ["application/pdf"] }), async (req, res, next) => {
+router.post('/admin/medical-record/:medicalRecordId/attachment/create', middlewares.guardRoute(['update_mrc']), middlewares.antiCsrfCheck, middlewares.dataUrlToReqFiles(['attachment']), middlewares.handleUpload({ allowedMimes: ["application/pdf"] }), async (req, res, next) => {
     try {
         let medicalRecordId = req.params.medicalRecordId
         let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
@@ -748,7 +749,7 @@ router.post('/admin/medical-record/attach/:medicalRecordId', middlewares.guardRo
         if (!medicalRecord) {
             throw new Error('Record not found.')
         }
-        
+
         let attachments = lodash.get(medicalRecord, 'attachments', [])
         attachments.push(lodash.get(req, 'saveList.attachment[0]'))
         let x = await req.app.locals.db.main.MedicalRecord.updateOne({ _id: medicalRecord._id }, {
@@ -761,4 +762,46 @@ router.post('/admin/medical-record/attach/:medicalRecordId', middlewares.guardRo
         next(err);
     }
 });
+
+router.post('/admin/medical-record/:medicalRecordId/attachment/delete', middlewares.guardRoute(['delete_mrc']), middlewares.antiCsrfCheck, async (req, res, next) => {
+    try {
+        let medicalRecordId = req.params.medicalRecordId
+        let medicalRecord = await req.app.locals.db.main.MedicalRecord.findOne({
+            _id: medicalRecordId
+        }).lean()
+        if (!medicalRecord) {
+            throw new Error('Record not found.')
+        }
+
+        let attachments = lodash.get(medicalRecord, 'attachments', [])
+        let attachmentName = lodash.get(req, 'body.name')
+
+        for (let x = 0; x < attachments.length; x++) {
+            if (attachments[x] === attachmentName) {
+                // Delete files on AWS S3
+                const bucketName = CONFIG.aws.bucket1.name
+                const bucketKeyPrefix = CONFIG.aws.bucket1.prefix + '/'
+                if (attachmentName) {
+                    let objects = [
+                        { Key: `${bucketKeyPrefix}${attachmentName}` },
+                    ]
+                    let xx = await S3_CLIENT.deleteObjects(bucketName, objects)
+                    console.log(x, xx)
+                }
+                attachments[x] = null
+            }
+        }
+        attachments = attachments.filter(a => a !== null)
+
+        let x = await req.app.locals.db.main.MedicalRecord.updateOne({ _id: medicalRecord._id }, {
+            $set: {
+                attachments: attachments
+            }
+        })
+        res.send(attachments)
+    } catch (err) {
+        next(err);
+    }
+});
+
 module.exports = router;

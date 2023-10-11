@@ -172,23 +172,30 @@
         <hr class="my-4">
         <div id="vApp3" v-cloak :data-pending="pending" class="jumbotron pt-4 p-3">
             <form v-on:submit.prevent="onSubmit($event)" action="" method="post">
-                <p>Attachments</p>
-                <div class="d-flex flex-wrap">
-                    <div v-for="attach,i in attachments" class="m-3">
-                        <div><a target="_blank" :href="`/file-getter/{{CONFIG.aws.bucket1.name}}/{{CONFIG.aws.bucket1.prefix}}/${attach}`">Attachment ${i+1}</a> | <a href="#" class="text-danger">X</a></div>
-                        <iframe style="pointer-events: none; overflow: hidden;" scrolling="no" frameborder="0" :src="`/file-getter/{{CONFIG.aws.bucket1.name}}/{{CONFIG.aws.bucket1.prefix}}/${attach}`" frameborder="0" width="100%" height="150px"></iframe>
+                <p class="text-center">Attachments</p>
+                <template v-if="page==2">
+                    <div class="form-group">
+                        <label for="attachment">Attachment in PDF Format</label>
+                        <div>
+                            <input name="attachment" v-model="attachment" type="hidden">
+                            <input id="attachment" v-on:change="readFile($event, 'attachment')" ref="attachment" type="file" class="form-control">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="attachment">Attachment in PDF Format</label>
-                    <div>
-                        <input name="attachment" v-model="attachment" type="hidden">
-                        <input id="attachment" v-on:change="readFile($event, 'attachment')" ref="attachment" type="file" class="form-control">
+                    <div class="text-center">
+                        <button @click.prevent="page=1" id="btnCancel" class="btn btn-light m-1" type="button">Cancel</button>
+                        <button v-if="attachment" class="btn btn-primary">Upload</button>
                     </div>
-                </div>
+                </template>
+                <template v-else>
+                    <div class="d-flex flex-wrap">
+                        <div v-for="attach,i in attachments" class="m-3">
+                            <div><a target="_blank" :href="`/file-getter/{{CONFIG.aws.bucket1.name}}/{{CONFIG.aws.bucket1.prefix}}/${attach}`">Attachment ${i+1}</a> | <button type="button" @click="deleteAttachment(attach)" class="btn text-danger">X</a></div>
+                            <iframe style="pointer-events: none; overflow: hidden;" scrolling="no" frameborder="0" :src="`/file-getter/{{CONFIG.aws.bucket1.name}}/{{CONFIG.aws.bucket1.prefix}}/${attach}`" frameborder="0" width="100%" height="150px"></iframe>
+                        </div>
+                    </div>
+                </template>
                 <div class="text-center">
-                    <button>asas</button>
-                    <!-- <a href="/admin/medical-record/attach/{{medicalRecord._id}}" class="btn btn-success">Add</a> -->
+                    <button v-if="page==1" @click.prevent="page=2" class="btn btn-success" type="button">Add Attachment</button>
                 </div>
             </form>
         </div>
@@ -413,6 +420,8 @@
         }
     });
 
+    let attachments = {{medicalRecord.attachments|default([], true)|stringify|safe}};
+
     let vApp3 = new Vue({
         el: '#vApp3',
         delimiters: ["${", "}"],
@@ -421,20 +430,66 @@
         ],
         data: {
             pending: false,
+            page: 1,
             acceptedMimeTypes: ['application/pdf'],
-            attachments: {{medicalRecord.attachments|default([], true)|stringify|safe}},
+            attachments: attachments,
             attachment: '',
         },
+        watch: {
+            page: function(prev,next){
+                if(next == 2){
+                    this.attachment = ''
+                }
+            }
+        },
         methods: {
+            deleteAttachment: function(name){
+                const me = this;
+                if(confirm('Delete permanently?')){
+
+                    me.pending = true
+
+                    me.$nextTick(function () {
+                        fetch(`/admin/medical-record/{{medicalRecord._id}}/attachment/delete`, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                name: name,
+                                acsrf: '{{acsrf}}',
+                            }),
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        }).then(async function (response) {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                            throw new Error(await response.text())
+
+                        }).then(function (responseJson) {
+
+                            console.log(responseJson)
+                            window.location.reload(false);
+
+                        }).catch(async function (error) {
+                            console.error(error)
+                            alert(error);
+                        }).then(function () {
+                            me.pending = false
+                        });
+                    });
+                }
+            },
             onSubmit: function (e) {
                 const me = this;
                 me.pending = true
 
                 me.$nextTick(function () {
-                    fetch(`/admin/medical-record/attach/{{medicalRecord._id}}`, {
+                    fetch(`/admin/medical-record/{{medicalRecord._id}}/attachment/create`, {
                         method: 'POST',
                         body: JSON.stringify({
-                            attachment: me.attachment
+                            attachment: me.attachment,
+                            acsrf: '{{acsrf}}',
                         }),
                         headers: {
                             'Content-Type': 'application/json',
