@@ -1,0 +1,92 @@
+{% extends "document-admin.html" %}
+
+{% block body %}
+<div id="vApp" v-cloak v-bind:data-pending="pending" class="col-md-12 py-3">
+    <div class="d-flex justify-content-between mb-3">
+        <h1 class="h6">Users</h1>
+        <a class="btn btn-success btn-sm" href="/admin/user/create" role="button">Add User</a>
+    </div>
+    <form ref="formSearch" action="">
+        <div class="form-group">
+            <input v-model="s" name="s" @input="onInput($event)" type="search" class="form-control" placeholder="Search by email...">
+        </div>
+    </form>
+    {% include 'parts/flash.html' %}
+    <div v-if="users.length > 0" class="pb-5">
+        <div class="table-responsive pb-5">
+            <table class="table table-sm table-striped table-bordered mb-5">
+                <tr>
+                    <th width="1%"></th>
+                    <th width="1%"></th>
+                    <th width="25%">Email</th>
+                    <th>Roles</th>
+                    <th></th>
+                </tr>
+                <tr v-for="user,i in users">
+                    <td>${i+1}</td>
+                    <td>
+                        <template v-if="user.active">
+                            <svg width="16px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Active</title><path fill="green" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
+                        </template>
+                        <template v-else>
+                            <svg width="16px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Inactive</title><path fill="lightgray" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
+                        </template>
+                    </td>
+                    <td>
+                        <a class="text-underline" :href="`/admin/user/${user._id}`">${user.email}</a>
+                    </td>
+                    <td>${user.roles.join(", ")}</td>
+                    <td width="5%">
+                        <div class="dropdown">
+                            <button class="btn btn-sm" type="button" data-toggle="dropdown" aria-expanded="false">
+                            ...
+                            </button>
+                            <div class="dropdown-menu">
+                            <!-- <a class="dropdown-item" :href="`/admin/user/view/${user._id}`">View</a> -->
+                            <!-- <a class="dropdown-item" :href="`/admin/user/print/${user._id}`">Print</a> -->
+                            <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" :href="`/admin/user/delete/${user._id}`">Delete</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div> 
+        <div class="text-center">
+            <a href="/admin/user/all?lastId={{users.at(-1)._id}}" class="btn btn-sm btn-light">View More</a>
+        </div>
+    </div>
+    <div v-else>
+        <p>No record found. <a href="/admin/user/all">Go back</a>.</p>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    var s = '{{s}}';
+    var users = {{users|default([], true)|stringify|safe}};
+
+    var vApp = new Vue({
+        el: '#vApp',
+        delimiters: ["${", "}"],
+        mixins: [],
+        data: {
+            pending: false,
+            s: s,
+            users: users
+        },
+        methods: {
+            onInput: function(e) {
+                var me = this;
+                if(!e.currentTarget.value){
+                    me.$nextTick(function(){
+                        me.$refs.formSearch.submit()
+                    })
+                }
+
+            }
+        }
+    })
+</script>
+{% endblock %}

@@ -473,6 +473,7 @@ router.post('/admin/medical-record/:medicalRecordId/user/create', middlewares.gu
         next(err);
     }
 });
+
 router.get('/admin/user/:userId/account', middlewares.getUserAccount, async (req, res, next) => {
     try {
         let userAccount = res.userAccount
@@ -785,8 +786,8 @@ router.post('/admin/medical-record/:medicalRecordId/attachment/delete', middlewa
                     let objects = [
                         { Key: `${bucketKeyPrefix}${attachmentName}` },
                     ]
-                    let xx = await S3_CLIENT.deleteObjects(bucketName, objects)
-                    console.log(x, xx)
+                    await S3_CLIENT.deleteObjects(bucketName, objects)
+                    // console.log(x, xx)
                 }
                 attachments[x] = null
             }
@@ -804,4 +805,173 @@ router.post('/admin/medical-record/:medicalRecordId/attachment/delete', middlewa
     }
 });
 
+router.get('/admin/user/all', middlewares.guardRoute(['read_all_mrc', 'read_mrc']), async (req, res, next) => {
+    try {
+        let s = req?.query?.s || ''
+        let searchQuery = {}
+
+        if (s) {
+            searchQuery = {
+                email: new RegExp(s, "i")
+            }
+        }
+
+        const lastId = req.query?.lastId
+        if (lastId) {
+            searchQuery = {
+                _id: {
+                    $lt: new req.app.locals.db.mongoose.Types.ObjectId(lastId)
+                }
+            }
+        }
+
+        let users = await req.app.locals.db.main.User.aggregate([
+            {
+                $sort: {
+                    _id: -1
+                }
+            },
+            {
+                $match: searchQuery
+            },
+            {
+                $limit: 500
+            },
+        ])
+
+        let data = {
+            flash: flash.get(req, 'admin'),
+            s: s,
+            users: users,
+        }
+        res.render('admin/user/all.html', data)
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/admin/user/create', middlewares.guardRoute(['update_mrc']), async (req, res, next) => {
+    try {
+        let data = {
+            flash: flash.get(req, 'admin'),
+        }
+        res.render('admin/user/create2.html', data);
+    } catch (err) {
+        next(err);
+    }
+});
+router.post('/admin/user/create', middlewares.guardRoute(['update_mrc']), async (req, res, next) => {
+    try {
+        // let medicalRecord = res.medicalRecord
+
+        let payload = req?.body
+        // console.log(payload)
+
+        let firstName = lodash.trim(lodash.get(payload, 'firstName', ''))
+        let email = lodash.trim(lodash.get(payload, 'email', ''))
+        let password = lodash.trim(lodash.get(payload, 'password', ''))
+
+        if (!firstName) {
+            throw new Error('First Name is required.')
+        }
+
+        if (!password) {
+            throw new Error('Password is required.')
+        } else {
+            if (password.length < 10) {
+                throw new Error('Password is too short. Must be at least 10 characters.')
+            }
+        }
+
+        if (!email) {
+            throw new Error('Email is required.')
+        } else {
+            email = email.trim()
+            if (/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email) === false) {
+                throw new Error('Invalid email.')
+            } else {
+                let domain = email.split('@').at(-1)
+                if (['gsu.edu.ph'].includes(domain) === false) {
+                    throw new Error('Only GSU emails are allowed.')
+                }
+            }
+        }
+
+        // Check email availability
+        let existingEmail = await req.app.locals.db.main.User.findOne({
+            email: email,
+            emailVerified: true,
+        })
+        if (existingEmail) {
+            throw new Error(`Email "${email}" is already registered.`)
+        }
+
+        let salt = passwordMan.randomString(16)
+        let passwordHash = passwordMan.hashPassword(password, salt)
+
+        let user = new req.app.locals.db.main.User({
+            email: email,
+            emailVerified: true,
+            salt: salt,
+            passwordHash: passwordHash,
+        });
+        user.active = true
+        user.roles = ["admin"]
+        user.permissions = []
+        await user.save()
+
+        // medicalRecord.userId = user._id
+        // await medicalRecord.save()
+
+        let resetLink = `${CONFIG.app.url}/login`
+        let data = {
+            email: user.email,
+            firstName: firstName,
+            resetLink: `${resetLink}`
+        }
+        if (ENV === 'dev') {
+            console.log(data)
+        } else {
+            // await mailer.sendForgot(data)
+        }
+
+        flash.ok(req, 'admin', `Created user.`)
+        res.redirect(`/admin/user/all`)
+    } catch (err) {
+        console.error(err)
+        next(err);
+    }
+});
+
+router.get('/admin/user/delete/:userId', middlewares.getUserAccount, middlewares.guardRoute(['update_mrc']), async (req, res, next) => {
+    try {
+        let user = await req.app.locals.db.main.User.findOne({
+            
+            $and: [
+                {
+                    _id: {
+                        $eq: req.params.userId,
+                    }
+                },
+                // {
+                //     _id: {
+                //         $ne: res.user._id,
+                //     }
+                // }
+            ]
+        })
+        if (!user) {
+            throw new Error('User not found.')
+        }
+        if (user._id.toString() === res.user._id.toString()) {
+            throw new Error('Cannot self delete.')
+        }
+        console.log(user._id.toString(), res.user._id.toString())
+        await user.deleteOne()
+        flash.ok(req, 'admin', `User "${user.email}" deleted.`)
+        res.redirect('/admin/user/all')
+    } catch (err) {
+        next(err);
+    }
+});
 module.exports = router;
