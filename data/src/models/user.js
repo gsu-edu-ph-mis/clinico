@@ -6,23 +6,6 @@ const mongoose = require('mongoose');
 //// Modules
 
 let schema = mongoose.Schema({
-    firstName: {
-        $type: String,
-        trim: true,
-    },
-    middleName: {
-        $type: String,
-        trim: true,
-    },
-    lastName: {
-        $type: String,
-        trim: true,
-    },
-    suffix: {
-        $type: String,
-        trim: true,
-        default: '',
-    },
     email: {
         $type: String,
         trim: true,
