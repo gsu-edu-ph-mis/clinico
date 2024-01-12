@@ -62,21 +62,37 @@
                                 here</a></p>
                     </template>
                     <template v-if="page=='#step2'">
-                        <div class="form-group row">
-                            <div class="col-6 col-md-5">
+                        <div v-if="!getsNa" class="form-group row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger">WARNING: Must have an existing and active email address that ends with @gsu.edu.ph</div>
+                                <div class="alert alert-danger">BABALA: Kailangang may aktibong email na @gsu.edu.ph. Kung wala, walang email na matatanggap.</div>
+                                <div class="alert alert-danger">LIWATLIWAT: Kinahanglan may ara ka na email address nga ang punta @gsu.edu.ph. Kung wala, wala ka email nga mabatunan.</div>
+                                <div class="alert alert-warning">
+                                    <div>Liwat-liwat na Pamangkot:</div>
+                                    <ol>
+                                        <li>Sa diin makakuha email? ~ <em>Kadto sa ICTO</em></li>
+                                        <li>May ara na ko email pero gsc pa to? ~ <em>Kadto sa ICTO</em></li>
+                                        <li>Naka register na ko pero gin ubra ubrahan ko lang email address na gsu.edu.ph? ~ <em>Kadto sa ICTO kag mag paubra email. Hulat 1-3 days kag mag register liwat.</em></li>
 
-                            </div>
-                            <div class="col-6 col-md-7">
+                                    </ol>
+                                    
+                                </div>
+                                <div class="text-center">
+                                    <span @click="shake" class="btn btn-light">Gets mo na?</span>
+                                    <button @click="getsNa=true" class="btn btn-success yes1" type="button">Yes</button>
+                                    <a href="/" class="btn btn-success no1">Indi</a>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group row" :data-error="errors.email" @click="errors.email=false">
+                        
+                        <div v-if="getsNa" class="form-group row" :data-error="errors.email" @click="errors.email=false">
                             <label for="email" class="col-md-5 col-form-label text-md-right">GSU Email <span
                                     class="text-danger">*</span></label>
                             <div class="col-md-7">
                                 <input v-model="email" type="text" class="form-control" id="email">
                             </div>
                         </div>
-                        <div class="form-group row" :data-error="errors.accountType" @click="errors.accountType=false">
+                        <div v-if="getsNa" class="form-group row" :data-error="errors.accountType" @click="errors.accountType=false">
                             <label for="accountType" class="col-md-5 col-form-label text-md-right">Account</label>
                             <div class="col-md-7">
                                 <select v-model="accountType" name="accountType" id="accountType" class="form-control">
@@ -85,7 +101,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group row" :data-error="errors.acceptedDataPrivacy"
+                        <div v-if="getsNa" class="form-group row" :data-error="errors.acceptedDataPrivacy"
                             @click="errors.acceptedDataPrivacy=false">
                             <div class="col-md-5 col-form-label"></div>
                             <div class="col-md-7 d-flex align-items-center">
@@ -99,7 +115,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div v-if="getsNa" class="form-group row">
                             <div class="col-6 col-md-5 text-right">
 
                             </div>
@@ -141,6 +157,7 @@
         mixins: [],
         data: {
             pending: false,
+            getsNa: false,
             page: '#home',
             firstName: '',
             middleName: '',
@@ -204,6 +221,14 @@
                     return this.passwordType = "text";
                 }
                 this.passwordType = "password";
+            },
+            shake: function(){
+                var element1 = document.querySelector('.yes1');
+                var element2 = document.querySelector('.no1');
+                element1.classList.toggle('shakeit');
+                // element2.classList.toggle('shakeit');
+
+               
             },
             onSubmit: function onSubmit(e) {
                 try {
