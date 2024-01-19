@@ -304,15 +304,20 @@
         var jwt = {}
         try {
             jwt = parseJwt(authResult.credential)
-        } catch(e){
+        } catch (e) {
             console.error(e)
         }
         console.log('authResult', jwt)
-        if(jwt.email){
-            vApp.page = '#home'
-            vApp.email = jwt.email
-            vApp.firstName = jwt.given_name
-            vApp.lastName = jwt.family_name
+        if (jwt.email) {
+            var domain = jwt.email.split('@').pop();
+            if (['gsu.edu.ph'].includes(domain) === false) {
+                alert('Only GSU emails are allowed (email that ends in @gsu.edu.ph).');
+            } else {
+                vApp.page = '#home'
+                vApp.email = jwt.email
+                vApp.firstName = jwt.given_name
+                vApp.lastName = jwt.family_name
+            }
         }
     }
 </script>
