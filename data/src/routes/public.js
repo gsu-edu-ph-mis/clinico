@@ -152,14 +152,14 @@ router.post('/register', async (req, res, next) => {
         if (!firstName) {
             throw new Error('First Name is required.')
         }
-        if (!middleName) {
-            throw new Error('Middle Name is required.')
-        } else {
-            middleName = middleName.trim()
-            if (middleName.at(-1) == '.' || middleName.length <= 1) {
-                throw new Error('Please write your Middle Name in full.')
-            }
-        }
+        // if (!middleName) {
+        //     throw new Error('Middle Name is required.')
+        // } else {
+        //     middleName = middleName.trim()
+        //     if (middleName.at(-1) == '.' || middleName.length <= 1) {
+        //         throw new Error('Please write your Middle Name in full.')
+        //     }
+        // }
         if (!lastName) {
             throw new Error('Last Name is required.')
         }
