@@ -201,14 +201,14 @@ router.post('/admin/medical-record/update/:medicalRecordId', middlewares.guardRo
         if (!payload.firstName) {
             throw new Error('First Name is required.')
         }
-        if (!payload.middleName) {
-            throw new Error('Middle Name is required.')
-        } else {
-            payload.middleName = payload.middleName.trim()
-            if (payload.middleName.at(-1) == '.' || payload.middleName.length <= 1) {
-                throw new Error('Please write your Middle Name in full.')
-            }
-        }
+        // if (!payload.middleName) {
+        //     throw new Error('Middle Name is required.')
+        // } else {
+        //     payload.middleName = payload.middleName.trim()
+        //     if (payload.middleName.at(-1) == '.' || payload.middleName.length <= 1) {
+        //         throw new Error('Please write your Middle Name in full.')
+        //     }
+        // }
         if (!payload.lastName) {
             throw new Error('Last Name is required.')
         }
@@ -255,14 +255,14 @@ router.post('/admin/medical-record/create', middlewares.guardRoute(['create_mrc'
         if (!payload.firstName) {
             throw new Error('First Name is required.')
         }
-        if (!payload.middleName) {
-            throw new Error('Middle Name is required.')
-        } else {
-            payload.middleName = payload.middleName.trim()
-            if (payload.middleName.at(-1) == '.' || payload.middleName.length <= 1) {
-                throw new Error('Please write your Middle Name in full.')
-            }
-        }
+        // if (!payload.middleName) {
+        //     throw new Error('Middle Name is required.')
+        // } else {
+        //     payload.middleName = payload.middleName.trim()
+        //     if (payload.middleName.at(-1) == '.' || payload.middleName.length <= 1) {
+        //         throw new Error('Please write your Middle Name in full.')
+        //     }
+        // }
         if (!payload.lastName) {
             throw new Error('Last Name is required.')
         }
