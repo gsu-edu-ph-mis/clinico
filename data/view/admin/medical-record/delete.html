@@ -10,7 +10,7 @@
             <input type="hidden" name="acsrf" value="{{acsrf}}">
             <div class="jumbotron pt-4 p-3">
                 <p class="lead mb-0">Are you sure you want to delete?</p>
-                <p>MRC of: {{medicalRecord.firstName}} {{medicalRecord.middleName||first('.')}} {{medicalRecord.lastName}} {{medicalRecord.suffix}}</p>
+                <p>MRC of: {{medicalRecord.firstName}} {{medicalRecord.middleName|first('.')}} {{medicalRecord.lastName}} {{medicalRecord.suffix}}</p>
             </div>
             <div class="text-center">
                 <a class="btn btn-light" href="/admin/medical-record/view/{{medicalRecord._id}}" role="button">Cancel</a>
