@@ -86,8 +86,9 @@ const extended = (env)=>{
     /**
      * Get first character from string.
      */
-    env.addFilter('first', (value) => {
-        return lodash.toString(value)[0];
+    env.addFilter('first', (value, suffix='') => {
+        let first = lodash.toString(value)[0]
+        return first ? first + suffix : ''
     });
 
     /**
