@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="form-group row" :data-error="errors.middleName" @click="errors.middleName=false">
-                            <label for="middleName" class="col-6 col-md-5 col-form-label text-right">Middle Name <span                                    class="text-danger">*</span></label>
+                            <label for="middleName" class="col-6 col-md-5 col-form-label text-right">Middle Name</label>
                             <div class="col-6 col-md-7">
                                 <input v-model="middleName" name="middleName" type="text" class="form-control"                                    id="middleName">
                             </div>
@@ -237,16 +237,16 @@
                             me.errors.firstName = true;
                             throw new Error('First Name is required.');
                         }
-                        if (!me.middleName) {
-                            me.errors.middleName = true;
-                            throw new Error('Middle Name is required.');
-                        } else {
-                            me.middleName = me.middleName.trim();
-                            if (_.get(me, 'middleName', '').slice(-1) == '.' || me.middleName.length <= 1) {
-                                me.errors.middleName = true;
-                                throw new Error('Please write your Middle Name in full.');
-                            }
-                        }
+                        // if (!me.middleName) {
+                        //     me.errors.middleName = true;
+                        //     throw new Error('Middle Name is required.');
+                        // } else {
+                        //     me.middleName = me.middleName.trim();
+                        //     if (_.get(me, 'middleName', '').slice(-1) == '.' || me.middleName.length <= 1) {
+                        //         me.errors.middleName = true;
+                        //         throw new Error('Please write your Middle Name in full.');
+                        //     }
+                        // }
                         if (!me.lastName) {
                             me.errors.lastName = true;
                             throw new Error('Last Name is required.');
