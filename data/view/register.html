@@ -307,7 +307,6 @@
         } catch (e) {
             console.error(e)
         }
-        console.log('authResult', jwt)
         if (jwt.email) {
             var domain = jwt.email.split('@').pop();
             if (['gsu.edu.ph'].includes(domain) === false) {
