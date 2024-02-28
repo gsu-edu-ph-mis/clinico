@@ -49,54 +49,56 @@
     </div>
     <div class="d-flex">
         <div style="width: 7%;">Name</div>
-        <div class="underline d-flex text-center" style="width: 71%;">
+        <div class="underline d-flex text-center" style="width: 50%;">
             <div style="width: 33%;">{{medicalRecord.lastName}}</div>
             <div style="width: 33%;">{{medicalRecord.firstName}}</div>
             <div style="width: 33%;">{{medicalRecord.middleName}}</div>
         </div>
+        <div style="width: 15%;">Course/Position</div>
+        <div class="underline text-center" style="width: 20%; font-size: 12px;" contenteditable="true">{{medicalRecord.course|replace('Bachelor of Science', 'BS')}}</div>
         <div style="width: 4%;">Age</div>
-        <div class="underline text-center" style="width: 18%;">{{medicalRecord.birthDate|age}}</div>
+        <div class="underline text-center" style="width: 4%;">{{medicalRecord.birthDate|age}}</div>
     </div>
     <div class="d-flex mb-3">
         <div style="width: 7%;"></div>
-        <div class="d-flex text-center smol" style="width: 71%;">
+        <div class="d-flex text-center smol" style="width: 50%;">
             <div style="width: 33%;">(Surname)</div>
             <div style="width: 33%;">(Given Name)</div>
             <div style="width: 33%;">(Middle Name)</div>
         </div>
-        <div style="width: 4%;"></div>
-        <div style="width: 18%;"></div>
     </div>
     
     <div class="d-flex mb-3">
-        <div style="width: 22%;">Course Taken/Position</div>
-        <div class="underline text-center" style="width: 31%;" contenteditable="true">{{medicalRecord.course}}</div>
         <div style="width: 8%;">Address</div>
-        <div class="underline text-center" style="width: 39%;" contenteditable="true">{{medicalRecord.address}}</div>
+        <div class="underline text-center" style="width: 38%;" contenteditable="true">{{medicalRecord.address}}</div>
+        <div style="width: 8%;">CP No.</div>
+        <div class="underline text-center" style="width: 13%; font-size: 16px;" contenteditable="true">{{medicalRecord.mobileNumber}}</div>
+        <div style="width: 16%;">PWD Disability</div>
+        <div class="underline text-center" style="width: 17%;" contenteditable="true">{{medicalRecord.pwd}}</div>
     </div>
     <div class="d-flex mb-3">
         <div style="width: 7%;">Gender</div>
-        <div class="underline text-center" style="width: 23%;" contenteditable="true">{{medicalRecord.gender}}</div>
-        <div style="width: 12%;">Civil Status</div>
-        <div class="underline text-center" style="width: 19%;" contenteditable="true">{{medicalRecord.civilStatus}}</div>
-        <div style="width: 13%;">Date of Birth</div>
-        <div class="underline text-center" style="width: 26%;" contenteditable="true">{{medicalRecord.birthDate|format_date('MMM DD, YYYY')}}</div>
+        <div class="underline text-center" style="width: 11%;" contenteditable="true">{{medicalRecord.gender}}</div>
+        <div style="width: 11%;">Civil Status</div>
+        <div class="underline text-center" style="width: 13%;" contenteditable="true">{{medicalRecord.civilStatus}}</div>
+        <div style="width: 11%;">Citizenship</div>
+        <div class="underline text-center" style="width: 15%;" contenteditable="true">{{medicalRecord.citizenship}}</div>
+        <div style="width: 12%;">Date of Birth</div>
+        <div class="underline text-center" style="width: 20%;" contenteditable="true">{{medicalRecord.birthDate|format_date('MMM DD, YYYY')}}</div>
     </div>
 
     <div class="d-flex mb-3">
-        <div style="width: 12%;">Citizenship</div>
-        <div class="underline text-center" style="width: 34%;" contenteditable="true">{{medicalRecord.citizenship}}</div>
-        <div style="width: 9%;">Religion</div>
-        <div class="underline text-center" style="width: 45%;" contenteditable="true">{{medicalRecord.religion}}</div>
-    </div>
-    <div class="d-flex mb-3 align-items-start">
+        
+        <div style="width: 8%;">Religion</div>
+        <div class="underline text-center" style="width: 15%; font-size: 12px;" contenteditable="true">{{medicalRecord.religion}}</div>
+
         <div style="width: 25%;">Allergy to Medicines/Food</div>
-        <div class="underline text-left" style="width: 31%;" contenteditable="true">{{medicalRecord.allergiesFormatted}}</div>
-        <div style="width: 19%;">Handedness: Right</div>
-        <div class="underline text-center" style="width: 9%;" contenteditable="true">{% if medicalRecord.handedness == 'R' %}✓{% endif %}</div>
-        <div style="width: 4%;">Left</div>
-        <div class="underline text-center" style="width: 12%;" contenteditable="true">{% if medicalRecord.handedness == 'L' %}✓{% endif %}</div>
+        <div class="underline text-left" style="width: 32%; font-size: 12px;" contenteditable="true">{{medicalRecord.allergiesFormatted}}</div>
+
+        <div style="width: 12%;">Blood Type</div>
+        <div class="underline text-left" style="width: 8%;" contenteditable="true">{{medicalRecord.bloodType}}</div>
     </div>
+    
     <div class="d-flex mb-3 align-items-start">
         <div style="width: 19%;">Parent or Guardian</div>
         <div class="underline" style="width: 42%;" contenteditable="true">{{medicalRecord.parentName}}</div>
@@ -105,9 +107,9 @@
     </div>
     <div class="d-flex mb-5 align-items-start">
         <div style="width: 34%;">In Case of Emergency, please notify</div>
-        <div class="underline " style="width: 27%;" contenteditable="true">{{medicalRecord.parentName}}</div>
+        <div class="underline " style="width: 27%;" contenteditable="true">{{medicalRecord.emergencyPerson}}</div>
         <div style="width: 17%;">Contact Number</div>
-        <div class="underline text-center" style="width: 22%;" contenteditable="true">{{medicalRecord.parentPhoneNumber}}</div>
+        <div class="underline text-center" style="width: 22%;" contenteditable="true">{{medicalRecord.emergencyPersonPhoneNumber}}</div>
     </div>
     <div class="cooper text-uppercase text-center">Clinical Record</div>
     <table class="table-records mb-4">
@@ -135,6 +137,6 @@
 {% block scripts %}
 {{super}}
 <script>
-    window.print()
+    // window.print()
 </script>
 {% endblock %}
