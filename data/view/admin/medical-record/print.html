@@ -112,31 +112,31 @@
         <div class="underline text-center" style="width: 22%;" contenteditable="true">{{medicalRecord.emergencyPersonPhoneNumber}}</div>
     </div>
     <div class="cooper text-uppercase text-center">Clinical Record</div>
-    <table class="table-records mb-4">
+    <table class="table table-records mb-4">
         <tr>
-            <th width="width: 17%">Date</th>
-            <th width="width: 23%">Complaints</th>
-            <th width="width: 36%">Treatment/Care Given</th>
-            <th>Diagnosis/ Remark</th>
+            <th style="width: 15%">DATE &amp; TIME</th>
+            <th style="width: 35%;">NURSE'S NOTES</th>
+            <th style="width: 35%">DOCTOR'S NOTES</th>
+            <th style="width: 15%">PATIENT'S SIGNATURE</th>
         </tr>
         {% for record in clinicalRecords %}
             <tr>
                 <td>{{record.date|format_date('MMM. DD, YYYY')}}</td>
                 <td>{{record.complaints}}</td>
-                <td>{{record.treatment}}</td>
-                <td>{{record.diagnosis}}</td>
+                <td>{{record.treatment}} <br>{{record.diagnosis}}</td>
+                <td></td>
             </tr>
         {% endfor %}
     </table>
-    <div class="cooper2 text-uppercase text-center">Relevance Data About Health History</div>
+    <!-- <div class="cooper2 text-uppercase text-center">Relevance Data About Health History</div> -->
     {% for relevanceData in relevanceDatas %}
-    <div class="underline w-100 pl-2 pr-2" style="min-height: 25px;">{{relevanceData}}</div>
+    <!-- <div class="underline w-100 pl-2 pr-2" style="min-height: 25px;">{{relevanceData}}</div> -->
     {% endfor %}
 </div>
 {% endblock %}
 {% block scripts %}
 {{super}}
 <script>
-    // window.print()
+    window.print()
 </script>
 {% endblock %}

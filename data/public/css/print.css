@@ -56,6 +56,7 @@ body {
     font-weight: normal;
     padding: 0px 3px;
     text-align: center;
+    vertical-align: middle;
 }
 .table-records th,
 .table-records td {
@@ -64,7 +65,7 @@ body {
     line-height: 1.1;
 }
 .table-records td {
-    height: 22px;
+    height: 32px;
 }
 .letter-head {
     font-size: 18px;

@@ -94,8 +94,8 @@ router.get('/admin/medical-record/print/:medicalRecordId', middlewares.guardRout
 
         let clinicalRecords = lodash.get(medicalRecord, 'clinicalRecords', [])
 
-        let toPad = 13 - clinicalRecords.length
-        for (let x = (13 - toPad); x < 13; x++) {
+        let toPad = 15 - clinicalRecords.length
+        for (let x = (15 - toPad); x < 15; x++) {
             clinicalRecords.push({
                 date: '',
                 complaints: '',
@@ -306,9 +306,9 @@ router.post('/admin/medical-record/:medicalRecordId/clinical-record/create', mid
         if (!payload.treatment) {
             throw new Error(`Treatment/Care Given field is required.`)
         }
-        if (!payload.diagnosis) {
-            throw new Error(`Diagnosis/Remark field is required.`)
-        }
+        // if (!payload.diagnosis) {
+        //     throw new Error(`Diagnosis/Remark field is required.`)
+        // }
 
         let clinicalRecords = lodash.get(medicalRecord, 'clinicalRecords', [])
         clinicalRecords.push({

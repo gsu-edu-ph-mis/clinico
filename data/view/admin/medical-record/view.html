@@ -96,17 +96,17 @@
             <form v-on:submit.prevent="onSubmit($event)" action="" method="post">
                 <table class="table table-bordered table-striped table-records mb-4">
                     <tr>
-                        <th width="width: 17%">Date</th>
-                        <th width="width: 23%">Complaints</th>
-                        <th width="width: 36%">Treatment/Care Given</th>
-                        <th>Diagnosis/ Remark</th>
+                        <th style="width: 15%">DATE &amp; TIME</th>
+                        <th style="width: 35%;">NURSE'S NOTES</th>
+                        <th style="width: 35%">DOCTOR'S NOTES</th>
+                        <th style="width: 15%">PATIENT'S SIGNATURE</th>
                         <th></th>
                     </tr>
                     <tr v-for="(clinicalRecord, index) in clinicalRecords">
                         <td>${clinicalRecord.date|format_date('MMM. DD, YYYY')}</td>
                         <td>${clinicalRecord.complaints}</td>
-                        <td>${clinicalRecord.treatment}</td>
-                        <td>${clinicalRecord.diagnosis}</td>
+                        <td>${clinicalRecord.treatment} <br>${clinicalRecord.diagnosis}</td>
+                        <td></td>
                         <td><button @click="deleteRecord(index)" class="btn btn-sm p-1 btn-danger" type="button">X</button></td>
                     </tr>
                     <template v-if="page===2">
@@ -127,9 +127,9 @@
                                 </div>
                             </td>
                             <td colspan="2">
-                                <div class="form-group" :data-error="errors.clinicalRecordDiagnosis" @click="errors.clinicalRecordDiagnosis=false">
+                                <!-- <div class="form-group" :data-error="errors.clinicalRecordDiagnosis" @click="errors.clinicalRecordDiagnosis=false">
                                     <textarea v-model="clinicalRecordDiagnosis" name="complaints" id="complaints" rows="3" class="form-control"></textarea>
-                                </div>
+                                </div> -->
                             </td>
                         </tr>
                         <tr>
@@ -297,10 +297,10 @@
                             me.errors.clinicalRecordTreatment = true
                             throw new Error(`Treatment/Care Given field is required.`)
                         }
-                        if(!me.clinicalRecordDiagnosis) {
-                            me.errors.clinicalRecordDiagnosis = true
-                            throw new Error(`Diagnosis/Remark field is required.`)
-                        }
+                        // if(!me.clinicalRecordDiagnosis) {
+                        //     me.errors.clinicalRecordDiagnosis = true
+                        //     throw new Error(`Diagnosis/Remark field is required.`)
+                        // }
                         
                         me.pending = true;
                         me.$nextTick(function() {
