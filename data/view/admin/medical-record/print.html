@@ -115,13 +115,13 @@
     <table class="table table-records mb-4">
         <tr>
             <th style="width: 15%">DATE &amp; TIME</th>
-            <th style="width: 35%;">NURSE'S NOTES</th>
+            <th style="width: 35%">NURSE'S NOTES</th>
             <th style="width: 35%">DOCTOR'S NOTES</th>
             <th style="width: 15%">PATIENT'S SIGNATURE</th>
         </tr>
         {% for record in clinicalRecords %}
             <tr>
-                <td>{{record.date|format_date('MMM. DD, YYYY')}}</td>
+                <td>{{record.date|format_date('MMM. DD, YYYY hh:mm A')}}</td>
                 <td>{{record.complaints}}</td>
                 <td>{{record.treatment}} <br>{{record.diagnosis}}</td>
                 <td></td>

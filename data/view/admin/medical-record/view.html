@@ -103,7 +103,7 @@
                         <th></th>
                     </tr>
                     <tr v-for="(clinicalRecord, index) in clinicalRecords">
-                        <td>${clinicalRecord.date|format_date('MMM. DD, YYYY')}</td>
+                        <td>${clinicalRecord.date|format_date('MMM. DD, YYYY hh:mm A')}</td>
                         <td>${clinicalRecord.complaints}</td>
                         <td>${clinicalRecord.treatment} <br>${clinicalRecord.diagnosis}</td>
                         <td></td>
@@ -113,7 +113,7 @@
                         <tr>
                             <td>
                                 <div class="form-group" :data-error="errors.clinicalRecordDate" @click="errors.clinicalRecordDate=false">
-                                    <input v-model="clinicalRecordDate" type="date" class="form-control">
+                                    <input v-model="clinicalRecordDate" type="datetime-local" class="form-control">
                                 </div>
                             </td>
                             <td>
