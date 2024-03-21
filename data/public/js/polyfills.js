@@ -1,5 +1,9 @@
 /**
  * Event.submitter
+ * 
+ * The read-only submitter property found on the SubmitEvent interface specifies the 
+ * submit button or other element that was invoked to cause the form to be submitted.
+ * @link https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent/submitter
  */
 !function(){
     var lastBtn = null
