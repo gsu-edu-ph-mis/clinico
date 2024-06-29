@@ -249,6 +249,9 @@ router.get('/register', async (req, res, next) => {
         if (lodash.get(req, 'session.authUserId')) {
             return res.redirect(`/auth`)
         }
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
+        }
         res.render('register.html', {
             flash: flash.get(req, 'register'),
         });
@@ -259,6 +262,9 @@ router.get('/register', async (req, res, next) => {
 });
 router.get('/register-pending', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
+        }
         res.render('register-pending.html', {
             email: req?.query?.email || '',
             ref: req?.query?.ref || '',
@@ -269,6 +275,9 @@ router.get('/register-pending', async (req, res, next) => {
 });
 router.post('/register', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
+        }
         let payload = JSON.parse(req?.body?.payload)
         // console.log(payload)
 
@@ -390,6 +399,9 @@ router.post('/register', async (req, res, next) => {
 
 router.get('/verify/:secureKey', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
+        }
         // Redirect if logged-in. Do not ruin verification token.
         if (lodash.get(req, 'session.authUserId')) {
             return res.redirect(`/auth`)
@@ -468,6 +480,9 @@ router.get('/verify/:secureKey', async (req, res, next) => {
 // Forgot password
 router.get('/forgot', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
+        }
         if (lodash.get(req, 'session.authUserId')) {
             return res.redirect(`/auth`)
         }
@@ -481,6 +496,9 @@ router.get('/forgot', async (req, res, next) => {
 });
 router.post('/forgot', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
+        }
         if (CONFIG.loginDelay > 0) {
             await new Promise(resolve => setTimeout(resolve, CONFIG.loginDelay)) // Rate limit 
         }
@@ -574,6 +592,9 @@ router.post('/forgot', async (req, res, next) => {
 });
 router.get('/sent', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
+        }
         if (lodash.get(req, 'session.authUserId')) {
             return res.redirect(`/auth`)
         }
@@ -588,6 +609,9 @@ router.get('/sent', async (req, res, next) => {
 });
 router.get('/sent-done', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
+        }
         if (lodash.get(req, 'session.authUserId')) {
             return res.redirect(`/auth`)
         }
@@ -600,6 +624,9 @@ router.get('/sent-done', async (req, res, next) => {
 });
 router.get('/forgotten/:secureKey', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
+        }
         // Delete expired
         await req.app.locals.db.main.PasswordReset.deleteMany({
             expiredAt: {
