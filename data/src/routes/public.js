@@ -50,6 +50,24 @@ router.post('/login', async (req, res, next) => {
 
         let post = req.body;
 
+        if (post.credential) {
+
+            const { OAuth2Client } = require('google-auth-library');
+            const CLIENT_ID = `68894341277-m36m7lknp1cfd4lc64bb5h2l79p28ppi.apps.googleusercontent.com`
+
+            const client = new OAuth2Client(CLIENT_ID);
+            try {
+                const ticket = await client.verifyIdToken({
+                    idToken: post.credential,
+                    audience: CLIENT_ID,
+                });
+                const payload = ticket.getPayload();
+                return res.send(payload)
+            } catch (err) {
+                console.error(err)
+                throw err
+            }
+        }
         let email = lodash.get(post, 'email', '');
         let password = lodash.trim(lodash.get(post, 'password', ''))
 
