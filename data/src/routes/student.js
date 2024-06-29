@@ -135,6 +135,9 @@ router.post('/student/update-medical-record', async (req, res, next) => {
 
 router.get('/student/account', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/student/home`)
+        }
         let data = {
             flash: flash.get(req, 'student'),
             civilStatuses: CONFIG.civilStatuses
@@ -146,6 +149,9 @@ router.get('/student/account', async (req, res, next) => {
 });
 router.post('/student/account', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/student/home`)
+        }
         let user = res.user
 
         let password = lodash.trim(lodash.get(req, 'body.password'))

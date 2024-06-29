@@ -15,10 +15,11 @@
                         <div class="d-flex justify-content-center mb-1">
                             <!-- {# See: https://developers.google.com/identity/gsi/web/tools/configurator #} -->
                             <div id="g_id_onload"
+                                data-use_fedcm_for_prompt="true"
                                 data-client_id="68894341277-m36m7lknp1cfd4lc64bb5h2l79p28ppi.apps.googleusercontent.com"
                                 data-context="signup" 
                                 data-ux_mode="popup" 
-                                data-callback="onclientsign"
+                                data-login_uri="{{CONFIG.app.url}}/sso"
                                 data-itp_support="true">
                             </div>
                             <div class="g_id_signin" 

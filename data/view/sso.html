@@ -1,0 +1,50 @@
+{% extends "document-public.html" %}
+
+{% block body %}
+<div class="col-md-6 ml-auto mr-auto mt-md-5 mb-md-5">
+    <div style="box-shadow: 0 0 5px #333; border-radius: 10px; overflow: hidden; ">
+        <div class="row" style="background: #fff;">
+            <div class="col-md-12 align-self-stretch text-center" style="background: url('/images/flat-lay-health-still-life-arrangement-with-copy-space.jpg') no-repeat top #b1cedc;background-size: cover; ">
+                <a href="/"><img src="/images/clinico.png" width="155" alt="" class="mt-4 mb-4"></a>
+            </div>
+            <div class="col-md-12">
+                <div class="p-4 min-height-400">
+                    <h1 class="h5 text-center mb-4">Login Page</h1>
+                    {% include 'parts/flash.html' %}
+                    
+                    <div class="form-group row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 d-flex justify-content-center flex-wrap">
+                            <!-- {# See: https://developers.google.com/identity/gsi/web/tools/configurator #} -->
+                            <div id="g_id_onload"
+                                data-use_fedcm_for_prompt="true"
+                                data-client_id="68894341277-m36m7lknp1cfd4lc64bb5h2l79p28ppi.apps.googleusercontent.com"
+                                data-context="signup" 
+                                data-ux_mode="popup" 
+                                data-login_uri="{{CONFIG.app.url}}/sso"
+                                data-itp_support="true">
+                            </div>
+                            <div class="g_id_signin" 
+                                data-type="standard" 
+                                data-shape="pill" 
+                                data-theme="filled_blue"
+                                data-text="continue_with" 
+                                data-size="large" 
+                                data-logo_alignment="left">
+                            </div>
+                            <p class="text-center pt-4 mt-5">
+                                <div class="alert alert-warning">Note: Use your GSU Google account</div>
+                            </p>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+{% endblock %}

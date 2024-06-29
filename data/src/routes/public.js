@@ -26,10 +26,119 @@ router.get('/', async (req, res, next) => {
     }
 });
 // Login
+router.get('/sso', async (req, res, next) => {
+    try {
+        if (lodash.get(req, 'session.authUserId')) {
+            return res.redirect(`/auth`)
+        }
+        // console.log(req.session)
+        let ip = req.headers['x-real-ip'] || req.socket.remoteAddress;
+        res.render('sso.html', {
+            flash: flash.get(req, 'login'),
+            ip: ip,
+            email: lodash.get(req, 'query.email', ''),
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+router.post('/sso', async (req, res, next) => {
+    try {
+        if (CONFIG.loginDelay > 0) {
+            await new Promise(resolve => setTimeout(resolve, CONFIG.loginDelay)) // Rate limit 
+        }
+
+        let post = req.body;
+        let user = null
+        if (post.credential) {
+
+            const { OAuth2Client } = require('google-auth-library');
+            const CLIENT_ID = `68894341277-m36m7lknp1cfd4lc64bb5h2l79p28ppi.apps.googleusercontent.com`
+
+            const client = new OAuth2Client(CLIENT_ID);
+            try {
+                const ticket = await client.verifyIdToken({
+                    idToken: post.credential,
+                    audience: CLIENT_ID,
+                });
+                const payload = ticket.getPayload();
+                // const userid = payload['sub'];
+                // console.log(`payload`, payload)
+                /*
+                {
+                    iss: 'https://accounts.google.com',
+                    nbf: xx,
+                    aud: 'xx-xx.apps.googleusercontent.com',
+                    sub: '115284064957933519698',
+                    hd: 'gsc.edu.ph',
+                    email: 'nico.amarilla@gsc.edu.ph',
+                    email_verified: true,
+                    azp: 'xx-xx.apps.googleusercontent.com',
+                    name: 'Nico Amarilla',
+                    picture: 'https://lh3.googleusercontent.com/a/xxx',
+                    given_name: 'Nico',
+                    family_name: 'Amarilla',
+                    iat: 1678459119,
+                    exp: 1678462719,
+                    jti: 'xx'
+                }
+                */
+                user = await req.app.locals.db.main.User.findOne({
+                    email: payload.email
+                });
+                if (!user) {
+                    let roles = ['student']
+                   
+                    user = await req.app.locals.db.main.User.create({
+                        roles: roles,
+                        email: payload.email,
+                        emailVerified: true,
+                        active: true,
+                        acceptedDataPrivacy: true,
+                        roles: roles
+                    });
+
+                    await req.app.locals.db.main.MedicalRecord.create({
+                        firstName: payload.given_name,
+                        lastName: payload.family_name,
+                        userId: user._id
+                    });
+                }
+                console.log(payload)
+                // return res.send(user)
+            } catch (err) {
+                console.error(err)
+                throw err
+            }
+        }
+
+        // Save user id to session
+        lodash.set(req, 'session.authUserId', user._id);
+
+        // Security: Anti-CSRF token.
+        let antiCsrfToken = await passwordMan.randomStringAsync(16)
+        lodash.set(req, 'session.acsrf', antiCsrfToken);
+
+        if (user.roles.includes('student')) {
+            return res.redirect('/student/home')
+        }
+
+        return res.redirect('/auth');
+    } catch (err) {
+        console.error(err)
+        flash.error(req, 'login', err.message);
+        return res.redirect('/login');
+    }
+});
+
+
 router.get('/login', async (req, res, next) => {
     try {
         if (lodash.get(req, 'session.authUserId')) {
             return res.redirect(`/auth`)
+        }
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
         }
         // console.log(req.session)
         let ip = req.headers['x-real-ip'] || req.socket.remoteAddress;
@@ -44,12 +153,33 @@ router.get('/login', async (req, res, next) => {
 });
 router.post('/login', async (req, res, next) => {
     try {
+        if (CONFIG.sso) {
+            return res.redirect(`/sso`)
+        }
         if (CONFIG.loginDelay > 0) {
             await new Promise(resolve => setTimeout(resolve, CONFIG.loginDelay)) // Rate limit 
         }
 
         let post = req.body;
 
+        if (post.credential) {
+
+            const { OAuth2Client } = require('google-auth-library');
+            const CLIENT_ID = `68894341277-m36m7lknp1cfd4lc64bb5h2l79p28ppi.apps.googleusercontent.com`
+
+            const client = new OAuth2Client(CLIENT_ID);
+            try {
+                const ticket = await client.verifyIdToken({
+                    idToken: post.credential,
+                    audience: CLIENT_ID,
+                });
+                const payload = ticket.getPayload();
+                return res.send(payload)
+            } catch (err) {
+                console.error(err)
+                throw err
+            }
+        }
         let email = lodash.get(post, 'email', '');
         let password = lodash.trim(lodash.get(post, 'password', ''))
 
@@ -432,7 +562,7 @@ router.post('/forgot', async (req, res, next) => {
         // if (ENV === 'dev') {
         //     console.log(data)
         // } else {
-            await mailer.sendForgot(data)
+        await mailer.sendForgot(data)
         // }
 
         res.redirect(`/sent?email=${user.email}`);

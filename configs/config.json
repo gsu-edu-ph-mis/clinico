@@ -73,5 +73,6 @@
         "Separated",
         "Widowed"
     ],
-    "loginDelay": 0
+    "loginDelay": 0,
+    "sso": true
 }
