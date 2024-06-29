@@ -83,6 +83,10 @@ router.post('/sso', async (req, res, next) => {
                     jti: 'xx'
                 }
                 */
+                var domain = payload.email.split('@').pop();
+                if (['gsu.edu.ph'].includes(domain) === false) {
+                    throw new Error('Only GSU emails are allowed (email that ends in @gsu.edu.ph).');
+                }
                 user = await req.app.locals.db.main.User.findOne({
                     email: payload.email
                 });
