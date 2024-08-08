@@ -35,12 +35,14 @@ router.get('/admin/home', middlewares.guardRoute(['read_all_mrc']), async (req, 
 router.get('/admin/medical-record/all', middlewares.guardRoute(['read_all_mrc']), async (req, res, next) => {
     try {
         let s = req?.query?.s || ''
+        let s2 = req?.query?.s2 || ''
         let searchQuery = {}
 
         if (s) {
-            searchQuery = {
-                lastName: new RegExp(s, "i")
-            }
+            lodash.set(searchQuery, 'lastName', new RegExp(s, "i"))
+        }
+        if (s2) {
+            lodash.set(searchQuery, 'firstName', new RegExp(s2, "i"))
         }
 
         const lastId = req.query?.lastId
@@ -68,6 +70,7 @@ router.get('/admin/medical-record/all', middlewares.guardRoute(['read_all_mrc'])
         let data = {
             flash: flash.get(req, 'admin'),
             s: s,
+            s2: s2,
             students: students
         }
         res.render('admin/medical-record/all.html', data);

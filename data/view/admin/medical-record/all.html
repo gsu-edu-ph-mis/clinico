@@ -5,8 +5,15 @@
     {% include 'parts/flash.html' %}
     <h1 class="h6">Medical Records</h1>
     <form ref="formSearch" action="">
-        <div class="form-group">
-            <input v-model="s" name="s" type="search" class="form-control" placeholder="Search by last name...">
+        <div class="form-group form-row align-items-center">
+            <label for="s" class="col-2 mb-0">Search Records</label>
+            <div class="col-4">
+                <input v-model="s" name="s" id="s" type="search" class="form-control" placeholder="Type Last Name...">
+            </div>
+            <div class="col-4">
+                <input v-model="s2" name="s2" type="search" class="form-control" placeholder="Type First Name...">
+            </div>
+            <button class="btn btn-primary col-2">Submit</button>
         </div>
     </form>
     <div v-if="students.length > 0" class="pb-5">
@@ -64,6 +71,7 @@
 {{ super() }}
 <script>
     var s = '{{s}}';
+    var s2= '{{s2}}';
     var students = {{students|default([], true)|stringify|safe}};
 
     var vApp = new Vue({
@@ -73,6 +81,7 @@
         data: {
             pending: false,
             s: s,
+            s2: s2,
             students: students
         },
         methods: {
