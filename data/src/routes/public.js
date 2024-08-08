@@ -108,7 +108,7 @@ router.post('/sso', async (req, res, next) => {
                         userId: user._id
                     });
                 }
-                console.log(payload)
+                // console.log(payload)
                 // return res.send(user)
             } catch (err) {
                 console.error(err)
@@ -135,14 +135,11 @@ router.post('/sso', async (req, res, next) => {
     }
 });
 
-
+// For admins only
 router.get('/login', async (req, res, next) => {
     try {
         if (lodash.get(req, 'session.authUserId')) {
             return res.redirect(`/auth`)
-        }
-        if (CONFIG.sso) {
-            return res.redirect(`/sso`)
         }
         // console.log(req.session)
         let ip = req.headers['x-real-ip'] || req.socket.remoteAddress;
@@ -157,33 +154,12 @@ router.get('/login', async (req, res, next) => {
 });
 router.post('/login', async (req, res, next) => {
     try {
-        if (CONFIG.sso) {
-            return res.redirect(`/sso`)
-        }
         if (CONFIG.loginDelay > 0) {
             await new Promise(resolve => setTimeout(resolve, CONFIG.loginDelay)) // Rate limit 
         }
 
         let post = req.body;
 
-        if (post.credential) {
-
-            const { OAuth2Client } = require('google-auth-library');
-            const CLIENT_ID = `68894341277-m36m7lknp1cfd4lc64bb5h2l79p28ppi.apps.googleusercontent.com`
-
-            const client = new OAuth2Client(CLIENT_ID);
-            try {
-                const ticket = await client.verifyIdToken({
-                    idToken: post.credential,
-                    audience: CLIENT_ID,
-                });
-                const payload = ticket.getPayload();
-                return res.send(payload)
-            } catch (err) {
-                console.error(err)
-                throw err
-            }
-        }
         let email = lodash.get(post, 'email', '');
         let password = lodash.trim(lodash.get(post, 'password', ''))
 
@@ -205,7 +181,7 @@ router.post('/login', async (req, res, next) => {
 
         // Check password
         let passwordHash = passwordMan.hashPassword(password, user.salt);
-        if (!timingSafeEqual(Buffer.from(passwordHash, 'utf8'), Buffer.from(user.passwordHash, 'utf8'))) {
+        if (passwordHash !== user.passwordHash) {
             // throw new Error('Incorrect password.');
             flash.error(req, 'login', 'Incorrect password.');
             return res.redirect(`/login?email=${email}`);

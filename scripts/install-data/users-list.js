@@ -18,7 +18,7 @@ module.exports = [
         "firstName" : "Nico",
         "middleName" : "Gayapa",
         "lastName" : "Amarilla",
-        "email" : "mis@gsu.edu.ph",
+        "email" : "nico.amarilla@gsu.edu.ph",
         "active" : true,
         permissions: [],
     },
