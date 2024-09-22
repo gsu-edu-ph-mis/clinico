@@ -70,8 +70,10 @@
                         <td>{{medicalRecord.emergencyPerson}} -  {{medicalRecord.emergencyPersonPhoneNumber}}</td>
                     </tr>
                     <tr>
-                        <td class="text-right">Handedness</td>
-                        <td>{{medicalRecord.handedness|replace('R', 'Right-handed')|replace('L', 'Left-handed')}}</td>
+                        <td class="text-right">Is PWD?</td>
+                        <td>{% if medicalRecord.isPWD %}Yes{% else %}No{% endif %}
+                            <br>{{medicalRecord.pwdDetails}}
+                        </td>
                     </tr>
                     <tr>
                         <td class="text-right">Allergies</td>

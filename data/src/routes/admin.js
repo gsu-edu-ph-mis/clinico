@@ -216,6 +216,9 @@ router.post('/admin/medical-record/update/:medicalRecordId', middlewares.guardRo
             throw new Error('Last Name is required.')
         }
 
+        payload.isPWD = (payload.isPWD) ? true : false
+        payload.pwdDetails = (!payload.isPWD) ? '' : payload.pwdDetails
+
         if (payload.allergies.includes('None')) {
             payload.allergies = ['None']
             payload.allergyDetails = {

@@ -172,12 +172,23 @@
             <template v-if="page==3">
                 <p class="lead text-center">Health Information</p>
                 <hr>
-                <div class="form-group" :data-error="errors.handedness" @click="errors.handedness=false">
+                <!-- <div class="form-group" :data-error="errors.handedness" @click="errors.handedness=false">
                     <label for="handedness">Handedness</label>
                     <select v-model="handedness" id="handedness" class="form-control">
                         <option value="R">Right-Handed</option>
                         <option value="L">Left-Handed</option>
                     </select>
+                </div> -->
+                <div class="form-group" :data-error="errors.isPWD" @click="errors.isPWD=false">
+                    <label for="isPWD">Are you a person with disability?</label>
+                    <select v-model="isPWD" name="isPWD" id="isPWD" class="form-control">
+                        <option :value="false">No</option>
+                        <option :value="true">Yes</option>
+                    </select>
+                </div>
+                <div v-if="isPWD" class="form-group" :data-error="errors.pwdDetails" @click="errors.pwdDetails=false">
+                    <label for="pwdDetails">What is your disablility? Please specify:</label>
+                    <textarea v-model="pwdDetails" name="pwdDetails" id="pwdDetails" class="form-control"></textarea>
                 </div>
                 <div class="form-group" :data-error="errors.allergy" @click="errors.allergy=false">
                     <label for="allergy">Allergy</label>
@@ -264,6 +275,8 @@
             ],
             allergyDetails: {{medicalRecord.allergyDetails|default({}, true)|stringify|safe}},
             handedness: `{{medicalRecord.handedness|default('R', true)}}`,
+            isPWD: {{medicalRecord.isPWD|default(false, true)}},
+            pwdDetails: `{{medicalRecord.pwdDetails}}`,
 
             errors: {
                 firstName: false,
@@ -288,6 +301,8 @@
 
                 allergy: false,
                 handedness: false,
+                isPWD: false,
+                pwdDetails: false,
             },
             civilStatuses: {{civilStatuses|default([], true)|stringify|safe}}
         },
@@ -323,29 +338,16 @@
                     handedness: me.handedness,
                     allergies: me.allergies,
                     allergyDetails: me.allergyDetails,
+
+                    isPWD: me.isPWD,
+                    pwdDetails: me.pwdDetails,
                 })
             }
         },
         mounted: function(){
             const me = this 
 
-            // me.gender = 'M'
-            // me.civilStatus = 'Single'
-            // me.birthDate = '1986-09-15'
-            // me.citizenship = 'Filipino'
-            // me.religion = 'Roman Catholic'
-            // me.course = 'BSIT'
-            // me.address = 'Mclain, Buenavista, Guimaras'
-
-            // me.fb = 'Nico Amarilla'
-            // me.mobileNumber = '09106189160'
-            // me.parentName = 'Virgie'
-            // me.parentPhoneNumber = '09106189160'
-            // me.emergencyPerson = 'Juan Cruz'
-            // me.emergencyPersonPhoneNumber = '09106189160'
-
             // me.page = 3
-
 
         },
         methods: {
@@ -457,11 +459,16 @@
                     }
                     if(e?.submitter?.id === 'btnSubmit'){
                         
-                        if(!me.handedness){
-                            me.errors.handedness = true
-                            throw new Error('handedness is required.')
-                        }
+                        // if(!me.handedness){
+                        //     me.errors.handedness = true
+                        //     throw new Error('handedness is required.')
+                        // }
                        
+                        if(me.isPWD && me.pwdDetails === ''){
+                            me.errors.pwdDetails = true
+                            throw new Error('Please specify your Disability.')
+                        }
+
                         if(me.allergies.length <= 0){
                             me.errors.allergy = true
                             throw new Error('Please specify your Allergy.')

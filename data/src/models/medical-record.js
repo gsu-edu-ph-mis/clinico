@@ -110,6 +110,12 @@ const schema = new Schema({
         treatment: String,
         diagnosis: String,
     }],
+    isPWD: Boolean,
+    pwdDetails: {
+        $type: String,
+        trim: true,
+        default: ''
+    },
     relevanceData: {
         $type: String,
         trim: true,

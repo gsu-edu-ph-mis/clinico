@@ -95,6 +95,9 @@ router.post('/student/update-medical-record', async (req, res, next) => {
             throw new Error('Last Name is required.')
         }
 
+        payload.isPWD = (payload.isPWD) ? true : false
+        payload.pwdDetails = (!payload.isPWD) ? '' : payload.pwdDetails
+
         if(payload.allergies.includes('None')){
             payload.allergies = ['None']
             payload.allergyDetails = {
